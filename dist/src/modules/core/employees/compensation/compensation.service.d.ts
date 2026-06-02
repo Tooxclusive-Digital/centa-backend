@@ -1,6 +1,6 @@
 import { CreateCompensationDto } from './dto/create-compensation.dto';
 import { UpdateCompensationDto } from './dto/update-compensation.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 export declare class CompensationService {
     private readonly db;

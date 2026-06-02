@@ -1,7 +1,7 @@
 import { BenefitGroupsService } from './benefit-groups.service';
 import { CreateBenefitGroupDto } from './dto/create-benefit-group.dto';
 import { UpdateBenefitGroupDto } from './dto/update-benefit-group.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class BenefitGroupsController extends BaseController {
     private readonly benefitGroupsService;

@@ -1,4 +1,4 @@
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { EmployeeShiftsService } from './employee-shifts.service';
 import { CreateEmployeeShiftDto } from './dto/create-employee-shift.dto';
@@ -51,13 +51,13 @@ export declare class EmployeeShiftsController extends BaseController {
             employeeId: string;
             shiftId: string | null;
             shiftDate: string;
-            employeeName: string;
+            employeeName: any;
         } | {
             id: string;
             employeeId: string;
             shiftId: string | null;
             shiftDate: string;
-            employeeName: string;
+            employeeName: any;
         })[];
         pagination: {
             total: number;
@@ -71,52 +71,52 @@ export declare class EmployeeShiftsController extends BaseController {
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getShiftAssignment(assignmentId: string, user: User): Promise<{
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     }>;
     getEmployeeShifts(employeeId: string, user: User): Promise<({
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getShiftEmployees(shiftId: string, user: User): Promise<({
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     bulkRemove(employeeIds: string[], user: User, ip: string): Promise<{
         success: boolean;

@@ -1,6 +1,6 @@
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class ProfileController extends BaseController {
     private readonly profileService;

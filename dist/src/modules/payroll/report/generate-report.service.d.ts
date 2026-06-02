@@ -1,6 +1,6 @@
 import { S3StorageService } from 'src/common/aws/s3-storage.service';
 import { ReportService } from './report.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 export declare class GenerateReportService {
     private db;
     private readonly payrollService;

@@ -1,7 +1,7 @@
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { SalaryAdvanceService } from './salary-advance.service';
 import { CreateSalaryAdvanceDto, UpdateLoanStatusDto } from './dto/create-salary-advance.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class SalaryAdvanceController extends BaseController {
     private readonly salaryAdvanceService;
     constructor(salaryAdvanceService: SalaryAdvanceService);
@@ -27,8 +27,8 @@ export declare class SalaryAdvanceController extends BaseController {
         totalPaid: string;
         tenureMonths: number;
         preferredMonthlyPayment: string | null;
-        employeeName: unknown;
-        outstandingBalance: number;
+        employeeName: any;
+        outstandingBalance: any;
         loanNumber: string | null;
     } | {
         name: string;
@@ -38,8 +38,8 @@ export declare class SalaryAdvanceController extends BaseController {
         totalPaid: string;
         tenureMonths: number;
         preferredMonthlyPayment: string | null;
-        employeeName: unknown;
-        outstandingBalance: number;
+        employeeName: any;
+        outstandingBalance: any;
         loanNumber: string | null;
     })[]>;
     getLoansByEmployee(employeeId: string): Promise<{
@@ -52,7 +52,7 @@ export declare class SalaryAdvanceController extends BaseController {
         name: string;
         paymentStatus: string;
         createAt: Date;
-        outstandingBalance: number;
+        outstandingBalance: any;
         loanNumber: string | null;
     }[]>;
     getLoanById(id: string): Promise<{
@@ -99,7 +99,7 @@ export declare class SalaryAdvanceController extends BaseController {
         name: string;
         paymentStatus: string;
         createAt: Date;
-        outstandingBalance: number;
+        outstandingBalance: any;
         loanNumber: string | null;
     }[]>;
     getLoanHistoryByCompany(user: User): Promise<({
@@ -107,13 +107,13 @@ export declare class SalaryAdvanceController extends BaseController {
         reason: string | null;
         role: string;
         createdAt: Date;
-        employee: unknown;
+        employee: any;
     } | {
         action: string;
         reason: string | null;
         role: string;
         createdAt: Date;
-        employee: unknown;
+        employee: any;
     })[]>;
     getLoanHistoryByEmployee(employeeId: string): Promise<{
         salary_advance: {

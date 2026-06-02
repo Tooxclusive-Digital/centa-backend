@@ -1,5 +1,5 @@
 import { LeaveApprovalService } from './leave-approval.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ApproveRejectLeaveDto } from './dto/approve-reject.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class LeaveApprovalController extends BaseController {

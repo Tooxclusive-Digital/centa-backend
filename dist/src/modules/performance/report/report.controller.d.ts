@@ -1,6 +1,6 @@
 import { ReportService } from './report.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GetGoalReportDto } from './dto/get-goal-report.dto';
 import { GetFeedbackReportDto } from './dto/get-feedback-report.dto';
 import { GetAssessmentReportDto } from './dto/get-assessment-report.dto';
@@ -66,7 +66,7 @@ export declare class ReportController extends BaseController {
         topEmployees: ({
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -75,7 +75,7 @@ export declare class ReportController extends BaseController {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -84,7 +84,7 @@ export declare class ReportController extends BaseController {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -93,7 +93,7 @@ export declare class ReportController extends BaseController {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -108,10 +108,10 @@ export declare class ReportController extends BaseController {
         }[];
         employeesList: ({
             id: any;
-            name: string;
+            name: any;
         } | {
             id: any;
-            name: string;
+            name: any;
         })[];
         departmentsList: ({
             id: any;
@@ -124,7 +124,7 @@ export declare class ReportController extends BaseController {
     getGoalReport(user: User, filter?: GetGoalReportDto): Promise<({
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -137,7 +137,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -150,7 +150,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -163,7 +163,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -176,7 +176,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -189,7 +189,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -202,7 +202,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -215,7 +215,7 @@ export declare class ReportController extends BaseController {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -227,7 +227,7 @@ export declare class ReportController extends BaseController {
         dueDate: any;
     })[]>;
     getFeedbackReport(user: User, filter: GetFeedbackReportDto): Promise<({
-        senderName: string | undefined;
+        senderName: any;
         responses: {
             questionText: string;
             answer: string;
@@ -238,9 +238,9 @@ export declare class ReportController extends BaseController {
         isAnonymous: boolean | null;
         submittedAt: Date | null;
         senderId: string;
-        employeeName: string;
+        employeeName: any;
     } | {
-        senderName: string | undefined;
+        senderName: any;
         responses: {
             questionText: string;
             answer: string;
@@ -251,7 +251,7 @@ export declare class ReportController extends BaseController {
         isAnonymous: boolean | null;
         submittedAt: Date | null;
         senderId: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getAssessmentReport(user: User, filter?: GetAssessmentReportDto): Promise<({
         id: string;
@@ -261,8 +261,8 @@ export declare class ReportController extends BaseController {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -275,8 +275,8 @@ export declare class ReportController extends BaseController {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -289,8 +289,8 @@ export declare class ReportController extends BaseController {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -299,7 +299,7 @@ export declare class ReportController extends BaseController {
     getTopEmployees(user: User, filter: GetTopEmployeesDto): Promise<({
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -308,7 +308,7 @@ export declare class ReportController extends BaseController {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -317,7 +317,7 @@ export declare class ReportController extends BaseController {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -326,7 +326,7 @@ export declare class ReportController extends BaseController {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;

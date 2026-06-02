@@ -1,9 +1,9 @@
 import { CreatePayGroupDto } from './dto/create-pay-group.dto';
 import { UpdatePayGroupDto } from './dto/update-pay-group.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 export declare class PayGroupsService {
     private readonly db;

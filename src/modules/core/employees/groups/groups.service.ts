@@ -2,11 +2,11 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AddGroupMembersDto, CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { eq, and, desc, inArray, count, sql, ne } from 'drizzle-orm';
 import { groupMemberships, groups } from '../schema/group.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { employees } from '../schema/employee.schema';
 import { CacheService } from 'src/common/cache/cache.service';
 

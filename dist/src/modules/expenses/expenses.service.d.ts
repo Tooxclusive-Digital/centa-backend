@@ -1,8 +1,8 @@
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from '../audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AwsService } from 'src/common/aws/aws.service';
 import { ExpensesSettingsService } from './settings/expense-settings.service';
 import { S3StorageService } from 'src/common/aws/s3-storage.service';
@@ -105,9 +105,9 @@ export declare class ExpensesService {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
     } | {
         id: string;
         date: string;
@@ -118,9 +118,9 @@ export declare class ExpensesService {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
     })[]>;
     findAllByEmployeeId(employeeId: string): Promise<{
         id: string;
@@ -171,9 +171,9 @@ export declare class ExpensesService {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
         approvalDate: Date | null;
     } | {
         id: string;
@@ -185,9 +185,9 @@ export declare class ExpensesService {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
         approvalDate: Date | null;
     })[]>;
     generateReimbursementReportToS3(companyId: string, format?: 'excel' | 'csv', filters?: {

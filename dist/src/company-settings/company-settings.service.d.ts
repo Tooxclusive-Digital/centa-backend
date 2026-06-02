@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { ModuleKey, TaskStatus } from './constants/constants';
 export declare class CompanySettingsService {
     private db;

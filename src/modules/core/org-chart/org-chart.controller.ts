@@ -1,7 +1,7 @@
 import { Controller, Get, Param, SetMetadata, UseGuards } from '@nestjs/common';
 import { OrgChartService } from './org-chart.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 

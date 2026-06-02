@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq } from 'drizzle-orm';
 import { CreateConclusionDto } from './dto/create-conclusion.dto';
 import { UpdateConclusionDto } from './dto/update-conclusion.dto';

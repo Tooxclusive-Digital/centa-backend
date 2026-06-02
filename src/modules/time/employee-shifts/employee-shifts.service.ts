@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateEmployeeShiftDto } from './dto/create-employee-shift.dto';
 import { employeeShifts } from '../schema/employee-shifts.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { and, eq, gte, lte, inArray, sql } from 'drizzle-orm';
 import { auditLogs } from 'src/modules/audit/schema';
 import {

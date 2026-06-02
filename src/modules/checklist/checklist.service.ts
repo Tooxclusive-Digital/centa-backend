@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { sql } from 'drizzle-orm';
 import { checklistCompletion } from './schema/checklist.schema';
 import { ExtraKeyParamDto } from './dto/extra-key.param';

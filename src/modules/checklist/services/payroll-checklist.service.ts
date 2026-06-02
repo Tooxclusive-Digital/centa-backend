@@ -1,7 +1,7 @@
 // src/payroll-checklist/payroll-checklist.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray } from 'drizzle-orm';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 import { TaskStatus } from '../constants/constants';

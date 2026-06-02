@@ -1,6 +1,6 @@
 import { PusherService } from './services/pusher.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PushNotificationService } from './services/push-notification.service';
 import { SendToEmployeeDto } from './dto/send-to-employee.dto';
 import { RegisterDeviceDto } from './dto/register-device.dto';

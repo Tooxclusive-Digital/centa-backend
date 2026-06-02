@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class SelfAssessmentsService {
     private readonly db;
     private readonly cache;

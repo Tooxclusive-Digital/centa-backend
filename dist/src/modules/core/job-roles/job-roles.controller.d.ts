@@ -1,7 +1,7 @@
 import { JobRolesService } from './job-roles.service';
 import { CreateJobRoleDto } from './dto/create-job-role.dto';
 import { UpdateJobRoleDto } from './dto/update-job-role.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class JobRolesController extends BaseController {
     private readonly jobRolesService;

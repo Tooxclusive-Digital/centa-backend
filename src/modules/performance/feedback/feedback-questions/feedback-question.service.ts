@@ -6,8 +6,8 @@ import {
 import { Inject } from '@nestjs/common';
 import { eq, inArray, asc, count as drizzleCount, and } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CreateFeedbackQuestionDto } from '../dto/create-feedback-question.dto';
 import { feedbackQuestions } from '../schema/performance-feedback-questions.schema';
 import { UpdateFeedbackQuestionDto } from '../dto/update-feedback-question.dto';

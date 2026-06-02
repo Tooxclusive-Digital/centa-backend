@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { GetGoalReportDto } from './dto/get-goal-report.dto';
 import { GetFeedbackReportDto } from './dto/get-feedback-report.dto';
 import { GetAssessmentReportDto } from './dto/get-assessment-report.dto';
@@ -14,10 +14,10 @@ export declare class ReportService {
         }[];
         employeesList: ({
             id: any;
-            name: string;
+            name: any;
         } | {
             id: any;
-            name: string;
+            name: any;
         })[];
         departmentsList: ({
             id: any;
@@ -30,7 +30,7 @@ export declare class ReportService {
     getGoalReport(user: User, filters?: GetGoalReportDto): Promise<({
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -43,7 +43,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -56,7 +56,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -69,7 +69,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -82,7 +82,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -95,7 +95,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -108,7 +108,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -121,7 +121,7 @@ export declare class ReportService {
     } | {
         goalId: any;
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         jobRoleName: string | null;
         departmentName: any;
         title: any;
@@ -133,7 +133,7 @@ export declare class ReportService {
         dueDate: any;
     })[]>;
     getFeedbackReport(user: User, filters: GetFeedbackReportDto): Promise<({
-        senderName: string | undefined;
+        senderName: any;
         responses: {
             questionText: string;
             answer: string;
@@ -144,9 +144,9 @@ export declare class ReportService {
         isAnonymous: boolean | null;
         submittedAt: Date | null;
         senderId: string;
-        employeeName: string;
+        employeeName: any;
     } | {
-        senderName: string | undefined;
+        senderName: any;
         responses: {
             questionText: string;
             answer: string;
@@ -157,7 +157,7 @@ export declare class ReportService {
         isAnonymous: boolean | null;
         submittedAt: Date | null;
         senderId: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getAssessmentReportSummary(user: User, filters?: GetAssessmentReportDto): Promise<({
         id: string;
@@ -167,8 +167,8 @@ export declare class ReportService {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -181,8 +181,8 @@ export declare class ReportService {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -195,8 +195,8 @@ export declare class ReportService {
         submittedAt: Date | null;
         createdAt: Date | null;
         reviewerId: string;
-        revieweeName: string;
-        reviewerName: string;
+        revieweeName: any;
+        reviewerName: any;
         departmentName: any;
         finalScore: number | null;
         promotionRecommendation: string | null;
@@ -205,7 +205,7 @@ export declare class ReportService {
     getTopEmployees(user: User, filter: GetTopEmployeesDto): Promise<({
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -214,7 +214,7 @@ export declare class ReportService {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -223,7 +223,7 @@ export declare class ReportService {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -232,7 +232,7 @@ export declare class ReportService {
     } | {
         source: "performance";
         employeeId: any;
-        employeeName: string;
+        employeeName: any;
         departmentName: any;
         jobRoleName: string | null;
         finalScore: number | null;
@@ -293,7 +293,7 @@ export declare class ReportService {
         topEmployees: ({
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -302,7 +302,7 @@ export declare class ReportService {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -311,7 +311,7 @@ export declare class ReportService {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;
@@ -320,7 +320,7 @@ export declare class ReportService {
         } | {
             source: "performance";
             employeeId: any;
-            employeeName: string;
+            employeeName: any;
             departmentName: any;
             jobRoleName: string | null;
             finalScore: number | null;

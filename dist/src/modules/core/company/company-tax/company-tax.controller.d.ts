@@ -1,7 +1,7 @@
 import { CompanyTaxService } from './company-tax.service';
 import { CreateCompanyTaxDto } from './dto/create-company-tax.dto';
 import { UpdateCompanyTaxDto } from './dto/update-company-tax.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class CompanyTaxController extends BaseController {
     private readonly companyTaxService;

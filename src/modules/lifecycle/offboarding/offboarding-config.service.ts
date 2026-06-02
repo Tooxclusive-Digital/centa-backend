@@ -1,14 +1,14 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { asc, eq, or, desc } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import {
   termination_checklist_items,
   termination_reasons,
   termination_types,
 } from '../schema';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { OffboardingChecklistItemDto } from './dto/offboarding-checklist.dto';
 import { CreateOffboardingConfigDto } from './dto/create-offboarding-config.dto';
 import { UpdateOffboardingConfigDto } from './dto/update-offboarding-config.dto';

@@ -1,6 +1,6 @@
 import { OnboardingService } from './onboarding.service';
 import { OnboardingSeederService } from './seeder.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { EmployeeOnboardingInputDto } from './dto/employee-onboarding-input.dto';
 export declare class OnboardingController extends BaseController {
@@ -18,7 +18,7 @@ export declare class OnboardingController extends BaseController {
             completedAt: Date | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -34,7 +34,7 @@ export declare class OnboardingController extends BaseController {
             completedAt: Date | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -58,7 +58,7 @@ export declare class OnboardingController extends BaseController {
             dueDaysAfterStart: number | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -78,7 +78,7 @@ export declare class OnboardingController extends BaseController {
             dueDaysAfterStart: number | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;

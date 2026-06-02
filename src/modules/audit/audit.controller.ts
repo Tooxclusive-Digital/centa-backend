@@ -2,7 +2,7 @@ import { Controller, Get, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuditService } from './audit.service';
 import { CurrentUser } from '../auth/decorator/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 
 @Controller('audit')

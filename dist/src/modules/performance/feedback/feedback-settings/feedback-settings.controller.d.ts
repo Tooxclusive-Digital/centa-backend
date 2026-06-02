@@ -1,5 +1,5 @@
 import { FeedbackSettingsService } from './feedback-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { UpdateFeedbackRuleDto } from '../dto/update-feedback-rule.dto';
 export declare class FeedbackSettingsController extends BaseController {

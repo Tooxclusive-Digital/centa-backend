@@ -1,5 +1,5 @@
 import { DeductionsService } from './deductions.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateDeductionTypeDto } from './dto/create-deduction-type.dto';
 import { CreateEmployeeDeductionDto } from './dto/create-employee-deduction.dto';
@@ -44,7 +44,7 @@ export declare class DeductionsController extends BaseController {
         isActive: boolean;
         startDate: string;
         endDate: string | null;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
@@ -54,7 +54,7 @@ export declare class DeductionsController extends BaseController {
         isActive: boolean;
         startDate: string;
         endDate: string | null;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getEmployeeDeductions(employeeId: string): Promise<{
         id: string;

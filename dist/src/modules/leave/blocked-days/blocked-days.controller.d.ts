@@ -1,7 +1,7 @@
 import { BlockedDaysService } from './blocked-days.service';
 import { CreateBlockedDayDto } from './dto/create-blocked-day.dto';
 import { UpdateBlockedDayDto } from './dto/update-blocked-day.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class BlockedDaysController extends BaseController {
     private readonly blockedDaysService;
@@ -20,7 +20,7 @@ export declare class BlockedDaysController extends BaseController {
         date: string;
         reason: string | null;
         createdAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         name: string;
     }[]>;
     findOne(id: string, user: User): Promise<{

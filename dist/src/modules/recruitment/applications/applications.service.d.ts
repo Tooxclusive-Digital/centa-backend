@@ -1,10 +1,10 @@
 import { CreateApplicationDto, FieldResponseDto } from './dto/create-application.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { AwsService } from 'src/common/aws/aws.service';
 import { MoveToStageDto } from './dto/move-to-stage.dto';
 import { ChangeApplicationStatusDto } from './dto/chnage-app-status.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ResumeScoringService } from './resume-scoring.service';
 import { Queue } from 'bullmq';
 import { CacheService } from 'src/common/cache/cache.service';
@@ -55,7 +55,7 @@ export declare class ApplicationsService {
         stageHistory: {
             name: string;
             movedAt: Date | null;
-            movedBy: unknown;
+            movedBy: any;
         }[];
         interview: {
             interviewers: {

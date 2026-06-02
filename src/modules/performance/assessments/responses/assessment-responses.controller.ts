@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AssessmentResponsesService } from './responses.service';
 import { SaveResponseDto } from './dto/save-response.dto';
 import { BulkSaveResponsesDto } from './dto/bulk-save-responses.dto';

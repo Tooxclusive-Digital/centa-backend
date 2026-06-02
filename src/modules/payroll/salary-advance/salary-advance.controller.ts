@@ -16,7 +16,7 @@ import {
   UpdateLoanStatusDto,
 } from './dto/create-salary-advance.dto';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 
 @Controller('salary-advance')
 export class SalaryAdvanceController extends BaseController {

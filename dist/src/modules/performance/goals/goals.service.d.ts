@@ -1,7 +1,7 @@
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateGoalDto } from './dto/update-goal.dto';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { PolicyService } from './goal-policy.service';
 import { GoalNotificationService } from 'src/modules/notification/services/goal-notification.service';
@@ -41,7 +41,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -59,7 +59,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -77,7 +77,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -95,7 +95,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -113,7 +113,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -131,7 +131,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -149,7 +149,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -167,7 +167,7 @@ export declare class GoalsService {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -186,7 +186,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -204,7 +204,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -222,7 +222,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -240,7 +240,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -258,7 +258,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -276,7 +276,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -294,7 +294,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -312,7 +312,7 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -325,21 +325,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -354,13 +354,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -368,21 +368,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -397,13 +397,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -411,21 +411,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -440,13 +440,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -454,21 +454,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -483,13 +483,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -497,21 +497,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -526,13 +526,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -540,21 +540,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -569,13 +569,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -583,21 +583,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -612,13 +612,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -626,21 +626,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -655,13 +655,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -669,21 +669,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -698,13 +698,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -712,21 +712,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -741,13 +741,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -755,21 +755,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -784,13 +784,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -798,21 +798,21 @@ export declare class GoalsService {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -827,13 +827,13 @@ export declare class GoalsService {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     }>;
     getStatusCountForEmployee(companyId: string, employeeId: string): Promise<Record<string, number>>;
     getStatusCount(companyId: string): Promise<Record<string, number>>;
@@ -847,9 +847,9 @@ export declare class GoalsService {
     archiveForEmployee(goalId: string, employeeId: string, user: User): Promise<{
         message: string;
         activity: {
-            updatesCount: number;
-            commentsCount: number;
-            attachmentsCount: number;
+            updatesCount: any;
+            commentsCount: any;
+            attachmentsCount: any;
         };
         deletable: boolean;
     }>;

@@ -1,6 +1,6 @@
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { Queue } from 'bullmq';
 import { UpdateOfferDto } from './dto/update-offer.dto';

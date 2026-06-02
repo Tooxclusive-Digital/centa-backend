@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { AwsService } from 'src/common/aws/aws.service';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import {
   companies,
   companyFileFolders,

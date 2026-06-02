@@ -4,11 +4,11 @@ import {
   Inject,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { and, asc, desc, eq, gte, lte, sql } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateAppraisalCycleDto } from './dto/create-appraisal-cycle.dto';
 import { UpdateAppraisalCycleDto } from './dto/update-appraisal-cycle.dto';
 import { performanceAppraisalCycles } from './schema/performance-appraisal-cycle.schema';

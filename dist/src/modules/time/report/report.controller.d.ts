@@ -1,5 +1,5 @@
 import { ReportService } from './report.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GenerateReportsService } from './generate-reports.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class ReportController extends BaseController {
@@ -60,12 +60,12 @@ export declare class ReportController extends BaseController {
         lateArrivals: ({
             employeeId: string;
             employeeNumber: any;
-            name: unknown;
+            name: any;
             clockIn: Date;
         } | {
             employeeId: string;
             employeeNumber: any;
-            name: unknown;
+            name: any;
             clockIn: Date;
         })[];
         overtime: {
@@ -141,49 +141,49 @@ export declare class ReportController extends BaseController {
             departmentId?: string;
         } | undefined;
         monthlySummary: {
-            yearMonth: string;
-            totalShifts: number;
-            uniqueEmployees: number;
-            uniqueShiftTypes: number;
+            yearMonth: any;
+            totalShifts: any;
+            uniqueEmployees: any;
+            uniqueShiftTypes: any;
         } | {
-            yearMonth: string;
-            totalShifts: number;
-            uniqueEmployees: number;
-            uniqueShiftTypes: number;
+            yearMonth: any;
+            totalShifts: any;
+            uniqueEmployees: any;
+            uniqueShiftTypes: any;
         };
         detailedBreakdown: ({
             yearMonth: string;
             daysExpected: number;
             employeeId: string;
-            employeeName: string;
+            employeeName: any;
             shiftName: string | null;
             locationName: string | null;
             startTime: string | null;
             endTime: string | null;
-            daysScheduled: number;
-            daysPresent: number;
+            daysScheduled: any;
+            daysPresent: any;
         } | {
             yearMonth: string;
             daysExpected: number;
             employeeId: string;
-            employeeName: string;
+            employeeName: any;
             shiftName: string | null;
             locationName: string | null;
             startTime: string | null;
             endTime: string | null;
-            daysScheduled: number;
-            daysPresent: number;
+            daysScheduled: any;
+            daysPresent: any;
         })[];
     }>;
     getLateArrivalsReport(user: User, yearMonth: string): Promise<({
         employeeId: string;
         employeeNumber: any;
-        name: unknown;
+        name: any;
         clockIn: Date;
     } | {
         employeeId: string;
         employeeNumber: any;
-        name: unknown;
+        name: any;
         clockIn: Date;
     })[]>;
     getAbsenteeismReport(user: User, startDate: string, endDate: string): Promise<{

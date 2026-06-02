@@ -7,7 +7,7 @@ import {
 import { PinoLogger } from 'nestjs-pino';
 import * as jwt from 'jsonwebtoken';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import {
   companies,
@@ -22,7 +22,7 @@ import {
 } from '../schema';
 import { employeeSequences } from './schema/employee-sequences.schema';
 import { eq, and, or, ilike, SQL, sql, ne, gte, lte } from 'drizzle-orm';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import {
   attendanceRecords,
   companyRoles,

@@ -1,6 +1,6 @@
 // src/modules/audit/audit.service.ts
 import { Injectable, Inject } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { auditLogs } from './schema';
 import { companyRoles, users } from '../auth/schema';

@@ -1,13 +1,13 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import {
   pipeline_template_stages,
   pipeline_templates,
 } from './schema/pipeline-templates.schema';
 import { pipeline_stages } from './schema/pipeline-stages.schema';
 import { eq, and, isNull } from 'drizzle-orm';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 
 @Injectable()
@@ -187,13 +187,20 @@ export class PipelineSeederService {
     const template = await this.db.query.pipeline_templates.findFirst({
       where: (tpl, { eq }) => eq(tpl.id, templateId),
     });
+    
+    // Use pipeline_templates table reference for consistency
+    const stagesQuery = await this.db
+      .select()
+      .from(pipeline_template_stages)
+      .where(eq(pipeline_template_stages.templateId, templateId))
+      .orderBy((s) => s.order);
 
     if (!template) {
       throw new BadRequestException(`Template not found`);
     }
 
     const stages = await this.db.query.pipeline_template_stages.findMany({
-      where: (s, { eq }) => eq(s.templateId, templateId),
+      where: eq(pipeline_template_stages.templateId, templateId),
       orderBy: (s, { asc }) => asc(s.order),
     });
 

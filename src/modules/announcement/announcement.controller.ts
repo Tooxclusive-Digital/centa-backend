@@ -14,7 +14,7 @@ import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { CommentService } from './comment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from '../auth/decorator/current-user.decorator';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateAnnouncementCommentDto } from './dto/create-announcement-comments.dto';

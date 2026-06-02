@@ -1,7 +1,7 @@
 import { DepartmentService } from './department.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AssignHeadDto } from './dto/assign-head.dto';
 import { AssignCostCenterDto } from './dto/assign-cost-center.dto';
 import { AssignParentDto } from './dto/assign-parent.dto';
@@ -22,48 +22,28 @@ export declare class DepartmentController extends BaseController {
         description: any;
     }[]>;
     findAll(user: User): Promise<({
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;

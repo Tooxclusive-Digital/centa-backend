@@ -1,8 +1,8 @@
 import { AddGroupMembersDto, CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class GroupsService {
     private readonly db;
@@ -206,36 +206,36 @@ export declare class GroupsService {
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     })[]>;
     findOne(id: string): Promise<{
         members: ({

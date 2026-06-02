@@ -14,7 +14,7 @@ import {
   asc,
 } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { payrollYtd } from '../schema/payroll-ytd.schema';
 import { payroll } from '../schema/payroll-run.schema';
 import { payGroups } from '../schema/pay-groups.schema';

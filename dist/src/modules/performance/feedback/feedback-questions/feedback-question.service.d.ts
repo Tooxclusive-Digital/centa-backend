@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CreateFeedbackQuestionDto } from '../dto/create-feedback-question.dto';
 import { UpdateFeedbackQuestionDto } from '../dto/update-feedback-question.dto';
 import { CacheService } from 'src/common/cache/cache.service';

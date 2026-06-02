@@ -1,10 +1,10 @@
 import { CreateClockInOutDto } from './dto/create-clock-in-out.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { EmployeesService } from 'src/modules/core/employees/employees.service';
 import { AttendanceSettingsService } from '../settings/attendance-settings.service';
 import { EmployeeShiftsService } from '../employee-shifts/employee-shifts.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ReportService } from '../report/report.service';
 import { AdjustAttendanceDto } from './dto/adjust-attendance.dto';
 import { CacheService } from 'src/common/cache/cache.service';

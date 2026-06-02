@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { termination_types } from './schema/termination-types.schema';
 import { termination_reasons } from './schema/termination-reasons.schema';
 import { termination_checklist_items } from './schema/termination-checklist-items.schema';

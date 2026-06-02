@@ -7,10 +7,10 @@ import {
 import { CreatePayrollAdjustmentDto } from './dto/create-payroll-adjustment.dto';
 import { UpdatePayrollAdjustmentDto } from './dto/update-payroll-adjustment.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq } from 'drizzle-orm';
 import { payrollAdjustments } from '../schema/payroll-adjustments.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 

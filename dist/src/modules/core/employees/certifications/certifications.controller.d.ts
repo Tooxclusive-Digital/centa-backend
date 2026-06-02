@@ -1,7 +1,7 @@
 import { CertificationsService } from './certifications.service';
 import { CreateCertificationDto } from './dto/create-certification.dto';
 import { UpdateCertificationDto } from './dto/update-certification.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class CertificationsController extends BaseController {
     private readonly certificationsService;

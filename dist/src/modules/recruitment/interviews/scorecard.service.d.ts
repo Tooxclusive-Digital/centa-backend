@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateScorecardTemplateDto } from './dto/create-score-card.dto';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class ScorecardTemplateService {
@@ -15,7 +15,7 @@ export declare class ScorecardTemplateService {
         description: string | null;
         isSystem: boolean | null;
         createdAt: Date | null;
-        criteria: unknown;
+        criteria: any;
     }[]>;
     create(user: User, dto: CreateScorecardTemplateDto): Promise<{
         id: string;

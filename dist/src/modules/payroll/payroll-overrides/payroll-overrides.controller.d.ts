@@ -1,7 +1,7 @@
 import { PayrollOverridesService } from './payroll-overrides.service';
 import { CreatePayrollOverrideDto } from './dto/create-payroll-override.dto';
 import { UpdatePayrollOverrideDto } from './dto/update-payroll-override.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class PayrollOverridesController {
     private readonly payrollOverridesService;
     constructor(payrollOverridesService: PayrollOverridesService);

@@ -6,13 +6,13 @@ import {
 } from '@nestjs/common';
 import { holidays } from '../schema/holidays.schema';
 import { ConfigService } from '@nestjs/config';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import axios from 'axios';
 import { and, eq, gte, isNull, lte, or, asc, inArray } from 'drizzle-orm';
 import { CreateHolidayDto } from './dto/create-holiday.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { UpdateHolidayDto } from './dto/update-holiday.dto';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';

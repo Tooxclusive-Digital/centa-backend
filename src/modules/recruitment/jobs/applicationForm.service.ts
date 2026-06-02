@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { application_form_fields } from './schema/application-form-fields.schema';
 import { application_form_questions } from './schema/application-form-questions.schema';
 import { application_form_configs } from './schema/application-form-configs.schema';
 import { eq, asc } from 'drizzle-orm';
 import { CreateFieldDto } from './dto/create-field.dto';
 import { CreateQuestionDto } from './dto/create-question.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { application_field_definitions } from './schema/application-field-definitions.schema';
 import { CacheService } from 'src/common/cache/cache.service';
 

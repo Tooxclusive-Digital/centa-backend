@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateQuestionsDto } from './dto/create-questions.dto';
 import { UpdateQuestionsDto } from './dto/update-questions.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class PerformanceReviewQuestionService {
     private readonly db;
     private readonly auditService;

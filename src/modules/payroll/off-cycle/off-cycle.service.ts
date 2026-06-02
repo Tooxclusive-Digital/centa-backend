@@ -1,12 +1,12 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateOffCycleDto } from './dto/create-off-cycle.dto';
 // import { UpdateOffCycleDto } from './dto/update-off-cycle.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { eq, and, sql, lt } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { offCyclePayroll } from './schema/off-cycle.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { v4 as uuidv4 } from 'uuid';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
 import Decimal from 'decimal.js';

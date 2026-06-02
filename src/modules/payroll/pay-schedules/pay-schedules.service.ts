@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreatePayScheduleDto } from './dto/create-pay-schedule.dto';
 import { paySchedules } from '../schema/pay-schedules.schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
 import axios from 'axios';
@@ -14,7 +14,7 @@ import {
   addMonths,
   endOfMonth,
 } from 'date-fns';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { payGroups } from '../schema/pay-groups.schema';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 import { CacheService } from 'src/common/cache/cache.service';

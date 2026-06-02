@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import {
   companyRolePermissions,
@@ -15,7 +15,7 @@ import {
 import { and, eq, inArray } from 'drizzle-orm';
 import { CacheService } from 'src/common/cache/cache.service';
 import { DefaultRolePermissions, PermissionKeys } from './permission-keys';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { companies } from 'src/drizzle/schema';
 

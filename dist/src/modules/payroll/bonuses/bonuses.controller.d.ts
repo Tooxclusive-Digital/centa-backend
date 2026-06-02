@@ -1,7 +1,7 @@
 import { BonusesService } from './bonuses.service';
 import { CreateBonusDto } from './dto/create-bonus.dto';
 import { UpdateBonusDto } from './dto/update-bonus.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class BonusesController extends BaseController {
     private readonly bonusesService;

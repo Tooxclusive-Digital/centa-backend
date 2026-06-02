@@ -1,6 +1,6 @@
 import { PerformanceSettingsService } from './performance-settings.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class PerformanceSettingsController extends BaseController {
     private readonly performanceSettingsService;
     constructor(performanceSettingsService: PerformanceSettingsService);

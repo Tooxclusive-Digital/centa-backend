@@ -12,7 +12,7 @@ import {
 import { PermissionsService } from './permissions.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CurrentUser } from '../decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdateCompanyPermissionsDto } from './dto/update-company-permission.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';

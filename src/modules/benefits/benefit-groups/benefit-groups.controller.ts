@@ -12,7 +12,7 @@ import {
 import { BenefitGroupsService } from './benefit-groups.service';
 import { CreateBenefitGroupDto } from './dto/create-benefit-group.dto';
 import { UpdateBenefitGroupDto } from './dto/update-benefit-group.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { BaseController } from 'src/common/interceptor/base.controller';

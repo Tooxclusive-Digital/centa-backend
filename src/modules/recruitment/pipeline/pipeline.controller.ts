@@ -15,7 +15,7 @@ import { UpdatePipelineDto } from './dto/update-pipeline.dto';
 import { PipelineSeederService } from './pipeline-seeder.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 
 @Controller('pipeline')

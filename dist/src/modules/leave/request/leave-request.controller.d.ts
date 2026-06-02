@@ -1,4 +1,4 @@
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
 import { LeaveRequestService } from './leave-request.service';
@@ -29,7 +29,7 @@ export declare class LeaveRequestController extends BaseController {
     getAllLeaveRequests(user: User): Promise<({
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -41,7 +41,7 @@ export declare class LeaveRequestController extends BaseController {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -53,7 +53,7 @@ export declare class LeaveRequestController extends BaseController {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -65,7 +65,7 @@ export declare class LeaveRequestController extends BaseController {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;

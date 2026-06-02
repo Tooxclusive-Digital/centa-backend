@@ -2,9 +2,9 @@ import { CreateCostCenterDto } from './dto/create-cost-center.dto';
 import { UpdateCostCenterDto } from './dto/update-cost-center.dto';
 import { BaseCrudService } from 'src/common/services/base-crud.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { costCenters } from '../schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class CostCentersService extends BaseCrudService<{

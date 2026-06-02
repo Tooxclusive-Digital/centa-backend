@@ -3,7 +3,7 @@ import { CreatePipelineDto } from './dto/create-pipeline.dto';
 import { UpdatePipelineDto } from './dto/update-pipeline.dto';
 import { PipelineSeederService } from './pipeline-seeder.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class PipelineController extends BaseController {
     private readonly pipelineService;
     private readonly pipelineSeedService;
@@ -30,7 +30,7 @@ export declare class PipelineController extends BaseController {
         description: string | null;
         isGlobal: boolean | null;
         createdAt: Date | null;
-        stageCount: number;
+        stageCount: any;
     }[]>;
     findOne(id: string): Promise<{
         stages: {

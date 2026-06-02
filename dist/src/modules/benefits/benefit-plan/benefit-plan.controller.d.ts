@@ -2,7 +2,7 @@ import { BenefitPlanService } from './benefit-plan.service';
 import { CreateBenefitPlanDto } from './dto/create-benefit-plan.dto';
 import { UpdateBenefitPlanDto } from './dto/update-benefit-plan.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { EnrollBenefitPlanDto } from './dto/enroll-employee.dto';
 import { SingleEnrollBenefitDto } from './dto/single-employee-enroll.dto';
 export declare class BenefitPlanController extends BaseController {
@@ -76,7 +76,7 @@ export declare class BenefitPlanController extends BaseController {
         planName: string;
         category: string;
         selectedCoverage: string;
-        monthlyCost: string;
+        monthlyCost: any;
         startDate: Date;
         endDate: Date | null;
     }[]>;

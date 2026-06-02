@@ -3,7 +3,7 @@ import { OpenAI } from 'openai';
 import axios from 'axios';
 import * as pdfParse from 'pdf-parse';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { applications } from '../schema';
 import { eq } from 'drizzle-orm';
 

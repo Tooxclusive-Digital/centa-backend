@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateAppraisalDto } from './dto/create-appraisal.dto';
 import { UpdateAppraisalDto } from './dto/update-appraisal.dto';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
@@ -28,8 +28,8 @@ export declare class AppraisalsService {
     findAll(companyId: string, cycleId: string): Promise<({
         id: string;
         employeeId: string;
-        employeeName: string;
-        managerName: string;
+        employeeName: any;
+        managerName: any;
         submittedByEmployee: boolean | null;
         submittedByManager: boolean | null;
         finalized: boolean | null;
@@ -39,8 +39,8 @@ export declare class AppraisalsService {
     } | {
         id: string;
         employeeId: string;
-        employeeName: string;
-        managerName: string;
+        employeeName: any;
+        managerName: any;
         submittedByEmployee: boolean | null;
         submittedByManager: boolean | null;
         finalized: boolean | null;
@@ -72,8 +72,8 @@ export declare class AppraisalsService {
             submittedByManager: boolean | null;
             finalized: boolean | null;
             finalScore: number | null;
-            employeeName: string;
-            managerName: string;
+            employeeName: any;
+            managerName: any;
             departmentName: any;
             jobRoleName: string | null;
         }[];
@@ -81,8 +81,8 @@ export declare class AppraisalsService {
     findOne(id: string, companyId: string): Promise<{
         id: string;
         cycleId: string;
-        employeeName: string;
-        managerName: string;
+        employeeName: any;
+        managerName: any;
         submittedByEmployee: boolean | null;
         submittedByManager: boolean | null;
         finalized: boolean | null;
@@ -94,8 +94,8 @@ export declare class AppraisalsService {
     } | {
         id: string;
         cycleId: string;
-        employeeName: string;
-        managerName: string;
+        employeeName: any;
+        managerName: any;
         submittedByEmployee: boolean | null;
         submittedByManager: boolean | null;
         finalized: boolean | null;

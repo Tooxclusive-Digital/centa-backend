@@ -1,8 +1,8 @@
 import { CreateBlockedDayDto } from './dto/create-blocked-day.dto';
 import { UpdateBlockedDayDto } from './dto/update-blocked-day.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class BlockedDaysService {
     private db;
@@ -25,7 +25,7 @@ export declare class BlockedDaysService {
         date: string;
         reason: string | null;
         createdAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         name: string;
     }[]>;
     findOne(id: string, companyId: string): Promise<{

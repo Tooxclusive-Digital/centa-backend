@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { onboardingTemplates } from './schema/onboarding-templates.schema';
 import { onboardingTemplateChecklists } from './schema/onboarding-template-checklists.schema';
 import { onboardingTemplateFields } from './schema/onboarding-template-fields.schema';

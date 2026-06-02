@@ -1,5 +1,5 @@
 import { OffboardingConfigService } from './offboarding-config.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { OffboardingSeederService } from './offboarding-seeder.service';
 import { CreateOffboardingConfigDto } from './dto/create-offboarding-config.dto';
 import { UpdateOffboardingConfigDto } from './dto/update-offboarding-config.dto';

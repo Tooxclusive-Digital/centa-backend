@@ -1,8 +1,8 @@
 import { CreateCompanyTaxDto } from './dto/create-company-tax.dto';
 import { UpdateCompanyTaxDto } from './dto/update-company-tax.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 export declare class CompanyTaxService {
     private readonly db;

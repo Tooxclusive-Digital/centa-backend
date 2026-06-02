@@ -140,7 +140,7 @@ let AppraisalEntriesService = class AppraisalEntriesService {
             .values({
             appraisalId,
             competencyId: dto.competencyId,
-            expectedLevelId: dto.expectedLevelId ?? null,
+            expectedLevelId: dto.expectedLevelId,
             employeeLevelId: dto.employeeLevelId ?? null,
             managerLevelId: dto.managerLevelId ?? null,
             notes: dto.notes ?? null,
@@ -186,10 +186,10 @@ let AppraisalEntriesService = class AppraisalEntriesService {
                     await trx.insert(performance_appraisals_entries_schema_1.appraisalEntries).values({
                         appraisalId,
                         competencyId: dto.competencyId,
-                        expectedLevelId: dto.expectedLevelId ?? null,
-                        employeeLevelId: dto.employeeLevelId ?? null,
-                        managerLevelId: dto.managerLevelId ?? null,
-                        notes: dto.notes ?? null,
+                        expectedLevelId: dto.expectedLevelId,
+                        employeeLevelId: dto.employeeLevelId ?? undefined,
+                        managerLevelId: dto.managerLevelId ?? undefined,
+                        notes: dto.notes ?? undefined,
                     });
                 }
             }

@@ -1,7 +1,7 @@
 import { UserService } from './user.service';
 import { TokenGeneratorService } from './token-generator.service';
 import { LoginDto } from '../dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { Response } from 'express';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { JwtType } from '../types/user.type';

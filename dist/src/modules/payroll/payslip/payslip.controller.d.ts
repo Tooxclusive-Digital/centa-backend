@@ -1,5 +1,5 @@
 import { PayslipService } from './payslip.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class PayslipController extends BaseController {
     private readonly payslipService;
@@ -80,14 +80,14 @@ export declare class PayslipController extends BaseController {
         voluntaryDeductions: unknown;
     }[]>;
     getEmployeePayslip(payslipId: string): Promise<{
-        ytdPension: number;
-        ytdNhf: number;
-        ytdPaye: number;
-        ytdGross: number;
-        ytdNet: number;
-        ytdBasic: number;
-        ytdHousing: number;
-        ytdTransport: number;
+        ytdPension: any;
+        ytdNhf: any;
+        ytdPaye: any;
+        ytdGross: any;
+        ytdNet: any;
+        ytdBasic: any;
+        ytdHousing: any;
+        ytdTransport: any;
         id: string;
         issued_at: string | null;
         status: string | null;
@@ -114,14 +114,14 @@ export declare class PayslipController extends BaseController {
         payment_date: string | null;
         reimbursement: unknown;
     } | {
-        ytdPension: number;
-        ytdNhf: number;
-        ytdPaye: number;
-        ytdGross: number;
-        ytdNet: number;
-        ytdBasic: number;
-        ytdHousing: number;
-        ytdTransport: number;
+        ytdPension: any;
+        ytdNhf: any;
+        ytdPaye: any;
+        ytdGross: any;
+        ytdNet: any;
+        ytdBasic: any;
+        ytdHousing: any;
+        ytdTransport: any;
         id: string;
         issued_at: string | null;
         status: string | null;

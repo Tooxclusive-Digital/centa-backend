@@ -1,7 +1,7 @@
 import { AssetsRequestService } from './assets-request.service';
 import { CreateAssetsRequestDto } from './dto/create-assets-request.dto';
 import { UpdateAssetsRequestDto } from './dto/update-assets-request.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class AssetsRequestController extends BaseController {
     private readonly assetsRequestService;
@@ -29,7 +29,7 @@ export declare class AssetsRequestController extends BaseController {
         status: string | null;
         requestDate: string;
         createdAt: Date | null;
-        employeeName: unknown;
+        employeeName: any;
         employeeEmail: any;
     } | {
         id: string;
@@ -40,7 +40,7 @@ export declare class AssetsRequestController extends BaseController {
         status: string | null;
         requestDate: string;
         createdAt: Date | null;
-        employeeName: unknown;
+        employeeName: any;
         employeeEmail: any;
     })[]>;
     findOne(id: string): Promise<{

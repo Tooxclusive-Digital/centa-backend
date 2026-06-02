@@ -149,5 +149,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "overrides": {
+    "drizzle-orm": "^0.39.3"
   }
 }

@@ -1,6 +1,6 @@
 import { ClockInOutService } from './clock-in-out.service';
 import { CreateClockInOutDto } from './dto/create-clock-in-out.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AdjustAttendanceDto } from './dto/adjust-attendance.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class ClockInOutController extends BaseController {

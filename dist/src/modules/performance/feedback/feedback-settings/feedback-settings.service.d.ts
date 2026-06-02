@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { UpdateFeedbackRuleDto } from '../dto/update-feedback-rule.dto';
 import { UpdateFeedbackSettingsDto } from '../dto/update-feedback-settings.dto';
 import { CacheService } from 'src/common/cache/cache.service';

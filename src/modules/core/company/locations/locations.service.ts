@@ -7,12 +7,12 @@ import {
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { eq, and } from 'drizzle-orm';
 import { companyLocations } from '../schema/company-location.schema';
 import { companies } from '../schema/company.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { locationManagers } from '../schema/location-managers.schema';
 import { employees } from '../../schema';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';

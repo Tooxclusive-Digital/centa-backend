@@ -1,7 +1,7 @@
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateEmployeeShiftDto } from './dto/create-employee-shift.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { UpdateEmployeeShiftDto } from './dto/update-employee-shift.dto';
 import { CacheService } from 'src/common/cache/cache.service';
 type CalendarEvent = {
@@ -67,13 +67,13 @@ export declare class EmployeeShiftsService {
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     listAllPaginated(companyId: string, { page, limit, search, shiftId, }: {
         page?: number;
@@ -86,13 +86,13 @@ export declare class EmployeeShiftsService {
             employeeId: string;
             shiftId: string | null;
             shiftDate: string;
-            employeeName: string;
+            employeeName: any;
         } | {
             id: string;
             employeeId: string;
             shiftId: string | null;
             shiftDate: string;
-            employeeName: string;
+            employeeName: any;
         })[];
         pagination: {
             total: number;
@@ -106,26 +106,26 @@ export declare class EmployeeShiftsService {
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     }>;
     listByEmployee(companyId: string, employeeId: string): Promise<({
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getActiveShiftForEmployee(employeeId: string, companyId: string, date: string): Promise<{
         id: string;
@@ -156,13 +156,13 @@ export declare class EmployeeShiftsService {
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
         shiftId: string | null;
         shiftDate: string;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     getCalendarEvents(companyId: string, from: string, to: string): Promise<Record<string, CalendarEvent[]>>;
 }

@@ -2,7 +2,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BaseCrudService } from 'src/common/services/base-crud.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { jobRoles } from '../schema';
 import { eq, and } from 'drizzle-orm';

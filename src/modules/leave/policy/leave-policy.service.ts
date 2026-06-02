@@ -7,8 +7,8 @@ import {
 import { eq, and } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { leavePolicies } from '../schema/leave-policies.schema';
 import { CreateLeavePolicyDto } from './dto/create-leave-policy.dto';
 import { UpdateLeavePolicyDto } from './dto/update-leave-policy.dto';

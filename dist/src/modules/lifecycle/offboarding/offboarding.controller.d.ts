@@ -1,7 +1,7 @@
 import { OffboardingService } from './offboarding.service';
 import { UpdateOffboardingDto } from './dto/update-offboarding.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateOffboardingBeginDto } from './dto/create-offboarding.dto';
 import { AddOffboardingDetailsDto } from './dto/add-offboarding-details.dto';
 export declare class OffboardingController extends BaseController {
@@ -40,7 +40,7 @@ export declare class OffboardingController extends BaseController {
         startedAt: Date | null;
         completedAt: Date | null;
         notes: string | null;
-        employeeName: unknown;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
@@ -53,7 +53,7 @@ export declare class OffboardingController extends BaseController {
         startedAt: Date | null;
         completedAt: Date | null;
         notes: string | null;
-        employeeName: unknown;
+        employeeName: any;
     }>;
     findAll(user: User): Promise<{
         id: string;

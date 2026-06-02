@@ -1,7 +1,7 @@
 import { CompensationService } from './compensation.service';
 import { CreateCompensationDto } from './dto/create-compensation.dto';
 import { UpdateCompensationDto } from './dto/update-compensation.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class CompensationController extends BaseController {
     private readonly compensationService;

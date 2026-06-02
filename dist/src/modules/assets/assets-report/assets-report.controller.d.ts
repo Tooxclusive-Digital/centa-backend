@@ -1,6 +1,6 @@
 import { AssetsReportService } from './assets-report.service';
 import { CreateAssetsReportDto } from './dto/create-assets-report.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class AssetsReportController extends BaseController {
     private readonly assetsReportService;
@@ -26,7 +26,7 @@ export declare class AssetsReportController extends BaseController {
         description: string;
         documentUrl: string | null;
         reportedAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         employeeEmail: any;
         assetName: string | null;
         status: string | null;
@@ -39,7 +39,7 @@ export declare class AssetsReportController extends BaseController {
         description: string;
         documentUrl: string | null;
         reportedAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         employeeEmail: any;
         assetName: string | null;
         status: string | null;

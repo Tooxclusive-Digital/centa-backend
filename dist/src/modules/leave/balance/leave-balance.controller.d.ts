@@ -1,5 +1,5 @@
 import { LeaveBalanceService } from './leave-balance.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { LeaveAccrualCronService } from './leave-accrual.cron';
 export declare class LeaveBalanceController extends BaseController {
@@ -12,31 +12,31 @@ export declare class LeaveBalanceController extends BaseController {
     findAll(user: User): Promise<({
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     })[]>;
     findEmployeeLeaveBalance(user: User, employeeId: string): Promise<{
         leaveTypeId: string;

@@ -4,10 +4,10 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { eq, and, or } from 'drizzle-orm';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { roleCompetencyExpectations } from '../schema/performance-competency-role-expectations.schema';
 import { CreateRoleExpectationDto } from './dto/create-role-expectation.dto';
 import { UpdateRoleExpectationDto } from './dto/update-role-expectation.dto';

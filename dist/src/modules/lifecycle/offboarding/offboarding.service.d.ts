@@ -1,8 +1,8 @@
 import { CreateOffboardingBeginDto } from './dto/create-offboarding.dto';
 import { UpdateOffboardingDto } from './dto/update-offboarding.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AddOffboardingDetailsDto } from './dto/add-offboarding-details.dto';
 export declare class OffboardingService {
     private readonly db;
@@ -37,7 +37,7 @@ export declare class OffboardingService {
         startedAt: Date | null;
         completedAt: Date | null;
         notes: string | null;
-        employeeName: unknown;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
@@ -50,7 +50,7 @@ export declare class OffboardingService {
         startedAt: Date | null;
         completedAt: Date | null;
         notes: string | null;
-        employeeName: unknown;
+        employeeName: any;
     }>;
     findAll(companyId: string): Promise<{
         id: string;

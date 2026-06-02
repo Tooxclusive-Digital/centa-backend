@@ -1,7 +1,7 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { EmployeesService } from 'src/modules/core/employees/employees.service';
 import { CacheService } from 'src/common/cache/cache.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AttendanceLocationService } from './attendance-location.service';
 export declare class BreaksService {
     private readonly db;

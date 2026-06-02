@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { employees, departments, jobRoles, users } from 'src/drizzle/schema';
 import { OrgChartNodeDto } from './dto/org-chart-node.dto';
 

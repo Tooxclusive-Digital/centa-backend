@@ -13,7 +13,7 @@ import { AllowancesService } from './allowances.service';
 import { CreateAllowanceDto } from './dto/create-allowance.dto';
 import { UpdateAllowanceDto } from './dto/update-allowance.dto';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 
 @Controller('payroll-allowances')

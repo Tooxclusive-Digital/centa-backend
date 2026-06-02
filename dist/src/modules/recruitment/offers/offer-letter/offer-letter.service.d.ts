@@ -1,7 +1,7 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateOfferTemplateDto } from './dto/create-offer-template.dto';
 import { UpdateOfferTemplateDto } from './dto/update-offer-template.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class OfferLetterService {

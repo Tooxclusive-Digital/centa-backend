@@ -14,7 +14,7 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { ApplicationFormService } from './applicationForm.service';
 import { ConfigDto } from './dto/config.dto';

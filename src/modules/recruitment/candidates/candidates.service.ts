@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { candidate_skills, candidates, skills } from '../schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, ilike, or, asc, desc } from 'drizzle-orm';
 import { CacheService } from 'src/common/cache/cache.service';
 

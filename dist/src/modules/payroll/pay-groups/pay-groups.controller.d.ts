@@ -1,7 +1,7 @@
 import { PayGroupsService } from './pay-groups.service';
 import { CreatePayGroupDto } from './dto/create-pay-group.dto';
 import { UpdatePayGroupDto } from './dto/update-pay-group.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class PayGroupsController extends BaseController {
     private readonly payGroupsService;

@@ -1,7 +1,7 @@
 // src/hiring-checklist/hiring-checklist.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray } from 'drizzle-orm';
 import { checklistCompletion } from '../schema/checklist.schema';
 import { TaskStatus } from '../constants/constants';

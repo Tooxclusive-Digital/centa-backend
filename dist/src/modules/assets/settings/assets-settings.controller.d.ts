@@ -1,5 +1,5 @@
 import { AssetsSettingsService } from './assets-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class AssetsSettingsController extends BaseController {
     private readonly assetsSettingsService;

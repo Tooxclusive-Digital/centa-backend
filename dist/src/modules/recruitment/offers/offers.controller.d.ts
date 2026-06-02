@@ -1,6 +1,6 @@
 import { OffersService } from './offers.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GetOfferTemplateVariablesDto } from './dto/get-offer-template-variables.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { UpdateOfferDto } from './dto/update-offer.dto';

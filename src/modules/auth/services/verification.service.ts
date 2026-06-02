@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { TokenDto } from '../dto';
 import { users, verificationToken } from '../schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { EmailVerificationService } from 'src/modules/notification/services/email-verification.service';
 
 @Injectable()

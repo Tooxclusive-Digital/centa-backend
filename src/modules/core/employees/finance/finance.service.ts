@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { eq } from 'drizzle-orm';
 import { employeeFinancials } from '../schema/finance.schema';

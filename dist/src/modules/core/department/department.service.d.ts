@@ -1,6 +1,6 @@
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AssignCostCenterDto } from './dto/assign-cost-center.dto';
 import { AssignParentDto } from './dto/assign-parent.dto';
 import { BaseCrudService } from 'src/common/services/base-crud.service';
@@ -49,48 +49,28 @@ export declare class DepartmentService extends BaseCrudService<UpdateDepartmentD
         description: any;
     }[]>;
     findAll(companyId: string): Promise<({
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
         description: any;
         createdAt: any;
     } | {
-        head: {
-            id: any;
-            name: unknown;
-            email: any;
-            avatarUrl: string | null;
-        } | null;
+        head: any;
         employees: any[];
         id: any;
         name: any;
@@ -158,208 +138,8 @@ export declare class DepartmentService extends BaseCrudService<UpdateDepartmentD
         id: any;
     }>;
     private parentDept;
-    findOneWithRelations(companyId: string, id: string): Promise<{
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        };
-        parent: {
-            id: any;
-            name: any;
-        };
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        };
-        parent: {
-            id: any;
-            name: any;
-        };
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        } | null;
-        parent: {
-            id: any;
-            name: any;
-        } | null;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: never;
-        parent: never;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        } | null;
-        parent: {
-            id: any;
-            name: any;
-        } | null;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: never;
-        parent: never;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    }>;
-    findAllWithRelations(companyId: string): Promise<({
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        };
-        parent: {
-            id: any;
-            name: any;
-        };
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        };
-        parent: {
-            id: any;
-            name: any;
-        };
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        } | null;
-        parent: {
-            id: any;
-            name: any;
-        } | null;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: never;
-        parent: never;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: {
-            id: any;
-            firstName: any;
-            lastName: any;
-        } | null;
-        parent: {
-            id: any;
-            name: any;
-        } | null;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    } | {
-        id: any;
-        name: any;
-        description: any;
-        head: never;
-        parent: never;
-        costCenter: {
-            id: string;
-            code: string;
-            name: string;
-            budget: number;
-        } | null;
-    })[]>;
+    findOneWithRelations(companyId: string, id: string): Promise<any>;
+    findAllWithRelations(companyId: string): Promise<any[]>;
     getHierarchy(companyId: string): Promise<(DeptWithRelations & {
         children: any[];
     })[]>;

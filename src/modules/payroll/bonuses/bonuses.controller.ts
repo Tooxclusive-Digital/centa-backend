@@ -13,7 +13,7 @@ import { BonusesService } from './bonuses.service';
 import { CreateBonusDto } from './dto/create-bonus.dto';
 import { UpdateBonusDto } from './dto/update-bonus.dto';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { BaseController } from 'src/common/interceptor/base.controller';
 

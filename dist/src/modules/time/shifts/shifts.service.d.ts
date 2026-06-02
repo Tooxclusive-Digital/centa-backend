@@ -1,8 +1,8 @@
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CreateShiftDto } from './dto/create-shift.dto';
 import { UpdateShiftDto } from './dto/update-shift.dto';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class ShiftsService {
     private readonly auditService;

@@ -1,7 +1,7 @@
 import { CostCentersService } from './cost-centers.service';
 import { CreateCostCenterDto } from './dto/create-cost-center.dto';
 import { UpdateCostCenterDto } from './dto/update-cost-center.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class CostCentersController extends BaseController {
     private readonly costCentersService;

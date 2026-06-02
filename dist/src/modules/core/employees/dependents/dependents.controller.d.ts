@@ -1,7 +1,7 @@
 import { DependentsService } from './dependents.service';
 import { CreateDependentDto } from './dto/create-dependent.dto';
 import { UpdateDependentDto } from './dto/update-dependent.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class DependentsController extends BaseController {
     private readonly dependentsService;

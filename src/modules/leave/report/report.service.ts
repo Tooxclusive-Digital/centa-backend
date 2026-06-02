@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, SQL, sql } from 'drizzle-orm';
 import { leaveBalances } from '../schema/leave-balance.schema';
 import { leaveRequests } from '../schema/leave-requests.schema';

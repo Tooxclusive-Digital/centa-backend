@@ -12,7 +12,7 @@ import {
 import { FeedbackQuestionService } from './feedback-question.service';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateFeedbackQuestionDto } from '../dto/create-feedback-question.dto';
 import { UpdateFeedbackQuestionDto } from '../dto/update-feedback-question.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';

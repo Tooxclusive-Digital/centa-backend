@@ -1,7 +1,7 @@
 import { PinoLogger } from 'nestjs-pino';
 import { UsefulLifeService } from './useful-life.service';
-import { User } from 'src/common/types/user.type';
-import { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { UpdateAssetDto } from './dto/update-asset.dto';
 import { CreateAssetDto } from './dto/create-asset.dto';
@@ -91,7 +91,7 @@ export declare class AssetsService {
         warrantyExpiry: string | null;
         employeeId: string | null;
         locationId: string;
-        assignedTo: string;
+        assignedTo: any;
         assignedEmail: any;
         location: string;
         status: string;
@@ -114,7 +114,7 @@ export declare class AssetsService {
         warrantyExpiry: string | null;
         employeeId: string | null;
         locationId: string;
-        assignedTo: string;
+        assignedTo: any;
         assignedEmail: any;
         location: string;
         status: string;
@@ -155,7 +155,7 @@ export declare class AssetsService {
         location: string;
         status: string;
         internalId: string;
-        hasReport: boolean;
+        hasReport: any;
     } | {
         id: string;
         name: string;
@@ -166,7 +166,7 @@ export declare class AssetsService {
         location: string;
         status: string;
         internalId: string;
-        hasReport: boolean;
+        hasReport: any;
     })[]>;
     update(id: string, updateAssetDto: UpdateAssetDto, user: User): Promise<{
         id: string;

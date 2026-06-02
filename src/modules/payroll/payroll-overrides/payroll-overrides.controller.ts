@@ -12,7 +12,7 @@ import { PayrollOverridesService } from './payroll-overrides.service';
 import { CreatePayrollOverrideDto } from './dto/create-payroll-override.dto';
 import { UpdatePayrollOverrideDto } from './dto/update-payroll-override.dto';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 
 @Controller('payroll-overrides')

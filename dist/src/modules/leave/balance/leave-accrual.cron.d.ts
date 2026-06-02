@@ -2,7 +2,7 @@ import { LeavePolicyService } from '../policy/leave-policy.service';
 import { LeaveBalanceService } from './leave-balance.service';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CompanyService } from 'src/modules/core/company/company.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 export declare class LeaveAccrualCronService {
     private readonly leavePolicyService;
     private readonly leaveBalanceService;

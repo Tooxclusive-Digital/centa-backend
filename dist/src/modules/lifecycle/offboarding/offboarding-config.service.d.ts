@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { OffboardingChecklistItemDto } from './dto/offboarding-checklist.dto';
 import { CreateOffboardingConfigDto } from './dto/create-offboarding-config.dto';
 import { UpdateOffboardingConfigDto } from './dto/update-offboarding-config.dto';

@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
@@ -46,7 +46,7 @@ export declare class FeedbackService {
         id: string;
         type: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         questionsCount: number;
         departmentName: any;
@@ -55,12 +55,12 @@ export declare class FeedbackService {
         isArchived: boolean | null;
     }[]>;
     getCounts(companyId: string, expectedTypes?: string[]): Promise<{
-        all: number;
-        archived: number;
+        all: any;
+        archived: any;
     }>;
     getCountsForEmployee(companyId: string, employeeId: string, expectedTypes?: string[]): Promise<{
-        all: number;
-        archived: number;
+        all: any;
+        archived: any;
     }>;
     findAllByEmployeeId(companyId: string, employeeId: string, filters?: {
         type?: string;
@@ -68,7 +68,7 @@ export declare class FeedbackService {
         id: string;
         type: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         questionsCount: number;
         departmentName: any;
@@ -81,7 +81,7 @@ export declare class FeedbackService {
         type: string;
         createdAt: Date | null;
         isAnonymous: boolean | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         responses: {
             answer: string;

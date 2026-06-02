@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
 import { CompensationService } from 'src/modules/core/employees/compensation/compensation.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { TaxService } from '../tax/tax.service';
 import { Queue } from 'bullmq';
 import { PayslipService } from '../payslip/payslip.service';

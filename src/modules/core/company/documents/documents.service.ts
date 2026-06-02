@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { eq } from 'drizzle-orm';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { S3StorageService } from 'src/common/aws/s3-storage.service';
 import { companyFiles } from './schema/company-files.schema';
 

@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { CreateRoleExpectationDto } from './dto/create-role-expectation.dto';
 import { UpdateRoleExpectationDto } from './dto/update-role-expectation.dto';
 import { AuditService } from 'src/modules/audit/audit.service';

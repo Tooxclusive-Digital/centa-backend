@@ -1,12 +1,12 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and } from 'drizzle-orm';
 
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { employees } from 'src/drizzle/schema';
 import { payrollBonuses } from '../schema/payroll-bonuses.schema';
 

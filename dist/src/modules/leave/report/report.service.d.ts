@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { SearchLeaveReportsDto } from './dto/search-leave-report.dto';
 import { HolidaysService } from '../holidays/holidays.service';
 import { LeaveRequestService } from '../request/leave-request.service';
@@ -24,7 +24,7 @@ export declare class LeaveReportService {
         leaveRequests: ({
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -36,7 +36,7 @@ export declare class LeaveReportService {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -48,7 +48,7 @@ export declare class LeaveReportService {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -60,7 +60,7 @@ export declare class LeaveReportService {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -73,31 +73,31 @@ export declare class LeaveReportService {
         leaveBalances: ({
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         })[];
     }>;
     listEmployeeLeaveBalances(companyId: string): Promise<({
@@ -108,7 +108,7 @@ export declare class LeaveReportService {
         used: string;
         balance: string;
         year: number;
-        employeeName: string;
+        employeeName: any;
     } | {
         employeeId: string;
         leaveTypeId: string;
@@ -117,7 +117,7 @@ export declare class LeaveReportService {
         used: string;
         balance: string;
         year: number;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     listLeaveRequests(companyId: string, status?: 'pending' | 'approved' | 'rejected'): Promise<({
         requestId: string;
@@ -129,7 +129,7 @@ export declare class LeaveReportService {
         status: string;
         requestedAt: Date | null;
         rejectionReason: string | null;
-        employeeName: string;
+        employeeName: any;
     } | {
         requestId: string;
         employeeId: string;
@@ -140,14 +140,14 @@ export declare class LeaveReportService {
         status: string;
         requestedAt: Date | null;
         rejectionReason: string | null;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     departmentLeaveSummary(companyId: string): Promise<({
         departmentName: any;
-        totalLeaveDays: number;
+        totalLeaveDays: any;
     } | {
         departmentName: any;
-        totalLeaveDays: number;
+        totalLeaveDays: any;
     })[]>;
     pendingApprovalRequests(companyId: string): Promise<{
         id: string;
@@ -172,7 +172,7 @@ export declare class LeaveReportService {
     }[]>;
     searchLeaveReports(companyId: string, dto: SearchLeaveReportsDto): Promise<{
         leaveType: string;
-        totalLeaveDays: number;
+        totalLeaveDays: any;
     }[]>;
     generateLeaveBalanceReport(companyId: string): Promise<{
         leaveBalances: ({
@@ -183,7 +183,7 @@ export declare class LeaveReportService {
             used: string;
             balance: string;
             year: number;
-            employeeName: string;
+            employeeName: any;
         } | {
             employeeId: string;
             leaveTypeId: string;
@@ -192,20 +192,20 @@ export declare class LeaveReportService {
             used: string;
             balance: string;
             year: number;
-            employeeName: string;
+            employeeName: any;
         })[];
     }>;
     generateLeaveUtilizationReport(companyId: string, dto: SearchLeaveReportsDto): Promise<{
         leaveUtilization: {
             leaveType: string;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         }[];
         departmentUsage: ({
             departmentName: any;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         } | {
             departmentName: any;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         })[];
     }>;
     generateLeaveBalanceReportToS3(companyId: string, filters?: LeaveBalanceReportFilter): Promise<{

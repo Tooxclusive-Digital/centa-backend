@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray, sql, desc } from 'drizzle-orm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { performanceAssessments } from './schema/performance-assessments.schema';
@@ -30,7 +30,7 @@ import { assessmentResponses } from './schema/performance-assessment-responses.s
 import { performanceFeedback } from '../feedback/schema/performance-feedback.schema';
 import { ClockInOutService } from 'src/modules/time/clock-in-out/clock-in-out.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GetDashboardAssessmentsDto } from './dto/get-dashboard-assessments.dto';
 import { feedbackResponses } from '../feedback/schema/performance-feedback-responses.schema';
 import { assessmentConclusions } from './schema/performance-assessment-conclusions.schema';

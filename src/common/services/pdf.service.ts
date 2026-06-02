@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { S3Client } from '@aws-sdk/client-s3';
 import { PayslipService } from 'src/modules/payroll/payslip/payslip.service';
 import { AwsService } from '../aws/aws.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from '../../drizzle/drizzle.module';
 import { paySlips } from 'src/modules/payroll/schema/payslip.schema';
 import { eq } from 'drizzle-orm';

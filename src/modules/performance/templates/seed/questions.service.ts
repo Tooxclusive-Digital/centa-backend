@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { Inject } from '@nestjs/common';
 import { eq, or, and } from 'drizzle-orm';
@@ -11,7 +11,7 @@ import { CreateQuestionsDto } from './dto/create-questions.dto';
 import { performanceReviewQuestions } from '../schema/performance-review-questions.schema';
 import { UpdateQuestionsDto } from './dto/update-questions.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { performanceCompetencies } from '../schema/performance-competencies.schema';
 import { questions } from './defaults';
 

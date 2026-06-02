@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseFile = parseFile;
 const fs_1 = require("fs");
 const path_1 = require("path");
-const csvParser = require("csv-parser");
+const csvParser = require('csv-parser');
 const XLSX = require("xlsx");
 async function parseFile(filePath, originalName, maxRows) {
     const ext = (0, path_1.extname)(originalName).toLowerCase();

@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
 import { PusherService } from 'src/modules/notification/services/pusher.service';
 import { DeductionsService } from '../deductions/deductions.service';
@@ -12,13 +12,19 @@ export declare class TaxService {
         message: string;
     }>;
     private getCompany;
-    getCompanyTaxFilings(user_id: string): Promise<{
+    getCompanyTaxFilings(user_id: string): Promise<({
         id: string;
         tax_type: string;
-        total_deductions: number;
+        total_deductions: any;
         status: string | null;
         month: string;
-    }[]>;
+    } | {
+        id: any;
+        tax_type: string;
+        total_deductions: any;
+        status: string;
+        month: string;
+    })[]>;
     updateCompanyTaxFilings(tax_filing_id: string, status: string): Promise<{
         success: boolean;
     }>;

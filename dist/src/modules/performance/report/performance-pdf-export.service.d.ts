@@ -1,6 +1,6 @@
 import { ReportService } from './report.service';
 import { GetTopEmployeesDto } from './dto/get-top-employees.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GetAssessmentReportDto } from './dto/get-assessment-report.dto';
 import { GetFeedbackReportDto } from './dto/get-feedback-report.dto';
 import { GetGoalReportDto } from './dto/get-goal-report.dto';

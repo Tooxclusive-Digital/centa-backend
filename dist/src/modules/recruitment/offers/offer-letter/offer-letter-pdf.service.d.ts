@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AwsService } from 'src/common/aws/aws.service';
 export declare class OfferLetterPdfService {
     private readonly db;

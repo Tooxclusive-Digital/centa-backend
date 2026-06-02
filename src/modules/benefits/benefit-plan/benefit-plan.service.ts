@@ -3,9 +3,9 @@ import { CreateBenefitPlanDto } from './dto/create-benefit-plan.dto';
 import { UpdateBenefitPlanDto } from './dto/update-benefit-plan.dto';
 import { eq, and, sql } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { benefitPlans } from '../schema/benefit-plan.schema';
 import { benefitEnrollments } from '../schema/benefit-enrollments.schema';
 import {

@@ -1,6 +1,6 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateAppraisalCycleDto } from './dto/create-appraisal-cycle.dto';
 import { UpdateAppraisalCycleDto } from './dto/update-appraisal-cycle.dto';
 import { CacheService } from 'src/common/cache/cache.service';

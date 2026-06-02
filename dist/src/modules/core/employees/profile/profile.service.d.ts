@@ -1,5 +1,5 @@
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 export declare class ProfileService {
     private readonly db;

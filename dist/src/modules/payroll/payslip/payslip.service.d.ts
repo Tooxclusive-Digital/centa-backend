@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { Queue } from 'bullmq';
 import { CacheService } from 'src/common/cache/cache.service';
 import { AwsService } from 'src/common/aws/aws.service';
@@ -85,14 +85,14 @@ export declare class PayslipService {
         voluntaryDeductions: unknown;
     }[]>;
     getEmployeePayslip(payslip_id: string): Promise<{
-        ytdPension: number;
-        ytdNhf: number;
-        ytdPaye: number;
-        ytdGross: number;
-        ytdNet: number;
-        ytdBasic: number;
-        ytdHousing: number;
-        ytdTransport: number;
+        ytdPension: any;
+        ytdNhf: any;
+        ytdPaye: any;
+        ytdGross: any;
+        ytdNet: any;
+        ytdBasic: any;
+        ytdHousing: any;
+        ytdTransport: any;
         id: string;
         issued_at: string | null;
         status: string | null;
@@ -119,14 +119,14 @@ export declare class PayslipService {
         payment_date: string | null;
         reimbursement: unknown;
     } | {
-        ytdPension: number;
-        ytdNhf: number;
-        ytdPaye: number;
-        ytdGross: number;
-        ytdNet: number;
-        ytdBasic: number;
-        ytdHousing: number;
-        ytdTransport: number;
+        ytdPension: any;
+        ytdNhf: any;
+        ytdPaye: any;
+        ytdGross: any;
+        ytdNet: any;
+        ytdBasic: any;
+        ytdHousing: any;
+        ytdTransport: any;
         id: string;
         issued_at: string | null;
         status: string | null;

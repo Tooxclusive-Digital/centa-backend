@@ -142,11 +142,16 @@ let PipelineSeederService = class PipelineSeederService {
         const template = await this.db.query.pipeline_templates.findFirst({
             where: (tpl, { eq }) => eq(tpl.id, templateId),
         });
+        const stagesQuery = await this.db
+            .select()
+            .from(pipeline_templates_schema_1.pipeline_template_stages)
+            .where((0, drizzle_orm_1.eq)(pipeline_templates_schema_1.pipeline_template_stages.templateId, templateId))
+            .orderBy((s) => s.order);
         if (!template) {
             throw new common_1.BadRequestException(`Template not found`);
         }
         const stages = await this.db.query.pipeline_template_stages.findMany({
-            where: (s, { eq }) => eq(s.templateId, templateId),
+            where: (0, drizzle_orm_1.eq)(pipeline_templates_schema_1.pipeline_template_stages.templateId, templateId),
             orderBy: (s, { asc }) => asc(s.order),
         });
         const now = new Date();

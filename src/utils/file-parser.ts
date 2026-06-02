@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { createReadStream } from 'fs';
 import { extname } from 'path';
-import * as csvParser from 'csv-parser';
+const csvParser = require('csv-parser');
 import * as XLSX from 'xlsx';
 
 /**

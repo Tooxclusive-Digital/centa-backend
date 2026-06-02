@@ -1,5 +1,5 @@
 import { AuditService } from './audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class AuditController extends BaseController {
     private readonly auditService;
@@ -13,7 +13,7 @@ export declare class AuditController extends BaseController {
         details: string | null;
         changes: unknown;
         ipAddress: string | null;
-        name: unknown;
+        name: any;
         role: string;
     }[]>;
     getAuthenticationLogs(user: User): Promise<{
@@ -25,7 +25,7 @@ export declare class AuditController extends BaseController {
         details: string | null;
         changes: unknown;
         ipAddress: string | null;
-        name: unknown;
+        name: any;
         role: string;
     }[]>;
 }

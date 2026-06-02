@@ -13,7 +13,7 @@ import {
 } from 'src/drizzle/schema';
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import { payroll } from '../schema/payroll-run.schema';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { payrollYtd } from '../schema/payroll-ytd.schema';
 import { ExportMatrixUtil } from 'src/utils/export-matrix-to-csv';

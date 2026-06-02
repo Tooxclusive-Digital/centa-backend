@@ -1,5 +1,5 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and, sql, desc, not } from 'drizzle-orm';
 import { companyRoles, employees, users } from 'src/drizzle/schema';
 import { CacheService } from 'src/common/cache/cache.service';
@@ -15,7 +15,7 @@ import {
 } from './dto/create-salary-advance.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PusherService } from 'src/modules/notification/services/pusher.service';
 import { employeeCompensations } from 'src/modules/core/employees/schema/compensation.schema';
 import Decimal from 'decimal.js';

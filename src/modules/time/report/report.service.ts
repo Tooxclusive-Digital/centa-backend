@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import {
   eachDayOfInterval,

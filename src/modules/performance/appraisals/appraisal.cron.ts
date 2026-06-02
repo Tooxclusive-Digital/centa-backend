@@ -98,7 +98,7 @@ export class AutoCreatePerformanceCronService {
               `Created appraisal for ${employee.id} in ${company.name}`,
             );
             createdCount++;
-          } catch (error) {
+          } catch (error: any) {
             if (error?.message?.includes('already exists')) {
               this.logger.debug(
                 `Appraisal already exists for ${employee.id} in ${company.name}`,

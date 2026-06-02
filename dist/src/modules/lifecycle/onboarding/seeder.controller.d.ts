@@ -1,5 +1,5 @@
 import { OnboardingSeederService } from './seeder.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateOnboardingTemplateDto } from './dto/create-onboarding-template.dto';
 export declare class OnboardingSeederController extends BaseController {

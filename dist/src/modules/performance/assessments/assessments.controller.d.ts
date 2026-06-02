@@ -1,7 +1,7 @@
 import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { SubmitAssessmentDto } from './dto/submit-assessment.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { GetDashboardAssessmentsDto } from './dto/get-dashboard-assessments.dto';
 export declare class AssessmentsController extends BaseController {
@@ -27,8 +27,8 @@ export declare class AssessmentsController extends BaseController {
         id: string;
         type: "manager" | "self" | "peer";
         status: "in_progress" | "submitted" | "not_started" | null;
-        reviewer: string;
-        employee: string;
+        reviewer: any;
+        employee: any;
         departmentName: any;
         jobRoleName: string | null;
         createdAt: Date | null;

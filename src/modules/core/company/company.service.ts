@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import {
   companies,

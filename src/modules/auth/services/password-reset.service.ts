@@ -1,6 +1,6 @@
 // password-reset.service.ts
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { companyRoles, PasswordResetToken, users } from '../schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { Inject } from '@nestjs/common';

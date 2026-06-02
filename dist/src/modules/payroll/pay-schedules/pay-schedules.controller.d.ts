@@ -1,6 +1,6 @@
 import { PaySchedulesService } from './pay-schedules.service';
 import { CreatePayScheduleDto } from './dto/create-pay-schedule.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class PaySchedulesController extends BaseController {
     private readonly paySchedulesService;

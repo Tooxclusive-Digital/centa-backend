@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { users } from '../schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { EmailVerificationService } from 'src/modules/notification/services/email-verification.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';

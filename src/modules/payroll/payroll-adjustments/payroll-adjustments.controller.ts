@@ -13,7 +13,7 @@ import { PayrollAdjustmentsService } from './payroll-adjustments.service';
 import { CreatePayrollAdjustmentDto } from './dto/create-payroll-adjustment.dto';
 import { UpdatePayrollAdjustmentDto } from './dto/update-payroll-adjustment.dto';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 
 @Controller('payroll-adjustments')

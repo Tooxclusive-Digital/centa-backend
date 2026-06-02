@@ -6,7 +6,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray } from 'drizzle-orm';
 import * as jwt from 'jsonwebtoken';
 import { plainToInstance } from 'class-transformer';
@@ -30,7 +30,7 @@ import { CreateFinanceDto } from './finance/dto/create-finance.dto';
 import { CreateCompensationDto } from './compensation/dto/create-compensation.dto';
 import { PermissionsService } from 'src/modules/auth/permissions/permissions.service';
 import { payGroups } from 'src/modules/payroll/schema/pay-groups.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { employeeCompensations } from './schema/compensation.schema';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
@@ -95,10 +95,7 @@ export class EmployeesBulkImportWriteService {
     });
 
     if (!Array.isArray(rows) || rows.length === 0) {
-      this.logger.warn({
-        op: 'employees.bulkCreate.noRows',
-        companyId,
-      });
+      this.logger.warn({ op: 'employees.bulkCreate.noRows', companyId });
       throw new BadRequestException('No rows provided.');
     }
 
@@ -130,9 +127,7 @@ export class EmployeesBulkImportWriteService {
     const permissionRoles =
       await this.permissionService.getRolesByCompany(companyId);
 
-    this.logger.warn({
-      op: 'employees.bulkCreate.refsLoaded',
-      companyId,
+    console.log('[bulkCreate] refs loaded', {
       ms: Date.now() - tRefs0,
       departments: allDepts.length,
       jobRoles: allRoles.length,
@@ -167,7 +162,6 @@ export class EmployeesBulkImportWriteService {
     const empNums = rows
       .map((r) => this.asString(r['Employee Number']))
       .filter(Boolean) as string[];
-
     const emails = rows
       .map((r) => this.asString(r['Email'])?.toLowerCase())
       .filter(Boolean) as string[];
@@ -178,7 +172,11 @@ export class EmployeesBulkImportWriteService {
       );
     }
 
-    // ✅ NEW: preload existing users/employees for incremental import
+    console.log('[bulkCreate] checking DB duplicates', {
+      emailCount: emails.length,
+      empNumCount: empNums.length,
+    });
+
     const [existingUsers, existingEmpsByEmail, existingEmpsByEmpNo] =
       await Promise.all([
         this.db
@@ -188,7 +186,6 @@ export class EmployeesBulkImportWriteService {
             and(eq(users.companyId, companyId), inArray(users.email, emails)),
           )
           .execute(),
-
         this.db
           .select({
             id: employees.id,
@@ -204,7 +201,6 @@ export class EmployeesBulkImportWriteService {
             ),
           )
           .execute(),
-
         this.db
           .select({
             id: employees.id,
@@ -221,15 +217,18 @@ export class EmployeesBulkImportWriteService {
           .execute(),
       ]);
 
+    console.log('[bulkCreate] existing records found', {
+      existingUsers: existingUsers.length,
+      existingEmpsByEmail: existingEmpsByEmail.length,
+      existingEmpsByEmpNo: existingEmpsByEmpNo.length,
+    });
+
     const existingUserIdByEmail = new Map(
       existingUsers.map((u) => [u.email.toLowerCase(), u.id]),
     );
-
     const existingEmpByEmail = new Map(
       existingEmpsByEmail.map((e) => [e.email.toLowerCase(), e]),
     );
-
-    // ✅ Allow same email (update path), but block employeeNumber reused by another email
     const empNoOwnerByEmpNo = new Map(
       existingEmpsByEmpNo.map((e) => [e.employeeNumber, e.email.toLowerCase()]),
     );
@@ -238,9 +237,7 @@ export class EmployeesBulkImportWriteService {
       const rowIndex = idx + 1;
       const email = this.asString(r['Email'])?.toLowerCase();
       const empNo = this.asString(r['Employee Number']);
-
       if (!email || !empNo) return;
-
       const ownerEmail = empNoOwnerByEmpNo.get(empNo);
       if (ownerEmail && ownerEmail !== email) {
         throw new BadRequestException(
@@ -257,13 +254,12 @@ export class EmployeesBulkImportWriteService {
       field: string;
       message: string;
     }> = [];
-
-    // ✅ HoD tracking (PATCH)
     const hodByDepartment = new Map<string, string>();
+
+    console.log('[bulkCreate] parsing rows', { total: rows.length });
 
     for (const [index, row] of rows.entries()) {
       const rowIndex = index + 1;
-
       try {
         const email = this.asString(row['Email'])?.toLowerCase();
         const employeeNumber = this.asString(row['Employee Number']);
@@ -273,14 +269,12 @@ export class EmployeesBulkImportWriteService {
 
         const managerEmailRaw =
           this.asString(row['Manager Email'])?.toLowerCase() ?? null;
-
         if (managerEmailRaw && managerEmailRaw === email) {
           throw new BadRequestException(
             'An employee cannot be their own manager.',
           );
         }
 
-        // ✅ HoD flag (PATCH)
         const isHoDRaw =
           this.asString(row['Is Head of Department'])?.toLowerCase() ?? 'no';
         if (!['yes', 'no', 'true', 'false'].includes(isHoDRaw)) {
@@ -312,7 +306,6 @@ export class EmployeesBulkImportWriteService {
         if (!payGroupId)
           throw new BadRequestException(`Unknown Pay Group "${pgName}"`);
 
-        // ✅ Enforce one HoD per department (PATCH)
         if (isHeadOfDepartment) {
           if (hodByDepartment.has(departmentId)) {
             throw new BadRequestException(
@@ -352,22 +345,17 @@ export class EmployeesBulkImportWriteService {
 
         const finDto = plainToInstance(CreateFinanceDto, {});
 
-        // ✅ NEW: parse gross salary from CSV (ONLY change)
         const grossSalaryRaw = this.asString(row['Gross Salary']);
         if (!grossSalaryRaw)
           throw new BadRequestException('Gross Salary is required');
-
-        // allow values like "5,000,000" or "₦5,000,000"
         const grossSalaryCleaned = grossSalaryRaw.replace(/[^0-9.-]/g, '');
         const grossSalary = Number(grossSalaryCleaned);
-        if (!Number.isFinite(grossSalary)) {
+        if (!Number.isFinite(grossSalary))
           throw new BadRequestException(
             `Invalid Gross Salary "${grossSalaryRaw}"`,
           );
-        }
-        if (grossSalary < 0) {
+        if (grossSalary < 0)
           throw new BadRequestException('Gross Salary cannot be negative');
-        }
 
         const compDto = plainToInstance(CreateCompensationDto, {
           effectiveDate: employmentStartDate.toISOString(),
@@ -381,6 +369,13 @@ export class EmployeesBulkImportWriteService {
           throw new BadRequestException(this.formatValidationErrors(errors));
         }
 
+        console.log(`[bulkCreate] row ${rowIndex} parsed OK`, {
+          email,
+          employeeNumber,
+          isHeadOfDepartment,
+          companyRoleKey,
+        });
+
         imports.push({
           rowIndex,
           empDto,
@@ -393,6 +388,11 @@ export class EmployeesBulkImportWriteService {
           confirmed,
         });
       } catch (err: any) {
+        console.warn(`[bulkCreate] row ${rowIndex} FAILED`, {
+          error: err.message,
+          email: this.asString(row['Email']),
+          empNo: this.asString(row['Employee Number']),
+        });
         failedRows.push({
           rowIndex,
           employeeNumber: this.asString(row['Employee Number']),
@@ -402,13 +402,16 @@ export class EmployeesBulkImportWriteService {
       }
     }
 
+    console.log('[bulkCreate] parse complete', {
+      total: rows.length,
+      imports: imports.length,
+      failed: failedRows.length,
+      failedRows,
+    });
+
     if (!imports.length) {
-      console.log('ALL ROWS FAILED:', failedRows);
-
-      const firstError = failedRows[0];
-
       throw new BadRequestException({
-        message: `All rows failed validation. Example error (row ${firstError.rowIndex}): ${firstError.error}`,
+        message: `All rows failed validation. Example error (row ${failedRows[0].rowIndex}): ${failedRows[0].error}`,
         failedRows,
       });
     }
@@ -416,15 +419,18 @@ export class EmployeesBulkImportWriteService {
     const importsToUpdateEmp = imports.filter((i) =>
       existingEmpByEmail.has(i.email),
     );
-
     const importsToInsert = imports.filter(
       (i) => !existingEmpByEmail.has(i.email),
     );
-
-    // only create users for new employees without users
     const importsToCreateUsers = importsToInsert.filter(
       (i) => !existingUserIdByEmail.has(i.email),
     );
+
+    console.log('[bulkCreate] split', {
+      toInsert: importsToInsert.length,
+      toUpdate: importsToUpdateEmp.length,
+      toCreateUsers: importsToCreateUsers.length,
+    });
 
     // --- 4) Passwords
     const plainPasswords = importsToCreateUsers.map(() =>
@@ -435,27 +441,38 @@ export class EmployeesBulkImportWriteService {
     );
 
     // --- 5) Transaction
+    console.log('[bulkCreate] starting transaction');
+
     const result = await this.db.transaction(async (trx) => {
       // users
-      const createdUsers = await trx
-        .insert(users)
-        .values(
-          importsToCreateUsers.map((i, idx) => ({
-            email: i.email,
-            firstName: i.empDto.firstName,
-            lastName: i.empDto.lastName,
-            password: hashedPasswords[idx],
-            companyRoleId:
-              companyRoleMap.get(this.norm(i.companyRoleKey)) ??
-              companyRoleMap.get('employee')!,
-            companyId,
-          })),
-        )
-        .returning({ id: users.id, email: users.email })
-        .execute();
+      console.log('[bulkCreate:tx] inserting users', {
+        count: importsToCreateUsers.length,
+      });
+      const createdUsers =
+        importsToCreateUsers.length > 0
+          ? await trx
+              .insert(users)
+              .values(
+                importsToCreateUsers.map((i, idx) => ({
+                  email: i.email,
+                  firstName: i.empDto.firstName,
+                  lastName: i.empDto.lastName,
+                  password: hashedPasswords[idx],
+                  companyRoleId:
+                    companyRoleMap.get(this.norm(i.companyRoleKey)) ??
+                    companyRoleMap.get('employee')!,
+                  companyId,
+                })),
+              )
+              .returning({ id: users.id, email: users.email })
+              .execute()
+          : [];
 
-      const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
+      console.log('[bulkCreate:tx] users created', {
+        count: createdUsers.length,
+      });
 
+      const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000);
       const inviteTokens = createdUsers.map((u) => ({
         user_id: u.id,
         token: this.generateToken({
@@ -466,27 +483,47 @@ export class EmployeesBulkImportWriteService {
         expires_at,
         is_used: false,
       }));
-      await trx.insert(PasswordResetToken).values(inviteTokens).execute();
+
+      if (inviteTokens.length > 0) {
+        await trx.insert(PasswordResetToken).values(inviteTokens).execute();
+        console.log('[bulkCreate:tx] invite tokens inserted', {
+          count: inviteTokens.length,
+        });
+      }
 
       const userIdByEmail = new Map(existingUserIdByEmail);
       createdUsers.forEach((u) =>
         userIdByEmail.set(u.email.toLowerCase(), u.id),
       );
 
-      // employees
-      const createdEmps = await trx
-        .insert(employees)
-        .values(
-          imports.map((i) => ({
-            ...i.empDto,
-            userId: userIdByEmail.get(i.email)!,
-            companyId,
-            employmentStatus: i.empDto.employmentStatus as any,
-          })),
-        )
-        .returning({ id: employees.id, email: employees.email })
-        .execute();
+      // employees insert
+      console.log('[bulkCreate:tx] inserting employees', {
+        count: importsToInsert.length,
+      });
+      const createdEmps =
+        importsToInsert.length > 0
+          ? await trx
+              .insert(employees)
+              .values(
+                importsToInsert.map((i) => ({
+                  ...i.empDto,
+                  userId: userIdByEmail.get(i.email)!,
+                  companyId,
+                  employmentStatus: i.empDto.employmentStatus as any,
+                })),
+              )
+              .returning({ id: employees.id, email: employees.email })
+              .execute()
+          : [];
 
+      console.log('[bulkCreate:tx] employees inserted', {
+        count: createdEmps.length,
+      });
+
+      // employees update
+      console.log('[bulkCreate:tx] updating existing employees', {
+        count: importsToUpdateEmp.length,
+      });
       for (const i of importsToUpdateEmp) {
         const existing = existingEmpByEmail.get(i.email)!;
         const uid = userIdByEmail.get(i.email) ?? existing.userId;
@@ -510,31 +547,32 @@ export class EmployeesBulkImportWriteService {
           .where(eq(employees.id, existing.id))
           .execute();
 
-        // optional: sync user role from CSV
         const newRoleId =
           companyRoleMap.get(this.norm(i.companyRoleKey)) ??
           companyRoleMap.get('employee')!;
-
         await trx
           .update(users)
           .set({ companyRoleId: newRoleId })
           .where(and(eq(users.companyId, companyId), eq(users.email, i.email)))
           .execute();
+
+        console.log(`[bulkCreate:tx] updated employee`, { email: i.email });
       }
 
       const createdEmpIdByEmail = new Map(
         createdEmps.map((e) => [e.email.toLowerCase(), e.id]),
       );
-
       for (const [email, emp] of existingEmpByEmail.entries()) {
         createdEmpIdByEmail.set(email, emp.id);
       }
 
-      // ✅ Assign Heads of Department (PATCH)
+      // HoD
+      console.log('[bulkCreate:tx] assigning HoDs', {
+        count: hodByDepartment.size,
+      });
       for (const [departmentId, email] of hodByDepartment.entries()) {
         const employeeId = createdEmpIdByEmail.get(email.toLowerCase());
         if (!employeeId) continue;
-
         await trx
           .update(departments)
           .set({ headId: employeeId })
@@ -545,9 +583,14 @@ export class EmployeesBulkImportWriteService {
             ),
           )
           .execute();
+        console.log(`[bulkCreate:tx] HoD assigned`, {
+          departmentId,
+          email,
+          employeeId,
+        });
       }
 
-      // --- manager resolution (UNCHANGED)
+      // manager resolution
       const mdFromImport = this.resolveManagingDirectorEmployeeIdFromImport(
         imports,
         createdEmpIdByEmail,
@@ -560,6 +603,12 @@ export class EmployeesBulkImportWriteService {
       );
       const defaultManagerEmployeeId = mdFromImport ?? mdFromDb;
 
+      console.log('[bulkCreate:tx] manager resolution', {
+        mdFromImport,
+        mdFromDb,
+        defaultManagerEmployeeId,
+      });
+
       if (!defaultManagerEmployeeId) {
         throw new BadRequestException(
           'No Managing Director employee found to use as the default manager.',
@@ -569,7 +618,6 @@ export class EmployeesBulkImportWriteService {
       const managerEmailSet = new Set(
         imports.map((i) => i.managerEmail).filter(Boolean) as string[],
       );
-
       const existingMgrs = managerEmailSet.size
         ? await trx
             .select({ id: employees.id, email: employees.email })
@@ -599,16 +647,17 @@ export class EmployeesBulkImportWriteService {
         if (!empId) continue;
 
         let managerId: string | null = null;
-
         if (imp.managerEmail) {
-          // explicit manager always wins
           managerId =
             createdEmpIdByEmail.get(imp.managerEmail) ??
             existingEmpIdByEmail.get(imp.managerEmail) ??
             defaultManagerEmployeeId;
         }
-        // else: no manager email → ROOT (managerId stays null)
 
+        console.log(`[bulkCreate:tx] setting manager`, {
+          email: imp.email,
+          managerId,
+        });
         await trx
           .update(employees)
           .set({ managerId })
@@ -617,25 +666,32 @@ export class EmployeesBulkImportWriteService {
       }
 
       // finance + compensation
-      await trx
-        .insert(employeeFinancials)
-        .values(
-          createdEmps.map((e, i) => ({
-            employeeId: e.id,
-            ...imports[i].finDto,
-          })),
-        )
-        .execute();
+      console.log('[bulkCreate:tx] inserting financials + compensations', {
+        count: createdEmps.length,
+      });
+      if (createdEmps.length > 0) {
+        await trx
+          .insert(employeeFinancials)
+          .values(
+            createdEmps.map((e, i) => ({
+              employeeId: e.id,
+              ...importsToInsert[i].finDto,
+            })),
+          )
+          .execute();
 
-      await trx
-        .insert(employeeCompensations)
-        .values(
-          createdEmps.map((e, i) => ({
-            employeeId: e.id,
-            ...imports[i].compDto,
-          })),
-        )
-        .execute();
+        await trx
+          .insert(employeeCompensations)
+          .values(
+            createdEmps.map((e, i) => ({
+              employeeId: e.id,
+              ...importsToInsert[i].compDto,
+            })),
+          )
+          .execute();
+
+        console.log('[bulkCreate:tx] financials + compensations inserted');
+      }
 
       await this.companySettingsService.setOnboardingTask(
         companyId,
@@ -645,6 +701,12 @@ export class EmployeesBulkImportWriteService {
       );
 
       return { createdEmps, createdUsers, inviteTokens };
+    });
+
+    console.log('[bulkCreate] transaction complete', {
+      createdEmps: result.createdEmps.length,
+      createdUsers: result.createdUsers.length,
+      inviteTokens: result.inviteTokens.length,
     });
 
     try {
@@ -664,20 +726,32 @@ export class EmployeesBulkImportWriteService {
     const tokenByUserId = new Map(
       result.inviteTokens.map((t) => [t.user_id, t.token]),
     );
-
-    // map first name by email from imports
     const firstNameByEmail = new Map(
       imports.map((i) => [i.email.toLowerCase(), i.empDto.firstName]),
     );
-
     const baseUrl = this.config.get('EMPLOYEE_PORTAL_URL');
+
+    console.log('[bulkCreate] sending invite emails', {
+      count: result.createdUsers.length,
+      baseUrl,
+    });
 
     await Promise.all(
       result.createdUsers.map((u) => {
         const token = tokenByUserId.get(u.id);
-        if (!token) return Promise.resolve();
+        if (!token) {
+          console.warn('[bulkCreate] no token for user', {
+            userId: u.id,
+            email: u.email,
+          });
+          return Promise.resolve();
+        }
 
         const resetLink = `${baseUrl}/reset-password/${token}`;
+        console.log('[bulkCreate] queuing email', {
+          email: u.email,
+          resetLink,
+        });
 
         return this.emailQueue.add(
           'sendPasswordResetEmail',
@@ -697,6 +771,12 @@ export class EmployeesBulkImportWriteService {
         );
       }),
     );
+
+    console.log('[bulkCreate] done', {
+      successCount: result.createdEmps.length,
+      failedCount: failedRows.length,
+      durationMs: Date.now() - t0,
+    });
 
     return {
       successCount: result.createdEmps.length,

@@ -13,7 +13,7 @@ import {
 import { TaxService } from './tax.service';
 import { FastifyReply } from 'fastify';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { Audit } from 'src/modules/audit/audit.decorator';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { BaseController } from 'src/common/interceptor/base.controller';

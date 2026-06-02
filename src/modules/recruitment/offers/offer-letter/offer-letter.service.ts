@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, or, asc } from 'drizzle-orm';
 import { offerLetterTemplates } from './schema/offer-letter-templates.schema';
 import { globalTemplates } from './seed/globalTemplates';
@@ -9,7 +9,7 @@ import { UpdateOfferTemplateDto } from './dto/update-offer-template.dto';
 import { extractHandlebarsVariables } from 'src/utils/extractHandlebarsVariables';
 import { offerLetterTemplateVariables } from './schema/offer-letter-template-variables.schema';
 import { offerLetterTemplateVariableLinks } from './schema/offer-letter-template-variable-links.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 

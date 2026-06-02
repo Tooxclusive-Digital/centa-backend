@@ -1,7 +1,7 @@
 import { PinoLogger } from 'nestjs-pino';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { ProfileService } from './profile/profile.service';
 import { HistoryService } from './history/history.service';
 import { DependentsService } from './dependents/dependents.service';
@@ -606,10 +606,10 @@ export declare class EmployeesService {
     buildTemplateWorkbook(companyId: string): Promise<Workbook>;
     getManagers(companyId: string): Promise<({
         id: any;
-        name: string;
+        name: any;
     } | {
         id: any;
-        name: string;
+        name: any;
     })[]>;
     assignManager(employeeId: string, managerId: string): Promise<{
         [x: string]: any;
@@ -619,12 +619,12 @@ export declare class EmployeesService {
     }>;
     findFallbackManagers(companyId: string): Promise<({
         id: any;
-        name: string;
+        name: any;
         role: string;
         email: string;
     } | {
         id: any;
-        name: string;
+        name: any;
         role: string;
         email: string;
     })[]>;

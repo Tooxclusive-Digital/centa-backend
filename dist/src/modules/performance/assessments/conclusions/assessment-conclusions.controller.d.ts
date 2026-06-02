@@ -1,4 +1,4 @@
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateConclusionDto } from './dto/create-conclusion.dto';
 import { UpdateConclusionDto } from './dto/update-conclusion.dto';
 import { AssessmentConclusionsService } from './conclusions.service';

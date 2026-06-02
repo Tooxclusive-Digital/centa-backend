@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { PaySchedulesService } from '../pay-schedules/pay-schedules.service';
 import Decimal from 'decimal.js';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
@@ -14,11 +14,11 @@ export declare class ReportService {
         current: {
             payroll_run_id: string;
             payroll_date: string;
-            total_gross_salary: number;
-            total_netSalary: number;
-            total_deductions: number;
-            employee_count: number;
-            totalPayrollCost: number;
+            total_gross_salary: any;
+            total_netSalary: any;
+            total_deductions: any;
+            employee_count: any;
+            totalPayrollCost: any;
         };
         variance: {
             gross_salary_variance: number;
@@ -70,10 +70,10 @@ export declare class ReportService {
         payrollMonth: string;
         approvalStatus: string;
         paymentStatus: string | null;
-        totalGrossSalary: number;
-        employeeCount: number;
-        totalNetSalary: number;
-        totalPayrollCost: number;
+        totalGrossSalary: any;
+        employeeCount: any;
+        totalNetSalary: any;
+        totalPayrollCost: any;
     }[]>;
     getCombinedPayroll(companyId: string): Promise<{
         payrollSummary: {
@@ -84,10 +84,10 @@ export declare class ReportService {
             payrollMonth: string;
             approvalStatus: string;
             paymentStatus: string | null;
-            totalGrossSalary: number;
-            employeeCount: number;
-            totalNetSalary: number;
-            totalPayrollCost: number;
+            totalGrossSalary: any;
+            employeeCount: any;
+            totalNetSalary: any;
+            totalPayrollCost: any;
         }[];
         nextPayDate: Date | null;
     }>;
@@ -98,126 +98,126 @@ export declare class ReportService {
             payrollMonth: string;
             approvalStatus: string;
             paymentStatus: string | null;
-            totalGross: number;
-            totalDeductions: number;
-            totalBonuses: number;
-            totalNet: number;
-            employeeCount: number;
-            costPerRun: number;
+            totalGross: any;
+            totalDeductions: any;
+            totalBonuses: any;
+            totalNet: any;
+            employeeCount: any;
+            costPerRun: any;
         }[];
         yearToDate: {
             year: string;
-            totalGrossYTD: number;
-            totalDeductionsYTD: number;
-            totalBonusesYTD: number;
-            totalNetYTD: number;
-            employeeCountYTD: number;
+            totalGrossYTD: any;
+            totalDeductionsYTD: any;
+            totalBonusesYTD: any;
+            totalNetYTD: any;
+            employeeCountYTD: any;
         };
-        headcount: number;
-        totalCurrentSalary: number;
+        headcount: any;
+        totalCurrentSalary: any;
         costTrend: {
-            monthCost: number;
+            monthCost: any;
             deltaCost: number;
             pctChange: number;
             month: string;
-            monthGross: number;
-            monthDeductions: number;
-            monthBonuses: number;
-            monthNet: number;
+            monthGross: any;
+            monthDeductions: any;
+            monthBonuses: any;
+            monthNet: any;
         }[];
         onboardingCompleted: any;
     }>;
     getPayrollCostReport(companyId: string, month: string): Promise<{
         payGroupCost: ({
-            totalGross: number;
-            totalNet: number;
-            headcount: number;
+            totalGross: any;
+            totalNet: any;
+            headcount: any;
             payGroupId: string;
             payGroupName: string;
         } | {
-            totalGross: number;
-            totalNet: number;
-            headcount: number;
+            totalGross: any;
+            totalNet: any;
+            headcount: any;
             payGroupId: string;
             payGroupName: string;
         })[];
         departmentCost: ({
-            totalGross: number;
-            totalNet: number;
-            headcount: number;
+            totalGross: any;
+            totalNet: any;
+            headcount: any;
             departmentName: any;
         } | {
-            totalGross: number;
-            totalNet: number;
-            headcount: number;
+            totalGross: any;
+            totalNet: any;
+            headcount: any;
             departmentName: any;
         })[];
     }>;
     getCostByPayGroup(companyId: string, month: string): Promise<({
         payGroupId: string;
         payGroupName: string;
-        totalGross: number;
-        totalNet: number;
-        headcount: number;
+        totalGross: any;
+        totalNet: any;
+        headcount: any;
     } | {
         payGroupId: string;
         payGroupName: string;
-        totalGross: number;
-        totalNet: number;
-        headcount: number;
+        totalGross: any;
+        totalNet: any;
+        headcount: any;
     })[]>;
     getCostByDepartment(companyId: string, month: string): Promise<({
         departmentName: any;
-        totalGross: number;
-        totalNet: number;
-        headcount: number;
+        totalGross: any;
+        totalNet: any;
+        headcount: any;
     } | {
         departmentName: any;
-        totalGross: number;
-        totalNet: number;
-        headcount: number;
+        totalGross: any;
+        totalNet: any;
+        headcount: any;
     })[]>;
     getTopBonusRecipients(companyId: string, month: string, limit?: number): Promise<({
         employeeId: string;
-        fullName: string;
-        bonus: number;
+        fullName: any;
+        bonus: any;
     } | {
         employeeId: string;
-        fullName: string;
-        bonus: number;
+        fullName: any;
+        bonus: any;
     })[]>;
     private getSalaryInsights;
     YtdReport(companyId: string): Promise<{
         totals: {
-            gross_salary_ytd: number;
-            net_salary_ytd: number;
-            paye_tax_ytd: number;
-            pension_contribution_ytd: number;
-            employer_pension_contribution_ytd: number;
-            nhf_contribution_ytd: number;
+            gross_salary_ytd: any;
+            net_salary_ytd: any;
+            paye_tax_ytd: any;
+            pension_contribution_ytd: any;
+            employer_pension_contribution_ytd: any;
+            nhf_contribution_ytd: any;
         };
         employees: ({
             employeeId: string;
             firstName: any;
             lastName: any;
             employeeNumber: any;
-            gross_salary_ytd: number;
-            net_salary_ytd: number;
-            paye_tax_ytd: number;
-            pension_contribution_ytd: number;
-            employer_pension_contribution_ytd: number;
-            nhf_contribution_ytd: number;
+            gross_salary_ytd: any;
+            net_salary_ytd: any;
+            paye_tax_ytd: any;
+            pension_contribution_ytd: any;
+            employer_pension_contribution_ytd: any;
+            nhf_contribution_ytd: any;
         } | {
             employeeId: string;
             firstName: any;
             lastName: any;
             employeeNumber: any;
-            gross_salary_ytd: number;
-            net_salary_ytd: number;
-            paye_tax_ytd: number;
-            pension_contribution_ytd: number;
-            employer_pension_contribution_ytd: number;
-            nhf_contribution_ytd: number;
+            gross_salary_ytd: any;
+            net_salary_ytd: any;
+            paye_tax_ytd: any;
+            pension_contribution_ytd: any;
+            employer_pension_contribution_ytd: any;
+            nhf_contribution_ytd: any;
         })[];
     }>;
     getPayrollAnalyticsReport(companyId: string, month?: string): Promise<{
@@ -230,79 +230,79 @@ export declare class ReportService {
             payrollMonth: string;
             approvalStatus: string;
             paymentStatus: string | null;
-            totalGrossSalary: number;
-            employeeCount: number;
-            totalNetSalary: number;
-            totalPayrollCost: number;
+            totalGrossSalary: any;
+            employeeCount: any;
+            totalNetSalary: any;
+            totalPayrollCost: any;
         }[];
         salaryInsights: {
             breakdown: ({
                 payrollMonth: string;
                 employeeId: string;
-                employeeName: unknown;
-                grossSalary: string | null;
-                netSalary: string | null;
-                deductions: string | null;
-                bonuses: string | null;
+                employeeName: any;
+                grossSalary: any;
+                netSalary: any;
+                deductions: any;
+                bonuses: any;
                 paymentStatus: string | null;
             } | {
                 payrollMonth: string;
                 employeeId: string;
-                employeeName: unknown;
-                grossSalary: string | null;
-                netSalary: string | null;
-                deductions: string | null;
-                bonuses: string | null;
+                employeeName: any;
+                grossSalary: any;
+                netSalary: any;
+                deductions: any;
+                bonuses: any;
                 paymentStatus: string | null;
             })[];
             stats: {
-                avgSalary: string | null;
-                highestPaid: string | null;
-                lowestPaid: string | null;
+                avgSalary: any;
+                highestPaid: any;
+                lowestPaid: any;
             };
             distribution: {
-                salaryRange: unknown;
-                count: number;
+                salaryRange: any;
+                count: any;
             }[];
             byDepartment: ({
                 departmentName: any;
-                totalNetSalary: string | null;
+                totalNetSalary: any;
             } | {
                 departmentName: any;
-                totalNetSalary: string | null;
+                totalNetSalary: any;
             })[];
         };
         ytdData: {
             totals: {
-                gross_salary_ytd: number;
-                net_salary_ytd: number;
-                paye_tax_ytd: number;
-                pension_contribution_ytd: number;
-                employer_pension_contribution_ytd: number;
-                nhf_contribution_ytd: number;
+                gross_salary_ytd: any;
+                net_salary_ytd: any;
+                paye_tax_ytd: any;
+                pension_contribution_ytd: any;
+                employer_pension_contribution_ytd: any;
+                nhf_contribution_ytd: any;
             };
             employees: ({
                 employeeId: string;
                 firstName: any;
                 lastName: any;
                 employeeNumber: any;
-                gross_salary_ytd: number;
-                net_salary_ytd: number;
-                paye_tax_ytd: number;
-                pension_contribution_ytd: number;
-                employer_pension_contribution_ytd: number;
-                nhf_contribution_ytd: number;
+                gross_salary_ytd: any;
+                net_salary_ytd: any;
+                paye_tax_ytd: any;
+                pension_contribution_ytd: any;
+                employer_pension_contribution_ytd: any;
+                nhf_contribution_ytd: any;
             } | {
                 employeeId: string;
                 firstName: any;
                 lastName: any;
                 employeeNumber: any;
-                gross_salary_ytd: number;
-                net_salary_ytd: number;
-                paye_tax_ytd: number;
-                pension_contribution_ytd: number;
-                employer_pension_contribution_ytd: number;
-                nhf_contribution_ytd: number;
+                gross_salary_ytd: any;
+                net_salary_ytd: any;
+                paye_tax_ytd: any;
+                pension_contribution_ytd: any;
+                employer_pension_contribution_ytd: any;
+                nhf_contribution_ytd: any;
             })[];
         };
     }>;
@@ -310,7 +310,7 @@ export declare class ReportService {
     private getEmployerCostBreakdownByMonth;
     getDeductionsByEmployee(companyId: string, month: string): Promise<{
         employeeId: string;
-        employeeName: string;
+        employeeName: any;
         paye: string;
         pension: string;
         nhf: string | null;
@@ -321,20 +321,20 @@ export declare class ReportService {
     getDeductionsSummary(companyId: string, month?: string): Promise<{
         deductionBreakdown: {
             payrollMonth: string;
-            paye: number;
-            pension: number;
-            nhf: number;
-            custom: number;
+            paye: any;
+            pension: any;
+            nhf: any;
+            custom: any;
         }[];
         employerCostBreakdown: {
             payrollMonth: string;
-            gross: number;
-            employerPension: number;
-            totalCost: number;
+            gross: any;
+            employerPension: any;
+            totalCost: any;
         }[];
         deductionByEmployee: {
             employeeId: string;
-            employeeName: string;
+            employeeName: any;
             paye: string;
             pension: string;
             nhf: string | null;
@@ -346,41 +346,41 @@ export declare class ReportService {
     getLoanFullReport(companyId: string): Promise<{
         outstandingSummary: ({
             employeeId: string;
-            employeeName: string;
+            employeeName: any;
             totalLoanAmount: string;
             totalRepaid: string;
-            outstanding: number;
+            outstanding: any;
             status: string;
         } | {
             employeeId: string;
-            employeeName: string;
+            employeeName: any;
             totalLoanAmount: string;
             totalRepaid: string;
-            outstanding: number;
+            outstanding: any;
             status: string;
         })[];
         monthlySummary: {
-            year: number;
-            month: number;
+            year: any;
+            month: any;
             status: string;
-            totalLoanAmount: number;
-            totalRepaid: number;
-            totalOutstanding: number;
+            totalLoanAmount: any;
+            totalRepaid: any;
+            totalOutstanding: any;
         }[];
     }>;
     getLoanRepaymentReport(companyId: string): Promise<({
         employeeId: any;
-        employeeName: string;
-        totalRepaid: number;
-        repaymentCount: number;
-        firstRepayment: string;
-        lastRepayment: string;
+        employeeName: any;
+        totalRepaid: any;
+        repaymentCount: any;
+        firstRepayment: any;
+        lastRepayment: any;
     } | {
         employeeId: any;
-        employeeName: string;
-        totalRepaid: number;
-        repaymentCount: number;
-        firstRepayment: string;
-        lastRepayment: string;
+        employeeName: any;
+        totalRepaid: any;
+        repaymentCount: any;
+        firstRepayment: any;
+        lastRepayment: any;
     })[]>;
 }

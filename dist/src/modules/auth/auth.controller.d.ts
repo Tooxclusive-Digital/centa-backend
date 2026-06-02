@@ -1,7 +1,7 @@
 import { UserService, TokenGeneratorService, AuthService, VerificationService, PasswordResetService } from './services';
 import { LoginDto, PasswordResetDto, RequestPasswordResetDto, TokenDto, VerifyLoginDto } from './dto';
 import { Response } from 'express';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { InviteUserDto } from './dto/invite-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtType } from './types/user.type';

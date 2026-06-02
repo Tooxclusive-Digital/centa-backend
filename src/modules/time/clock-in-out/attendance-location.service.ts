@@ -3,7 +3,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { fromZonedTime } from 'date-fns-tz';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { companyLocations } from 'src/drizzle/schema';
 import { CacheService } from 'src/common/cache/cache.service';
 

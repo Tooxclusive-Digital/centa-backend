@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq } from 'drizzle-orm';
 import { renderOfferLetter, wrapInHtml } from 'src/utils/renderOfferLetter';
 import { extractHandlebarsVariables } from 'src/utils/extractHandlebarsVariables';

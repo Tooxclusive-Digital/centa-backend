@@ -1,6 +1,6 @@
 import { AttendanceSettingsService } from './attendance-settings.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class AttendanceSettingsController extends BaseController {
     private readonly attendanceSettingsService;
     constructor(attendanceSettingsService: AttendanceSettingsService);

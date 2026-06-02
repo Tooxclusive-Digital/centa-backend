@@ -3,15 +3,15 @@ import { IsUUID, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 export class UpsertEntryDto {
   @IsUUID()
   @IsNotEmpty()
-  appraisalId: string;
+  appraisalId!: string;
 
   @IsUUID()
   @IsNotEmpty()
-  competencyId: string;
+  competencyId!: string;
 
   @IsUUID()
-  @IsOptional()
-  expectedLevelId: string;
+  @IsNotEmpty()
+  expectedLevelId!: string;
 
   @IsUUID()
   @IsOptional()

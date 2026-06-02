@@ -2,7 +2,7 @@ import { ReservedDaysService } from './reserved-days.service';
 import { CreateReservedDayDto } from './dto/create-reserved-day.dto';
 import { UpdateReservedDayDto } from './dto/update-reserved-day.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class ReservedDaysController extends BaseController {
     private readonly reservedDaysService;
     constructor(reservedDaysService: ReservedDaysService);
@@ -22,18 +22,18 @@ export declare class ReservedDaysController extends BaseController {
         startDate: string;
         endDate: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
-        createdBy: string;
+        createdBy: any;
         reason: string | null;
     } | {
         id: string;
         startDate: string;
         endDate: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
-        createdBy: string;
+        createdBy: any;
         reason: string | null;
     })[]>;
     findOne(id: string, user: User): Promise<{

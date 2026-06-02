@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray, desc } from 'drizzle-orm';
 import { CacheService } from 'src/common/cache/cache.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 
 import {
   employees,

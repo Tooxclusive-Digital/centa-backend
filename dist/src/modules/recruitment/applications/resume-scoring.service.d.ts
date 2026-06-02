@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 interface JobDescription {
     title: string;
     responsibilities: string[] | null;

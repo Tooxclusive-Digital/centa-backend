@@ -3,7 +3,7 @@ import { Controller, Get, Patch, UseGuards, Body } from '@nestjs/common';
 import { StaffChecklistService } from './services/staff-checklist.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ExtraKeyParamDto } from './dto/extra-key.param';
 import { ChecklistService } from './checklist.service';
 import { PayrollChecklistService } from './services/payroll-checklist.service';

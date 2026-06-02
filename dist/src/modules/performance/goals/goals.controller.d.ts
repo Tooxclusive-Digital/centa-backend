@@ -6,7 +6,7 @@ import { AddGoalProgressDto } from './dto/add-goal-progress.dto';
 import { AddGoalCommentDto } from './dto/add-goal-comment.dto';
 import { UploadGoalAttachmentDto } from './dto/upload-goal-attachment.dto';
 import { UpdateGoalAttachmentDto } from './dto/update-goal-attachment.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class GoalsController extends BaseController {
     private readonly goalsService;
@@ -30,7 +30,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -48,7 +48,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -66,7 +66,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -84,7 +84,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -102,7 +102,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -120,7 +120,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -138,7 +138,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -156,7 +156,7 @@ export declare class GoalsController extends BaseController {
         weight: any;
         status: any;
         isArchived: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -175,7 +175,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -193,7 +193,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -211,7 +211,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -229,7 +229,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -247,7 +247,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -265,7 +265,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -283,7 +283,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -301,7 +301,7 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         isRecurring: any;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
@@ -314,21 +314,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -343,13 +343,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -357,21 +357,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -386,13 +386,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -400,21 +400,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -429,13 +429,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -443,21 +443,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -472,13 +472,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -486,21 +486,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -515,13 +515,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -529,21 +529,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -558,13 +558,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -572,21 +572,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -601,13 +601,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -615,21 +615,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -644,13 +644,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -658,21 +658,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -687,13 +687,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -701,21 +701,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -730,13 +730,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -744,21 +744,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -773,13 +773,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     } | {
         updates: {
             id: string;
@@ -787,21 +787,21 @@ export declare class GoalsController extends BaseController {
             note: string | null;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         comments: {
             id: string;
             comment: string;
             createdAt: Date | null;
             createdBy: string;
-            createdByName: string;
+            createdByName: any;
         }[];
         attachments: {
             id: string;
             fileName: string;
             createdAt: Date | null;
             uploadedBy: string;
-            uploadedByName: string;
+            uploadedByName: any;
             fileUrl: string;
             comment: string;
         }[];
@@ -816,13 +816,13 @@ export declare class GoalsController extends BaseController {
         status: any;
         isArchived: any;
         avatarUrl: string | null;
-        employee: string;
+        employee: any;
         employeeId: any;
         departmentName: any;
         departmentId: any;
         office: string;
         isRecurring: any;
-        manager: string;
+        manager: any;
     }>;
     getStatusCounts(user: User): Promise<Record<string, number>>;
     getStatusCountsForEmployee(user: User, employeeId: string): Promise<Record<string, number>>;
@@ -836,9 +836,9 @@ export declare class GoalsController extends BaseController {
     archiveForEmployee(id: string, employeeId: string, user: User): Promise<{
         message: string;
         activity: {
-            updatesCount: number;
-            commentsCount: number;
-            attachmentsCount: number;
+            updatesCount: any;
+            commentsCount: any;
+            attachmentsCount: any;
         };
         deletable: boolean;
     }>;

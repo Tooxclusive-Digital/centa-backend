@@ -1,5 +1,5 @@
 import { UpdateLeaveBalanceDto } from './dto/update-leave-balance.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class LeaveBalanceService {
@@ -200,31 +200,31 @@ export declare class LeaveBalanceService {
     findAll(companyId: string): Promise<({
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     } | {
         employeeId: string;
         companyId: any;
-        name: string;
+        name: any;
         department: any;
         jobRole: string | null;
-        totalBalance: string;
+        totalBalance: any;
     })[]>;
     findByEmployeeId(employeeId: string): Promise<{
         leaveTypeId: string;

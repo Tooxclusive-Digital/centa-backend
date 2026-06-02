@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { leaveTypes } from '../schema/leave-types.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { and, eq, inArray } from 'drizzle-orm';
 import { CreateLeaveTypeDto } from './dto/create-leave-type.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leave-type.dto';

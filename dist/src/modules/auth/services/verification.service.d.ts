@@ -1,5 +1,5 @@
 import { TokenDto } from '../dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { EmailVerificationService } from 'src/modules/notification/services/email-verification.service';
 export declare class VerificationService {
     private db;

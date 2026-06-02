@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateOffboardingBeginDto } from './dto/create-offboarding.dto';
 import { UpdateOffboardingDto } from './dto/update-offboarding.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { Inject } from '@nestjs/common';
 import { eq, inArray, sql, and, desc } from 'drizzle-orm';
@@ -15,7 +15,7 @@ import {
 } from './schema/termination-sessions.schema';
 import { termination_checklist_items } from './schema/termination-checklist-items.schema';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { assets } from 'src/modules/assets/schema/assets.schema';
 import {
   departments,

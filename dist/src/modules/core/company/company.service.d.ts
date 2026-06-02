@@ -1,6 +1,6 @@
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
 import { DepartmentService } from '../department/department.service';
 import { PayGroupsService } from 'src/modules/payroll/pay-groups/pay-groups.service';
@@ -412,16 +412,16 @@ export declare class CompanyService {
         })[];
         allDepartments: ({
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         })[];
         newStartersCount: number;
         leaversCount: number;
@@ -438,18 +438,18 @@ export declare class CompanyService {
             payrollMonth: string;
             approvalStatus: string;
             paymentStatus: string | null;
-            totalGrossSalary: number;
-            employeeCount: number;
-            totalNetSalary: number;
-            totalPayrollCost: number;
+            totalGrossSalary: any;
+            employeeCount: any;
+            totalNetSalary: any;
+            totalPayrollCost: any;
         }[];
         recentLeaves: ({
-            name: string;
+            name: any;
             leaveType: string;
             startDate: string;
             endDate: string;
         } | {
-            name: string;
+            name: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -481,7 +481,7 @@ export declare class CompanyService {
         announcements: {
             id: string;
             title: string;
-            body: string;
+            body: any;
             createdAt: Date | null;
             category: string;
         }[];
@@ -503,48 +503,28 @@ export declare class CompanyService {
     }>;
     getCompanyElements(companyId: string): Promise<{
         departments: ({
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;

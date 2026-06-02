@@ -1,26 +1,19 @@
 import { AssetsService } from './assets.service';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class AssetsController extends BaseController {
     private readonly assetsService;
     constructor(assetsService: AssetsService);
     create(createAssetDto: CreateAssetDto, user: User): Promise<{
-        status: string;
         id: string;
         name: string;
-        createdAt: string | null;
-        updatedAt: string | null;
-        companyId: string;
-        category: string;
-        locationId: string;
-        isDeleted: boolean | null;
-        employeeId: string | null;
         internalId: string;
         modelName: string | null;
         color: string | null;
         specs: string | null;
+        category: string;
         manufacturer: string | null;
         serialNumber: string;
         purchasePrice: string;
@@ -30,24 +23,24 @@ export declare class AssetsController extends BaseController {
         lendDate: string | null;
         returnDate: string | null;
         usefulLifeYears: number;
+        createdAt: string | null;
+        updatedAt: string | null;
+        companyId: string;
+        locationId: string;
+        isDeleted: boolean | null;
+        employeeId: string | null;
+        status: string;
     }>;
     bulkCreate(rows: any[], user: User): Promise<{
         insertedCount: number;
         inserted: {
-            status: string;
             id: string;
             name: string;
-            createdAt: string | null;
-            updatedAt: string | null;
-            companyId: string;
-            category: string;
-            locationId: string;
-            isDeleted: boolean | null;
-            employeeId: string | null;
             internalId: string;
             modelName: string | null;
             color: string | null;
             specs: string | null;
+            category: string;
             manufacturer: string | null;
             serialNumber: string;
             purchasePrice: string;
@@ -57,6 +50,13 @@ export declare class AssetsController extends BaseController {
             lendDate: string | null;
             returnDate: string | null;
             usefulLifeYears: number;
+            createdAt: string | null;
+            updatedAt: string | null;
+            companyId: string;
+            locationId: string;
+            isDeleted: boolean | null;
+            employeeId: string | null;
+            status: string;
         }[];
         errors: {
             index: number;
@@ -82,7 +82,7 @@ export declare class AssetsController extends BaseController {
         warrantyExpiry: string | null;
         employeeId: string | null;
         locationId: string;
-        assignedTo: string;
+        assignedTo: any;
         assignedEmail: any;
         location: string;
         status: string;
@@ -105,7 +105,7 @@ export declare class AssetsController extends BaseController {
         warrantyExpiry: string | null;
         employeeId: string | null;
         locationId: string;
-        assignedTo: string;
+        assignedTo: any;
         assignedEmail: any;
         location: string;
         status: string;
@@ -146,7 +146,7 @@ export declare class AssetsController extends BaseController {
         location: string;
         status: string;
         internalId: string;
-        hasReport: boolean;
+        hasReport: any;
     } | {
         id: string;
         name: string;
@@ -157,7 +157,7 @@ export declare class AssetsController extends BaseController {
         location: string;
         status: string;
         internalId: string;
-        hasReport: boolean;
+        hasReport: any;
     })[]>;
     update(id: string, updateAssetDto: UpdateAssetDto, user: User): Promise<{
         id: string;

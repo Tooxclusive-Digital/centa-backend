@@ -7,11 +7,11 @@ import {
 import { CreateBlockedDayDto } from './dto/create-blocked-day.dto';
 import { UpdateBlockedDayDto } from './dto/update-blocked-day.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { blockedLeaveDays } from './schema/blocked-day.schema';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { and, eq, sql } from 'drizzle-orm';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { users } from 'src/drizzle/schema';
 import { CacheService } from 'src/common/cache/cache.service';
 

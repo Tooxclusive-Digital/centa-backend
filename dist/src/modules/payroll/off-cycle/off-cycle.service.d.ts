@@ -1,7 +1,7 @@
 import { CreateOffCycleDto } from './dto/create-off-cycle.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
 export declare class OffCycleService {
     private db;
@@ -63,7 +63,7 @@ export declare class OffCycleService {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     } | {
         id: string;
         employeeId: string;
@@ -74,7 +74,7 @@ export declare class OffCycleService {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     })[]>;
     findAll(companyId: string, payrollDate: string): Omit<import("drizzle-orm/pg-core").PgSelectBase<"off_cycle_payroll", {
         id: import("drizzle-orm/pg-core").PgColumn<{
@@ -230,7 +230,7 @@ export declare class OffCycleService {
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
-        name: import("drizzle-orm").SQL<string>;
+        name: any;
     }, "partial", Record<"off_cycle_payroll", "not-null"> | (Record<"off_cycle_payroll", "not-null"> & {
         [x: string]: "not-null";
     }), false, "where", ({
@@ -243,7 +243,7 @@ export declare class OffCycleService {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     } | {
         id: string;
         employeeId: string;
@@ -254,7 +254,7 @@ export declare class OffCycleService {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     })[], {
         id: import("drizzle-orm/pg-core").PgColumn<{
             name: "id";
@@ -409,7 +409,7 @@ export declare class OffCycleService {
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
-        name: import("drizzle-orm").DrizzleTypeError<"You cannot reference this field without assigning it an alias first - use `.as(<alias>)`">;
+        name: any;
     }>, "where">;
     findOne(id: string): Promise<{
         id: string;

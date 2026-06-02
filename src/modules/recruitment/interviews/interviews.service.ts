@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, eq, inArray } from 'drizzle-orm';
 import {
   interviews,
@@ -12,7 +12,7 @@ import {
   job_postings,
   candidates,
 } from '../schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ScheduleInterviewDto } from './dto/schedule-interview.dto';
 import { FeedbackScoreDto } from './dto/feedback-score.dto';
 import { AuditService } from 'src/modules/audit/audit.service';

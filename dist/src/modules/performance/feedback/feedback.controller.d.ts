@@ -1,7 +1,7 @@
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class FeedbackController extends BaseController {
     private readonly feedbackService;
@@ -21,7 +21,7 @@ export declare class FeedbackController extends BaseController {
         id: string;
         type: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         questionsCount: number;
         departmentName: any;
@@ -30,18 +30,18 @@ export declare class FeedbackController extends BaseController {
         isArchived: boolean | null;
     }[]>;
     getCounts(user: User): Promise<{
-        all: number;
-        archived: number;
+        all: any;
+        archived: any;
     }>;
     getCountsForEmployee(employeeId: string, user: User): Promise<{
-        all: number;
-        archived: number;
+        all: any;
+        archived: any;
     }>;
     getForEmployee(employeeId: string, user: User, type?: string): Promise<{
         id: string;
         type: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         questionsCount: number;
         departmentName: any;
@@ -55,7 +55,7 @@ export declare class FeedbackController extends BaseController {
         type: string;
         createdAt: Date | null;
         isAnonymous: boolean | null;
-        employeeName: string;
+        employeeName: any;
         senderName: string;
         responses: {
             answer: string;

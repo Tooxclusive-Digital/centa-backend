@@ -1,5 +1,5 @@
 import { PermissionsService } from './permissions.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdateCompanyPermissionsDto } from './dto/update-company-permission.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';

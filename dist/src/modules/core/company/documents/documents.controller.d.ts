@@ -1,7 +1,7 @@
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentsFolderService } from './documents-folder.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateDocumentFoldersDto } from './dto/create-folders.dto';
 import { UpdateDocumentFoldersDto } from './dto/update-folders.dto';

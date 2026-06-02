@@ -9,7 +9,7 @@ import {
   FieldResponseDto,
 } from './dto/create-application.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { and, asc, desc, eq, inArray, not, sql } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
 import {
@@ -33,7 +33,7 @@ import {
 import { AwsService } from 'src/common/aws/aws.service';
 import { MoveToStageDto } from './dto/move-to-stage.dto';
 import { ChangeApplicationStatusDto } from './dto/chnage-app-status.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ResumeScoringService } from './resume-scoring.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';

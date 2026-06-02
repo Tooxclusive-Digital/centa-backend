@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { CreateAssetsRequestDto } from './dto/create-assets-request.dto';
 import { UpdateAssetsRequestDto } from './dto/update-assets-request.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { assetRequests } from '../schema/asset-requests.schema';
 import { eq, and, desc, sql } from 'drizzle-orm';

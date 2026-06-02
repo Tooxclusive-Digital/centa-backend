@@ -7,11 +7,11 @@ import {
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from '../audit/audit.service';
 import { eq, and, desc, sql, isNull } from 'drizzle-orm';
 import { expenses } from './schema/expense.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AwsService } from 'src/common/aws/aws.service';
 import {
   approvalSteps,

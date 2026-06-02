@@ -1,6 +1,6 @@
 // src/company-settings/company-settings.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { companySettings } from './schema/index.schema';
 import { eq, and, like, sql, inArray } from 'drizzle-orm';

@@ -1,5 +1,5 @@
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and, sql } from 'drizzle-orm';
 import * as path from 'path';
 import { Workbook } from 'exceljs';

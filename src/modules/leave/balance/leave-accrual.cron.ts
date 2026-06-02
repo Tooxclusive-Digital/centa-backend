@@ -8,7 +8,7 @@ import { AuditService } from 'src/modules/audit/audit.service';
 import { CompanyService } from 'src/modules/core/company/company.service';
 
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { users } from '../../auth/schema';
 
 @Injectable()

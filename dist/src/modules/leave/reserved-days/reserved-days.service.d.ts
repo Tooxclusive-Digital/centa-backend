@@ -1,8 +1,8 @@
 import { CreateReservedDayDto } from './dto/create-reserved-day.dto';
 import { UpdateReservedDayDto } from './dto/update-reserved-day.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class ReservedDaysService {
     private db;
@@ -28,18 +28,18 @@ export declare class ReservedDaysService {
         startDate: string;
         endDate: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
-        createdBy: string;
+        createdBy: any;
         reason: string | null;
     } | {
         id: string;
         startDate: string;
         endDate: string;
         createdAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
-        createdBy: string;
+        createdBy: any;
         reason: string | null;
     })[]>;
     findByEmployee(employeeId: string): Promise<{

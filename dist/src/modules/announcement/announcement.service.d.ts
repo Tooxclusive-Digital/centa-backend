@@ -1,8 +1,8 @@
 import { Queue } from 'bullmq';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
-import { User } from 'src/common/types/user.type';
-import { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from '../audit/audit.service';
 import { CommentService } from './comment.service';
 import { ReactionService } from './reaction.service';
@@ -46,7 +46,7 @@ export declare class AnnouncementService {
         reactionCounts: Record<string, number>;
         commentCount: number;
         publishedAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         role: string;
         avatarUrl: string | null;
     }[]>;
@@ -56,7 +56,7 @@ export declare class AnnouncementService {
         reactionCounts: Record<string, number>;
         commentCount: number;
         publishedAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         avatarUrl: string | null;
     }[]>;
     findOne(id: string, userId: string): Promise<{
@@ -79,7 +79,7 @@ export declare class AnnouncementService {
         };
         likeCount: {
             reactionType: string;
-            count: number;
+            count: any;
         }[];
         likedByCurrentUser: boolean;
         comments: {
@@ -91,7 +91,7 @@ export declare class AnnouncementService {
             id: string;
             comment: string;
             createdAt: Date | null;
-            createdBy: string;
+            createdBy: any;
             avatarUrl: string | null;
         }[];
     }>;

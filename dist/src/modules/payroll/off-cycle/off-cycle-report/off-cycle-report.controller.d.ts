@@ -1,19 +1,19 @@
 import { OffCycleReportService } from './off-cycle-report.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class OffCycleReportController extends BaseController {
     private readonly offCycleReportService;
     constructor(offCycleReportService: OffCycleReportService);
     getOffCycleSummary(user: User, fromDate: string, toDate: string): Promise<({
         employeeId: string;
-        name: string;
+        name: any;
         payrollDate: string;
         type: string;
         amount: string;
         taxable: boolean;
     } | {
         employeeId: string;
-        name: string;
+        name: any;
         payrollDate: string;
         type: string;
         amount: string;
@@ -21,14 +21,14 @@ export declare class OffCycleReportController extends BaseController {
     })[]>;
     getOffCycleVsRegular(user: User, month: string): Promise<{
         regular: {
-            gross: number;
-            tax: number;
-            net: number;
+            gross: any;
+            tax: any;
+            net: any;
         };
         offCycle: {
-            gross: number;
-            tax: number;
-            net: number;
+            gross: any;
+            tax: any;
+            net: any;
         };
         offPercent: number;
     }>;
@@ -42,7 +42,7 @@ export declare class OffCycleReportController extends BaseController {
     }[]>;
     getOffCycleTypeBreakdown(user: User, month: string): Promise<{
         type: string;
-        total: number;
+        total: any;
     }[]>;
     getOffCycleTaxImpact(user: User, month: string): Promise<{
         lines: {
@@ -54,19 +54,19 @@ export declare class OffCycleReportController extends BaseController {
             net: string;
             type: string;
         }[];
-        totalRegularTax: number;
+        totalRegularTax: any;
     }>;
     getOffCycleDashboard(user: User, month?: string, fromDate?: string, toDate?: string, employeeId?: string): Promise<{
         summary: ({
             employeeId: string;
-            name: string;
+            name: any;
             payrollDate: string;
             type: string;
             amount: string;
             taxable: boolean;
         } | {
             employeeId: string;
-            name: string;
+            name: any;
             payrollDate: string;
             type: string;
             amount: string;
@@ -74,14 +74,14 @@ export declare class OffCycleReportController extends BaseController {
         })[];
         vsRegular: {
             regular: {
-                gross: number;
-                tax: number;
-                net: number;
+                gross: any;
+                tax: any;
+                net: any;
             };
             offCycle: {
-                gross: number;
-                tax: number;
-                net: number;
+                gross: any;
+                tax: any;
+                net: any;
             };
             offPercent: number;
         };
@@ -95,7 +95,7 @@ export declare class OffCycleReportController extends BaseController {
         }[];
         typeBreakdown: {
             type: string;
-            total: number;
+            total: any;
         }[];
         taxImpact: {
             lines: {
@@ -107,7 +107,7 @@ export declare class OffCycleReportController extends BaseController {
                 net: string;
                 type: string;
             }[];
-            totalRegularTax: number;
+            totalRegularTax: any;
         };
     }>;
     getOffCyclePayrollSummary(user: User): Promise<{
@@ -117,9 +117,9 @@ export declare class OffCycleReportController extends BaseController {
         payrollMonth: string;
         approvalStatus: string;
         paymentStatus: string | null;
-        totalGrossSalary: number;
-        employeeCount: number;
-        totalNetSalary: number;
-        totalPayrollCost: number;
+        totalGrossSalary: any;
+        employeeCount: any;
+        totalNetSalary: any;
+        totalPayrollCost: any;
     }[]>;
 }

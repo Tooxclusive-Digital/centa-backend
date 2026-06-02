@@ -1,7 +1,7 @@
 import { AllowancesService } from './allowances.service';
 import { CreateAllowanceDto } from './dto/create-allowance.dto';
 import { UpdateAllowanceDto } from './dto/update-allowance.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 export declare class AllowancesController {
     private readonly allowancesService;
     constructor(allowancesService: AllowancesService);

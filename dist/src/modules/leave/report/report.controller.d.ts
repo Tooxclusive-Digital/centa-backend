@@ -1,5 +1,5 @@
 import { LeaveReportService } from './report.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { SearchLeaveReportsDto } from './dto/search-leave-report.dto';
 export declare class ReportController extends BaseController {
@@ -14,7 +14,7 @@ export declare class ReportController extends BaseController {
         leaveRequests: ({
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -26,7 +26,7 @@ export declare class ReportController extends BaseController {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -38,7 +38,7 @@ export declare class ReportController extends BaseController {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -50,7 +50,7 @@ export declare class ReportController extends BaseController {
         } | {
             employeeId: string;
             requestId: string;
-            employeeName: string;
+            employeeName: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -63,31 +63,31 @@ export declare class ReportController extends BaseController {
         leaveBalances: ({
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         } | {
             employeeId: string;
             companyId: any;
-            name: string;
+            name: any;
             department: any;
             jobRole: string | null;
-            totalBalance: string;
+            totalBalance: any;
         })[];
     }>;
     getLeaveBalances(user: User): Promise<any>;
@@ -102,7 +102,7 @@ export declare class ReportController extends BaseController {
             used: string;
             balance: string;
             year: number;
-            employeeName: string;
+            employeeName: any;
         } | {
             employeeId: string;
             leaveTypeId: string;
@@ -111,20 +111,20 @@ export declare class ReportController extends BaseController {
             used: string;
             balance: string;
             year: number;
-            employeeName: string;
+            employeeName: any;
         })[];
     }>;
     getLeaveUtilizationReport(user: User, dto: SearchLeaveReportsDto): Promise<{
         leaveUtilization: {
             leaveType: string;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         }[];
         departmentUsage: ({
             departmentName: any;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         } | {
             departmentName: any;
-            totalLeaveDays: number;
+            totalLeaveDays: any;
         })[];
     }>;
     generateLeaveBalanceReportToS3(user: User, leaveTypeName?: string, year?: number): Promise<{

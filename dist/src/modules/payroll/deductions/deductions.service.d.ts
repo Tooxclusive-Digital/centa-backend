@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CreateDeductionTypeDto } from './dto/create-deduction-type.dto';
 import { UpdateEmployeeDeductionDto } from './dto/update-employee-deduction.dto';
@@ -82,7 +82,7 @@ export declare class DeductionsService {
         isActive: boolean;
         startDate: string;
         endDate: string | null;
-        employeeName: string;
+        employeeName: any;
     } | {
         id: string;
         employeeId: string;
@@ -92,7 +92,7 @@ export declare class DeductionsService {
         isActive: boolean;
         startDate: string;
         endDate: string | null;
-        employeeName: string;
+        employeeName: any;
     })[]>;
     processVoluntaryDeductionsFromPayroll(payrollRecords: any[], payrollRunId: string, companyId: string): Promise<{
         inserted: number;

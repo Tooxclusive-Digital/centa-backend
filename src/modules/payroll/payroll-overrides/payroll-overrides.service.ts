@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { CreatePayrollOverrideDto } from './dto/create-payroll-override.dto';
 import { UpdatePayrollOverrideDto } from './dto/update-payroll-override.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { and, eq } from 'drizzle-orm';
 import { payrollOverrides } from '../schema/payroll-overrides.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 

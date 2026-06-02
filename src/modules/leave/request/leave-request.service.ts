@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { leaveRequests } from '../schema/leave-requests.schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { LeavePolicyService } from '../policy/leave-policy.service';
 import { LeaveSettingsService } from '../settings/leave-settings.service';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { EmployeesService } from 'src/modules/core/employees/employees.service';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { HolidaysService } from 'src/modules/leave/holidays/holidays.service';

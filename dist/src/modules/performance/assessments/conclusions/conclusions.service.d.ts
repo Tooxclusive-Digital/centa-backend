@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateConclusionDto } from './dto/create-conclusion.dto';
 import { UpdateConclusionDto } from './dto/update-conclusion.dto';
 import { CacheService } from 'src/common/cache/cache.service';

@@ -2,7 +2,7 @@ import { AnnouncementService } from './announcement.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { CommentService } from './comment.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateAnnouncementCommentDto } from './dto/create-announcement-comments.dto';
 import { ReactionService } from './reaction.service';
@@ -39,7 +39,7 @@ export declare class AnnouncementController extends BaseController {
         reactionCounts: Record<string, number>;
         commentCount: number;
         publishedAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         role: string;
         avatarUrl: string | null;
     }[]>;
@@ -49,7 +49,7 @@ export declare class AnnouncementController extends BaseController {
         reactionCounts: Record<string, number>;
         commentCount: number;
         publishedAt: Date | null;
-        createdBy: string;
+        createdBy: any;
         avatarUrl: string | null;
     }[]>;
     findOne(id: string, user: User): Promise<{
@@ -72,7 +72,7 @@ export declare class AnnouncementController extends BaseController {
         };
         likeCount: {
             reactionType: string;
-            count: number;
+            count: any;
         }[];
         likedByCurrentUser: boolean;
         comments: {
@@ -84,7 +84,7 @@ export declare class AnnouncementController extends BaseController {
             id: string;
             comment: string;
             createdAt: Date | null;
-            createdBy: string;
+            createdBy: any;
             avatarUrl: string | null;
         }[];
     }>;

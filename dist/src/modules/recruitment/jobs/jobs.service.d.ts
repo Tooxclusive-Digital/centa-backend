@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PipelineSeederService } from '../pipeline/pipeline-seeder.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { PublicJobsDto } from './dto/public-jobs.dto';
 import { CompanyJobsDto } from './dto/company-job.dto';

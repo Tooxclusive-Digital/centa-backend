@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { OrgChartNodeDto } from './dto/org-chart-node.dto';
 export declare class OrgChartService {
     private readonly db;

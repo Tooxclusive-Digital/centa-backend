@@ -16,7 +16,7 @@ import { AddGroupMembersDto, CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { Audit } from 'src/modules/audit/audit.decorator';
 import { AuditInterceptor } from 'src/modules/audit/audit.interceptor';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { BaseController } from 'src/common/interceptor/base.controller';

@@ -1,5 +1,5 @@
 import { CompanySettingsService } from './company-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { TaskStatus } from './constants/constants';
 export declare class CompanySettingsController extends BaseController {

@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards, SetMetadata } from '@nestjs/common';
 import { PayslipService } from './payslip.service';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 
 @Controller('payslip')

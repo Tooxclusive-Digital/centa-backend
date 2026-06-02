@@ -1,5 +1,5 @@
 import { LeaveSettingsService } from './leave-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class LeaveSettingsController extends BaseController {
     private readonly settingsService;

@@ -2,14 +2,14 @@ import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { CreatePayGroupDto } from './dto/create-pay-group.dto';
 import { UpdatePayGroupDto } from './dto/update-pay-group.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { employees } from 'src/drizzle/schema';
 import { and, eq, inArray } from 'drizzle-orm';
 import { payGroups } from '../schema/pay-groups.schema';
 import { paySchedules } from '../schema/pay-schedules.schema';
 import { CacheService } from 'src/common/cache/cache.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 
 @Injectable()

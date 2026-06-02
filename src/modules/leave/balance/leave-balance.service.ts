@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateLeaveBalanceDto } from './dto/update-leave-balance.dto';
 import { leaveBalances } from '../schema/leave-balance.schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and, sql } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { departments, employees, jobRoles } from 'src/drizzle/schema';

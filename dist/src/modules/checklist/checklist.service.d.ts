@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { ExtraKeyParamDto } from './dto/extra-key.param';
 import { AttendanceChecklistService } from './services/attendance-checklist.service';
 import { HiringChecklistService } from './services/hiring-checklist.service';

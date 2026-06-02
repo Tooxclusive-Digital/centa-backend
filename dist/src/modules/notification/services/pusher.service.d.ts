@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 export declare class PusherService {
     private config;
     private db;

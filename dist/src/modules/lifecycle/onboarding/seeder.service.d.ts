@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreateOnboardingTemplateDto } from './dto/create-onboarding-template.dto';
 export declare class OnboardingSeederService {
     private readonly db;

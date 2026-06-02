@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 import { TaskStatus } from '../constants/constants';
 type ExtraKey = 'onboarding_templates' | 'offboarding_process';

@@ -1,4 +1,4 @@
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PayrollSettingsService } from './payroll-settings.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class PayrollSettingsController extends BaseController {

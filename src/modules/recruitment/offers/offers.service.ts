@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { offers } from './schema/offers.schema';
 import {
@@ -14,7 +14,7 @@ import {
 } from 'src/drizzle/schema';
 import { eq, sql, and, asc } from 'drizzle-orm';
 import { offerLetterTemplates } from './offer-letter/schema/offer-letter-templates.schema';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { extractHandlebarsVariables } from 'src/utils/extractHandlebarsVariables';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { InjectQueue } from '@nestjs/bullmq';

@@ -1,7 +1,7 @@
 import { OffCycleService } from './off-cycle.service';
 import { CreateOffCycleDto } from './dto/create-off-cycle.dto';
 import { BaseController } from 'src/common/interceptor/base.controller';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PayrollRunDto } from './dto/run-off-cylce.dto';
 export declare class OffCycleController extends BaseController {
     private readonly offCycleService;
@@ -16,7 +16,7 @@ export declare class OffCycleController extends BaseController {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     } | {
         id: string;
         employeeId: string;
@@ -27,7 +27,7 @@ export declare class OffCycleController extends BaseController {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     })[]>;
     findAll(user: User, payrollDate: string): Omit<import("drizzle-orm/pg-core").PgSelectBase<"off_cycle_payroll", {
         id: import("drizzle-orm/pg-core").PgColumn<{
@@ -183,7 +183,7 @@ export declare class OffCycleController extends BaseController {
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
-        name: import("drizzle-orm").SQL<string>;
+        name: any;
     }, "partial", Record<"off_cycle_payroll", "not-null"> | (Record<"off_cycle_payroll", "not-null"> & {
         [x: string]: "not-null";
     }), false, "where", ({
@@ -196,7 +196,7 @@ export declare class OffCycleController extends BaseController {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     } | {
         id: string;
         employeeId: string;
@@ -207,7 +207,7 @@ export declare class OffCycleController extends BaseController {
         payrollDate: string;
         notes: string | null;
         payrollRunId: string;
-        name: string;
+        name: any;
     })[], {
         id: import("drizzle-orm/pg-core").PgColumn<{
             name: "id";
@@ -362,7 +362,7 @@ export declare class OffCycleController extends BaseController {
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
-        name: import("drizzle-orm").DrizzleTypeError<"You cannot reference this field without assigning it an alias first - use `.as(<alias>)`">;
+        name: any;
     }>, "where">;
     runOffCycle(dto: PayrollRunDto, user: User, runId: string): Promise<{
         name: string;

@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { ConfigService } from '@nestjs/config';
 import { EmployeeOnboardingInputDto } from './dto/employee-onboarding-input.dto';
 import { AwsService } from 'src/common/aws/aws.service';
@@ -23,7 +23,7 @@ export declare class OnboardingService {
             completedAt: Date | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -39,7 +39,7 @@ export declare class OnboardingService {
             completedAt: Date | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -60,7 +60,7 @@ export declare class OnboardingService {
             dueDaysAfterStart: number | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;
@@ -80,7 +80,7 @@ export declare class OnboardingService {
             dueDaysAfterStart: number | null;
         }[];
         employeeId: any;
-        employeeName: unknown;
+        employeeName: any;
         email: any;
         templateId: string;
         status: "pending" | "in_progress" | "completed" | null;

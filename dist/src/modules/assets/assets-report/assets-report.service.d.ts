@@ -1,6 +1,6 @@
 import { CreateAssetsReportDto } from './dto/create-assets-report.dto';
-import { User } from 'src/common/types/user.type';
-import { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { AwsService } from 'src/common/aws/aws.service';
 import { CacheService } from 'src/common/cache/cache.service';
@@ -32,7 +32,7 @@ export declare class AssetsReportService {
         description: string;
         documentUrl: string | null;
         reportedAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         employeeEmail: any;
         assetName: string | null;
         status: string | null;
@@ -45,7 +45,7 @@ export declare class AssetsReportService {
         description: string;
         documentUrl: string | null;
         reportedAt: Date | null;
-        employeeName: string;
+        employeeName: any;
         employeeEmail: any;
         assetName: string | null;
         status: string | null;

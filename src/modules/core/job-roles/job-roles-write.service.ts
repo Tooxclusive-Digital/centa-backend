@@ -10,7 +10,7 @@ import { validate, ValidationError } from 'class-validator';
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { jobRoles } from '../schema';
 
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';

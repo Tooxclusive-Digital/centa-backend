@@ -1,5 +1,5 @@
 import { CompanyService } from './company.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 export declare class CompanyController extends BaseController {
@@ -94,16 +94,16 @@ export declare class CompanyController extends BaseController {
         })[];
         allDepartments: ({
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         } | {
             department: any;
-            employees: number;
+            employees: any;
         })[];
         newStartersCount: number;
         leaversCount: number;
@@ -120,18 +120,18 @@ export declare class CompanyController extends BaseController {
             payrollMonth: string;
             approvalStatus: string;
             paymentStatus: string | null;
-            totalGrossSalary: number;
-            employeeCount: number;
-            totalNetSalary: number;
-            totalPayrollCost: number;
+            totalGrossSalary: any;
+            employeeCount: any;
+            totalNetSalary: any;
+            totalPayrollCost: any;
         }[];
         recentLeaves: ({
-            name: string;
+            name: any;
             leaveType: string;
             startDate: string;
             endDate: string;
         } | {
-            name: string;
+            name: any;
             leaveType: string;
             startDate: string;
             endDate: string;
@@ -163,7 +163,7 @@ export declare class CompanyController extends BaseController {
         announcements: {
             id: string;
             title: string;
-            body: string;
+            body: any;
             createdAt: Date | null;
             category: string;
         }[];
@@ -185,48 +185,28 @@ export declare class CompanyController extends BaseController {
     }>;
     getCompanyElements(user: User): Promise<{
         departments: ({
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;
             description: any;
             createdAt: any;
         } | {
-            head: {
-                id: any;
-                name: unknown;
-                email: any;
-                avatarUrl: string | null;
-            } | null;
+            head: any;
             employees: any[];
             id: any;
             name: any;

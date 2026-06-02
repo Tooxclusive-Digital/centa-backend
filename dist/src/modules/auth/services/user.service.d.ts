@@ -4,7 +4,7 @@ import { InviteUserDto } from '../dto/invite-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { AwsService } from 'src/common/aws/aws.service';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { RegisterDto } from '../dto/register-user.dto';
 import { InvitationService } from 'src/modules/notification/services/invitation.service';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';

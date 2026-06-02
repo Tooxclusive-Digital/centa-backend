@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as Pusher from 'pusher';
 import { ConfigService } from '@nestjs/config';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, desc, and } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { notification } from '../schema/notification.schema';

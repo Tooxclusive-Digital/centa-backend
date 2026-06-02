@@ -3,7 +3,7 @@ import { ReportService } from './report.service';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { GetGoalReportDto } from './dto/get-goal-report.dto';
 import { GetFeedbackReportDto } from './dto/get-feedback-report.dto';
 import { GetAssessmentReportDto } from './dto/get-assessment-report.dto';

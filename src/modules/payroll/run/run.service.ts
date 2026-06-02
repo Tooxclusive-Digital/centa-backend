@@ -15,7 +15,7 @@ import {
 } from 'src/drizzle/schema';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { DRIZZLE, HOT_QUERIES } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { payrollAllowances } from '../schema/payroll-allowances.schema';
 import { payrollYtd } from '../schema/payroll-ytd.schema';
@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { payroll, payrollApprovals } from '../schema/payroll-run.schema';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
 import { CompensationService } from 'src/modules/core/employees/compensation/compensation.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { format } from 'date-fns';
 import { TaxService } from '../tax/tax.service';
 import { Queue } from 'bullmq';

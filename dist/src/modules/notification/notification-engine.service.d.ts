@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { Queue } from 'bullmq';
 type CreateNotificationEventInput = {
     companyId: string;

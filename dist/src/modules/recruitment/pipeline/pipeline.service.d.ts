@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CreatePipelineDto } from './dto/create-pipeline.dto';
 import { UpdatePipelineDto } from './dto/update-pipeline.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class PipelineService {
     private readonly db;
@@ -24,7 +24,7 @@ export declare class PipelineService {
         description: string | null;
         isGlobal: boolean | null;
         createdAt: Date | null;
-        stageCount: number;
+        stageCount: any;
     }[]>;
     findTemplateWithStages(templateId: string): Promise<{
         stages: {

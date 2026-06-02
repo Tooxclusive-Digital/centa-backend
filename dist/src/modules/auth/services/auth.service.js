@@ -281,6 +281,19 @@ let AuthService = class AuthService {
         if (!passwordIsValid) {
             throw new common_1.BadRequestException('Invalid credentials');
         }
+        const [employeeRecord] = await this.db
+            .select({ employmentStatus: schema_2.employees.employmentStatus })
+            .from(schema_2.employees)
+            .where((0, drizzle_orm_1.eq)(schema_2.employees.userId, user.id))
+            .execute();
+        if (employeeRecord && employeeRecord.employmentStatus !== 'active') {
+            this.logger.warn({
+                userId: user.id,
+                email,
+                employmentStatus: employeeRecord.employmentStatus,
+            }, 'Login rejected: employee is not active');
+            throw new common_1.BadRequestException('Your account is inactive. Please contact your administrator.');
+        }
         return user;
     }
     async logout(response) {

@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { LeavePolicyService } from '../policy/leave-policy.service';
 import { LeaveSettingsService } from '../settings/leave-settings.service';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { EmployeesService } from 'src/modules/core/employees/employees.service';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { HolidaysService } from 'src/modules/leave/holidays/holidays.service';
@@ -55,7 +55,7 @@ export declare class LeaveRequestService {
     findAll(companyId: string): Promise<({
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -67,7 +67,7 @@ export declare class LeaveRequestService {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -79,7 +79,7 @@ export declare class LeaveRequestService {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;
@@ -91,7 +91,7 @@ export declare class LeaveRequestService {
     } | {
         employeeId: string;
         requestId: string;
-        employeeName: string;
+        employeeName: any;
         leaveType: string;
         startDate: string;
         endDate: string;

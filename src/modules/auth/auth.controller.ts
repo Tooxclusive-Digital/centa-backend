@@ -30,7 +30,7 @@ import {
 import { Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorator/current-user.decorator';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ResponseInterceptor } from 'src/common/interceptor/error-interceptor';
 import { InviteUserDto } from './dto/invite-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and, inArray } from 'drizzle-orm';
 import { assessmentResponses } from '../schema/performance-assessment-responses.schema';
 import {
@@ -16,7 +16,7 @@ import { performanceAssessments } from '../schema/performance-assessments.schema
 import { SaveResponseDto } from './dto/save-response.dto';
 import { BulkSaveResponsesDto } from './dto/bulk-save-responses.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CacheService } from 'src/common/cache/cache.service';
 
 @Injectable()

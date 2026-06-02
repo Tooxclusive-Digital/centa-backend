@@ -1,5 +1,5 @@
-import { User } from 'src/common/types/user.type';
-import { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from '../audit/audit.service';
 import { CacheService } from 'src/common/cache/cache.service';
 export declare class ReactionService {
@@ -19,7 +19,7 @@ export declare class ReactionService {
     }[]>;
     countReactionsByType(announcementId: string): Promise<{
         reactionType: string;
-        count: number;
+        count: any;
     }[]>;
     hasUserReacted(announcementId: string, userId: string): Promise<boolean>;
 }

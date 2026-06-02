@@ -1,8 +1,8 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CompanySettingsService } from 'src/company-settings/company-settings.service';
 import { PermissionsService } from 'src/modules/auth/permissions/permissions.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
 type Row = Record<string, any>;
@@ -33,8 +33,8 @@ export declare class EmployeesBulkImportWriteService {
         }[];
         created: {
             createdEmps: {
-                id: any;
-                email: any;
+                id: string;
+                email: string;
             }[];
             createdUsers: {
                 id: string;

@@ -1,4 +1,4 @@
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { SelfAssessmentsService } from './self-assessments.service';
 export declare class SelfAssessmentsController extends BaseController {

@@ -1,5 +1,5 @@
 import { OfferLetterService } from './offer-letter.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateOfferTemplateDto } from './dto/create-offer-template.dto';
 import { UpdateOfferTemplateDto } from './dto/update-offer-template.dto';

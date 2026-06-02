@@ -5,10 +5,10 @@ import {
   Inject,
 } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq } from 'drizzle-orm';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { payGroupAllowances } from '../schema/pay-group-allowances.schema';
 import { payGroups } from 'src/modules/payroll/schema/pay-groups.schema';
 import { CreateAllowanceDto } from './dto/create-allowance.dto';

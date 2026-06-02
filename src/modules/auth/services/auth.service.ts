@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 import * as bcrypt from 'bcryptjs';
 import { TokenGeneratorService } from './token-generator.service';
 import { LoginDto } from '../dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { companyRoles, users } from '../schema';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { eq } from 'drizzle-orm';
@@ -388,6 +388,29 @@ export class AuthService {
 
     if (!passwordIsValid) {
       throw new BadRequestException('Invalid credentials');
+    }
+
+    // Check employee status — block inactive/terminated employees
+    const [employeeRecord] = await this.db
+      .select({ employmentStatus: employees.employmentStatus })
+      .from(employees)
+      .where(eq(employees.userId, user.id))
+      .execute();
+
+    // Only block if a record exists and is explicitly inactive
+    // (admins/super_admins may not have an employee record — let them through)
+    if (employeeRecord && employeeRecord.employmentStatus !== 'active') {
+      this.logger.warn(
+        {
+          userId: user.id,
+          email,
+          employmentStatus: employeeRecord.employmentStatus,
+        },
+        'Login rejected: employee is not active',
+      );
+      throw new BadRequestException(
+        'Your account is inactive. Please contact your administrator.',
+      );
     }
 
     return user;

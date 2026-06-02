@@ -8,7 +8,7 @@ import {
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { eq, and, aliasedTable, inArray, sql } from 'drizzle-orm';
 import { AssignCostCenterDto } from './dto/assign-cost-center.dto';
 import { AssignParentDto } from './dto/assign-parent.dto';

@@ -1,4 +1,4 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { NotificationEngineService } from '../notification-engine.service';
 export declare class NotificationPlannerCron {
     private readonly db;

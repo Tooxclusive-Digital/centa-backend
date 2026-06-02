@@ -1,5 +1,5 @@
 import { CreateDependentDto } from './dto/create-dependent.dto';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { UpdateDependentDto } from './dto/update-dependent.dto';
 export declare class DependentsService {

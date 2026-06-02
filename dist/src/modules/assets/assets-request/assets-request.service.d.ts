@@ -1,7 +1,7 @@
 import { CreateAssetsRequestDto } from './dto/create-assets-request.dto';
 import { UpdateAssetsRequestDto } from './dto/update-assets-request.dto';
-import { User } from 'src/common/types/user.type';
-import { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { AssetsSettingsService } from '../settings/assets-settings.service';
 import { PusherService } from 'src/modules/notification/services/pusher.service';
@@ -42,7 +42,7 @@ export declare class AssetsRequestService {
         status: string | null;
         requestDate: string;
         createdAt: Date | null;
-        employeeName: unknown;
+        employeeName: any;
         employeeEmail: any;
     } | {
         id: string;
@@ -53,7 +53,7 @@ export declare class AssetsRequestService {
         status: string | null;
         requestDate: string;
         createdAt: Date | null;
-        employeeName: unknown;
+        employeeName: any;
         employeeEmail: any;
     })[]>;
     findOne(id: string): Promise<{

@@ -2,17 +2,17 @@ import { IsString, IsDateString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateCycleDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
   @IsDateString()
-  startDate: string;
+  startDate!: string;
 
   @IsDateString()
-  endDate: string;
+  endDate!: string;
 
   @IsOptional()
   @IsBoolean()

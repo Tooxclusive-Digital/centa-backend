@@ -1,6 +1,6 @@
 import { InterviewsService } from './interviews.service';
 import { ScorecardTemplateService } from './scorecard.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { CreateScorecardTemplateDto } from './dto/create-score-card.dto';
 import { SubmitFeedbackDto } from './dto/feedback-score.dto';
 import { ScheduleInterviewDto } from './dto/schedule-interview.dto';
@@ -119,7 +119,7 @@ export declare class InterviewsController extends BaseController {
         description: string | null;
         isSystem: boolean | null;
         createdAt: Date | null;
-        criteria: unknown;
+        criteria: any;
     }[]>;
     createScorecardTemplate(dto: CreateScorecardTemplateDto, user: User): Promise<{
         id: string;

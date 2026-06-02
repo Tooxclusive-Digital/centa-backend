@@ -3,11 +3,11 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { and, eq, gte, lte, isNull } from 'drizzle-orm';
 import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { attendanceBreaks, attendanceRecords } from 'src/drizzle/schema';
 import { EmployeesService } from 'src/modules/core/employees/employees.service';
 import { CacheService } from 'src/common/cache/cache.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { AttendanceLocationService } from './attendance-location.service';
 
 @Injectable()

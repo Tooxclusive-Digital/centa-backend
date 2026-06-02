@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { offCyclePayroll } from '../schema/off-cycle.schema';
 import { sql, eq, and, gte, lte, desc } from 'drizzle-orm';
 import { employees } from 'src/drizzle/schema';

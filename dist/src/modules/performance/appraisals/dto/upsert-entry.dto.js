@@ -26,7 +26,7 @@ __decorate([
 ], UpsertEntryDto.prototype, "competencyId", void 0);
 __decorate([
     (0, class_validator_1.IsUUID)(),
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], UpsertEntryDto.prototype, "expectedLevelId", void 0);
 __decorate([

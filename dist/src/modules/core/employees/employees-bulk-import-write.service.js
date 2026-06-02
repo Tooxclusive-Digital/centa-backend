@@ -57,10 +57,7 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
             rowsCount: Array.isArray(rows) ? rows.length : 0,
         });
         if (!Array.isArray(rows) || rows.length === 0) {
-            this.logger.warn({
-                op: 'employees.bulkCreate.noRows',
-                companyId,
-            });
+            this.logger.warn({ op: 'employees.bulkCreate.noRows', companyId });
             throw new common_1.BadRequestException('No rows provided.');
         }
         const tRefs0 = Date.now();
@@ -87,9 +84,7 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 .execute(),
         ]);
         const permissionRoles = await this.permissionService.getRolesByCompany(companyId);
-        this.logger.warn({
-            op: 'employees.bulkCreate.refsLoaded',
-            companyId,
+        console.log('[bulkCreate] refs loaded', {
             ms: Date.now() - tRefs0,
             departments: allDepts.length,
             jobRoles: allRoles.length,
@@ -116,6 +111,10 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
         if (!empNums.length || !emails.length) {
             throw new common_1.BadRequestException('CSV must include Employee Number and Email.');
         }
+        console.log('[bulkCreate] checking DB duplicates', {
+            emailCount: emails.length,
+            empNumCount: empNums.length,
+        });
         const [existingUsers, existingEmpsByEmail, existingEmpsByEmpNo] = await Promise.all([
             this.db
                 .select({ id: schema_1.users.id, email: schema_1.users.email })
@@ -142,6 +141,11 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employees.companyId, companyId), (0, drizzle_orm_1.inArray)(schema_1.employees.employeeNumber, empNums)))
                 .execute(),
         ]);
+        console.log('[bulkCreate] existing records found', {
+            existingUsers: existingUsers.length,
+            existingEmpsByEmail: existingEmpsByEmail.length,
+            existingEmpsByEmpNo: existingEmpsByEmpNo.length,
+        });
         const existingUserIdByEmail = new Map(existingUsers.map((u) => [u.email.toLowerCase(), u.id]));
         const existingEmpByEmail = new Map(existingEmpsByEmail.map((e) => [e.email.toLowerCase(), e]));
         const empNoOwnerByEmpNo = new Map(existingEmpsByEmpNo.map((e) => [e.employeeNumber, e.email.toLowerCase()]));
@@ -160,6 +164,7 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
         const failedRows = [];
         const warnings = [];
         const hodByDepartment = new Map();
+        console.log('[bulkCreate] parsing rows', { total: rows.length });
         for (const [index, row] of rows.entries()) {
             const rowIndex = index + 1;
             try {
@@ -229,12 +234,10 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                     throw new common_1.BadRequestException('Gross Salary is required');
                 const grossSalaryCleaned = grossSalaryRaw.replace(/[^0-9.-]/g, '');
                 const grossSalary = Number(grossSalaryCleaned);
-                if (!Number.isFinite(grossSalary)) {
+                if (!Number.isFinite(grossSalary))
                     throw new common_1.BadRequestException(`Invalid Gross Salary "${grossSalaryRaw}"`);
-                }
-                if (grossSalary < 0) {
+                if (grossSalary < 0)
                     throw new common_1.BadRequestException('Gross Salary cannot be negative');
-                }
                 const compDto = (0, class_transformer_1.plainToInstance)(create_compensation_dto_1.CreateCompensationDto, {
                     effectiveDate: employmentStartDate.toISOString(),
                     grossSalary,
@@ -245,6 +248,12 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 if (errors.length) {
                     throw new common_1.BadRequestException(this.formatValidationErrors(errors));
                 }
+                console.log(`[bulkCreate] row ${rowIndex} parsed OK`, {
+                    email,
+                    employeeNumber,
+                    isHeadOfDepartment,
+                    companyRoleKey,
+                });
                 imports.push({
                     rowIndex,
                     empDto,
@@ -258,6 +267,11 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 });
             }
             catch (err) {
+                console.warn(`[bulkCreate] row ${rowIndex} FAILED`, {
+                    error: err.message,
+                    email: this.asString(row['Email']),
+                    empNo: this.asString(row['Employee Number']),
+                });
                 failedRows.push({
                     rowIndex,
                     employeeNumber: this.asString(row['Employee Number']),
@@ -266,33 +280,51 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 });
             }
         }
+        console.log('[bulkCreate] parse complete', {
+            total: rows.length,
+            imports: imports.length,
+            failed: failedRows.length,
+            failedRows,
+        });
         if (!imports.length) {
-            console.log('ALL ROWS FAILED:', failedRows);
-            const firstError = failedRows[0];
             throw new common_1.BadRequestException({
-                message: `All rows failed validation. Example error (row ${firstError.rowIndex}): ${firstError.error}`,
+                message: `All rows failed validation. Example error (row ${failedRows[0].rowIndex}): ${failedRows[0].error}`,
                 failedRows,
             });
         }
         const importsToUpdateEmp = imports.filter((i) => existingEmpByEmail.has(i.email));
         const importsToInsert = imports.filter((i) => !existingEmpByEmail.has(i.email));
         const importsToCreateUsers = importsToInsert.filter((i) => !existingUserIdByEmail.has(i.email));
+        console.log('[bulkCreate] split', {
+            toInsert: importsToInsert.length,
+            toUpdate: importsToUpdateEmp.length,
+            toCreateUsers: importsToCreateUsers.length,
+        });
         const plainPasswords = importsToCreateUsers.map(() => (0, crypto_1.randomBytes)(12).toString('hex'));
         const hashedPasswords = await Promise.all(plainPasswords.map((pw) => bcrypt.hash(pw, 6)));
+        console.log('[bulkCreate] starting transaction');
         const result = await this.db.transaction(async (trx) => {
-            const createdUsers = await trx
-                .insert(schema_1.users)
-                .values(importsToCreateUsers.map((i, idx) => ({
-                email: i.email,
-                firstName: i.empDto.firstName,
-                lastName: i.empDto.lastName,
-                password: hashedPasswords[idx],
-                companyRoleId: companyRoleMap.get(this.norm(i.companyRoleKey)) ??
-                    companyRoleMap.get('employee'),
-                companyId,
-            })))
-                .returning({ id: schema_1.users.id, email: schema_1.users.email })
-                .execute();
+            console.log('[bulkCreate:tx] inserting users', {
+                count: importsToCreateUsers.length,
+            });
+            const createdUsers = importsToCreateUsers.length > 0
+                ? await trx
+                    .insert(schema_1.users)
+                    .values(importsToCreateUsers.map((i, idx) => ({
+                    email: i.email,
+                    firstName: i.empDto.firstName,
+                    lastName: i.empDto.lastName,
+                    password: hashedPasswords[idx],
+                    companyRoleId: companyRoleMap.get(this.norm(i.companyRoleKey)) ??
+                        companyRoleMap.get('employee'),
+                    companyId,
+                })))
+                    .returning({ id: schema_1.users.id, email: schema_1.users.email })
+                    .execute()
+                : [];
+            console.log('[bulkCreate:tx] users created', {
+                count: createdUsers.length,
+            });
             const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000);
             const inviteTokens = createdUsers.map((u) => ({
                 user_id: u.id,
@@ -304,19 +336,35 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 expires_at,
                 is_used: false,
             }));
-            await trx.insert(schema_1.PasswordResetToken).values(inviteTokens).execute();
+            if (inviteTokens.length > 0) {
+                await trx.insert(schema_1.PasswordResetToken).values(inviteTokens).execute();
+                console.log('[bulkCreate:tx] invite tokens inserted', {
+                    count: inviteTokens.length,
+                });
+            }
             const userIdByEmail = new Map(existingUserIdByEmail);
             createdUsers.forEach((u) => userIdByEmail.set(u.email.toLowerCase(), u.id));
-            const createdEmps = await trx
-                .insert(schema_1.employees)
-                .values(imports.map((i) => ({
-                ...i.empDto,
-                userId: userIdByEmail.get(i.email),
-                companyId,
-                employmentStatus: i.empDto.employmentStatus,
-            })))
-                .returning({ id: schema_1.employees.id, email: schema_1.employees.email })
-                .execute();
+            console.log('[bulkCreate:tx] inserting employees', {
+                count: importsToInsert.length,
+            });
+            const createdEmps = importsToInsert.length > 0
+                ? await trx
+                    .insert(schema_1.employees)
+                    .values(importsToInsert.map((i) => ({
+                    ...i.empDto,
+                    userId: userIdByEmail.get(i.email),
+                    companyId,
+                    employmentStatus: i.empDto.employmentStatus,
+                })))
+                    .returning({ id: schema_1.employees.id, email: schema_1.employees.email })
+                    .execute()
+                : [];
+            console.log('[bulkCreate:tx] employees inserted', {
+                count: createdEmps.length,
+            });
+            console.log('[bulkCreate:tx] updating existing employees', {
+                count: importsToUpdateEmp.length,
+            });
             for (const i of importsToUpdateEmp) {
                 const existing = existingEmpByEmail.get(i.email);
                 const uid = userIdByEmail.get(i.email) ?? existing.userId;
@@ -345,11 +393,15 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                     .set({ companyRoleId: newRoleId })
                     .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.users.companyId, companyId), (0, drizzle_orm_1.eq)(schema_1.users.email, i.email)))
                     .execute();
+                console.log(`[bulkCreate:tx] updated employee`, { email: i.email });
             }
             const createdEmpIdByEmail = new Map(createdEmps.map((e) => [e.email.toLowerCase(), e.id]));
             for (const [email, emp] of existingEmpByEmail.entries()) {
                 createdEmpIdByEmail.set(email, emp.id);
             }
+            console.log('[bulkCreate:tx] assigning HoDs', {
+                count: hodByDepartment.size,
+            });
             for (const [departmentId, email] of hodByDepartment.entries()) {
                 const employeeId = createdEmpIdByEmail.get(email.toLowerCase());
                 if (!employeeId)
@@ -359,10 +411,20 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                     .set({ headId: employeeId })
                     .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.departments.id, departmentId), (0, drizzle_orm_1.eq)(schema_1.departments.companyId, companyId)))
                     .execute();
+                console.log(`[bulkCreate:tx] HoD assigned`, {
+                    departmentId,
+                    email,
+                    employeeId,
+                });
             }
             const mdFromImport = this.resolveManagingDirectorEmployeeIdFromImport(imports, createdEmpIdByEmail, managingDirectorJobRoleId);
             const mdFromDb = await this.resolveManagingDirectorEmployeeIdFromDb(trx, companyId, managingDirectorJobRoleId);
             const defaultManagerEmployeeId = mdFromImport ?? mdFromDb;
+            console.log('[bulkCreate:tx] manager resolution', {
+                mdFromImport,
+                mdFromDb,
+                defaultManagerEmployeeId,
+            });
             if (!defaultManagerEmployeeId) {
                 throw new common_1.BadRequestException('No Managing Director employee found to use as the default manager.');
             }
@@ -392,28 +454,43 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                             existingEmpIdByEmail.get(imp.managerEmail) ??
                             defaultManagerEmployeeId;
                 }
+                console.log(`[bulkCreate:tx] setting manager`, {
+                    email: imp.email,
+                    managerId,
+                });
                 await trx
                     .update(schema_1.employees)
                     .set({ managerId })
                     .where((0, drizzle_orm_1.eq)(schema_1.employees.id, empId))
                     .execute();
             }
-            await trx
-                .insert(schema_1.employeeFinancials)
-                .values(createdEmps.map((e, i) => ({
-                employeeId: e.id,
-                ...imports[i].finDto,
-            })))
-                .execute();
-            await trx
-                .insert(compensation_schema_1.employeeCompensations)
-                .values(createdEmps.map((e, i) => ({
-                employeeId: e.id,
-                ...imports[i].compDto,
-            })))
-                .execute();
+            console.log('[bulkCreate:tx] inserting financials + compensations', {
+                count: createdEmps.length,
+            });
+            if (createdEmps.length > 0) {
+                await trx
+                    .insert(schema_1.employeeFinancials)
+                    .values(createdEmps.map((e, i) => ({
+                    employeeId: e.id,
+                    ...importsToInsert[i].finDto,
+                })))
+                    .execute();
+                await trx
+                    .insert(compensation_schema_1.employeeCompensations)
+                    .values(createdEmps.map((e, i) => ({
+                    employeeId: e.id,
+                    ...importsToInsert[i].compDto,
+                })))
+                    .execute();
+                console.log('[bulkCreate:tx] financials + compensations inserted');
+            }
             await this.companySettingsService.setOnboardingTask(companyId, 'employees', 'upload_employees', 'done');
             return { createdEmps, createdUsers, inviteTokens };
+        });
+        console.log('[bulkCreate] transaction complete', {
+            createdEmps: result.createdEmps.length,
+            createdUsers: result.createdUsers.length,
+            inviteTokens: result.inviteTokens.length,
         });
         try {
             await this.cacheService.bumpCompanyVersion(companyId);
@@ -431,11 +508,24 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
         const tokenByUserId = new Map(result.inviteTokens.map((t) => [t.user_id, t.token]));
         const firstNameByEmail = new Map(imports.map((i) => [i.email.toLowerCase(), i.empDto.firstName]));
         const baseUrl = this.config.get('EMPLOYEE_PORTAL_URL');
+        console.log('[bulkCreate] sending invite emails', {
+            count: result.createdUsers.length,
+            baseUrl,
+        });
         await Promise.all(result.createdUsers.map((u) => {
             const token = tokenByUserId.get(u.id);
-            if (!token)
+            if (!token) {
+                console.warn('[bulkCreate] no token for user', {
+                    userId: u.id,
+                    email: u.email,
+                });
                 return Promise.resolve();
+            }
             const resetLink = `${baseUrl}/reset-password/${token}`;
+            console.log('[bulkCreate] queuing email', {
+                email: u.email,
+                resetLink,
+            });
             return this.emailQueue.add('sendPasswordResetEmail', {
                 email: u.email,
                 name: firstNameByEmail.get(u.email.toLowerCase()) ?? '',
@@ -449,6 +539,11 @@ let EmployeesBulkImportWriteService = EmployeesBulkImportWriteService_1 = class 
                 removeOnFail: false,
             });
         }));
+        console.log('[bulkCreate] done', {
+            successCount: result.createdEmps.length,
+            failedCount: failedRows.length,
+            durationMs: Date.now() - t0,
+        });
         return {
             successCount: result.createdEmps.length,
             failedCount: failedRows.length,

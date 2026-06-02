@@ -1,5 +1,5 @@
 import { EmployeesService } from './employees.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { CreateEmployeeCoreDto } from './dto/create-employee-core.dto';
 import { FastifyReply } from 'fastify';
@@ -28,8 +28,8 @@ export declare class EmployeesController extends BaseController {
         }[];
         created: {
             createdEmps: {
-                id: any;
-                email: any;
+                id: string;
+                email: string;
             }[];
             createdUsers: {
                 id: string;
@@ -473,10 +473,10 @@ export declare class EmployeesController extends BaseController {
     }>;
     findAllManagers(user: User): Promise<({
         id: any;
-        name: string;
+        name: any;
     } | {
         id: any;
-        name: string;
+        name: any;
     })[]>;
     updateManagerId(id: string, managerId: string): Promise<{
         [x: string]: any;
@@ -486,12 +486,12 @@ export declare class EmployeesController extends BaseController {
     }>;
     getFallbackManagers(user: User): Promise<({
         id: any;
-        name: string;
+        name: any;
         role: string;
         email: string;
     } | {
         id: any;
-        name: string;
+        name: any;
         role: string;
         email: string;
     })[]>;

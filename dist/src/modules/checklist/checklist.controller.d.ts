@@ -1,5 +1,5 @@
 import { StaffChecklistService } from './services/staff-checklist.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { ExtraKeyParamDto } from './dto/extra-key.param';
 import { ChecklistService } from './checklist.service';
 import { PayrollChecklistService } from './services/payroll-checklist.service';

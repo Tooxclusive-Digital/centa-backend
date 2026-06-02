@@ -1,6 +1,6 @@
 import { BaseCrudService } from 'src/common/services/base-crud.service';
 import { AuditService } from 'src/modules/audit/audit.service';
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { jobRoles } from '../schema';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CreateJobRoleDto } from './dto/create-job-role.dto';

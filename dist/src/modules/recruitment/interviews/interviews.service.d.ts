@@ -1,5 +1,5 @@
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { ScheduleInterviewDto } from './dto/schedule-interview.dto';
 import { FeedbackScoreDto } from './dto/feedback-score.dto';
 import { AuditService } from 'src/modules/audit/audit.service';

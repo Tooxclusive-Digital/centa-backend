@@ -1,9 +1,9 @@
-import { db } from 'src/drizzle/types/drizzle';
+import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CreateSalaryAdvanceDto, UpdateLoanStatusDto } from './dto/create-salary-advance.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
 import { PayrollSettingsService } from '../settings/payroll-settings.service';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { PusherService } from 'src/modules/notification/services/pusher.service';
 import { PushNotificationService } from 'src/modules/notification/services/push-notification.service';
 export declare class SalaryAdvanceService {
@@ -43,8 +43,8 @@ export declare class SalaryAdvanceService {
         totalPaid: string;
         tenureMonths: number;
         preferredMonthlyPayment: string | null;
-        employeeName: unknown;
-        outstandingBalance: number;
+        employeeName: any;
+        outstandingBalance: any;
         loanNumber: string | null;
     } | {
         name: string;
@@ -54,8 +54,8 @@ export declare class SalaryAdvanceService {
         totalPaid: string;
         tenureMonths: number;
         preferredMonthlyPayment: string | null;
-        employeeName: unknown;
-        outstandingBalance: number;
+        employeeName: any;
+        outstandingBalance: any;
         loanNumber: string | null;
     })[]>;
     getAdvancesByEmployee(employee_id: string): Promise<{
@@ -116,7 +116,7 @@ export declare class SalaryAdvanceService {
         name: string;
         paymentStatus: string;
         createAt: Date;
-        outstandingBalance: number;
+        outstandingBalance: any;
         loanNumber: string | null;
     }[]>;
     getRepaymentByLoan(loan_id: string): Promise<{
@@ -155,12 +155,12 @@ export declare class SalaryAdvanceService {
         reason: string | null;
         role: string;
         createdAt: Date;
-        employee: unknown;
+        employee: any;
     } | {
         action: string;
         reason: string | null;
         role: string;
         createdAt: Date;
-        employee: unknown;
+        employee: any;
     })[]>;
 }

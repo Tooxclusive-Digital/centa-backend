@@ -1,43 +1,43 @@
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class ExpensesController extends BaseController {
     private readonly expensesService;
     constructor(expensesService: ExpensesService);
     create(createExpenseDto: CreateExpenseDto, user: User): Promise<{
-        status: string;
         date: string;
         id: string;
+        category: string;
         createdAt: Date | null;
         updatedAt: Date | null;
         companyId: string;
-        category: string;
         employeeId: string;
-        submittedAt: Date | null;
-        amount: string;
-        rejectionReason: string | null;
+        status: string;
         purpose: string;
+        amount: string;
+        submittedAt: Date | null;
         receiptUrl: string | null;
         paymentMethod: string | null;
+        rejectionReason: string | null;
         deletedAt: Date | null;
     }>;
     bulkCreate(rows: any[], user: User): Promise<{
-        status: string;
         date: string;
         id: string;
+        category: string;
         createdAt: Date | null;
         updatedAt: Date | null;
         companyId: string;
-        category: string;
         employeeId: string;
-        submittedAt: Date | null;
-        amount: string;
-        rejectionReason: string | null;
+        status: string;
         purpose: string;
+        amount: string;
+        submittedAt: Date | null;
         receiptUrl: string | null;
         paymentMethod: string | null;
+        rejectionReason: string | null;
         deletedAt: Date | null;
     }[]>;
     findAll(user: User): Promise<({
@@ -50,9 +50,9 @@ export declare class ExpensesController extends BaseController {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
     } | {
         id: string;
         date: string;
@@ -63,9 +63,9 @@ export declare class ExpensesController extends BaseController {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
     })[]>;
     findOne(id: string): Promise<{
         id: string;
@@ -149,9 +149,9 @@ export declare class ExpensesController extends BaseController {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
         approvalDate: Date | null;
     } | {
         id: string;
@@ -163,9 +163,9 @@ export declare class ExpensesController extends BaseController {
         status: string;
         paymentMethod: string | null;
         receiptUrl: string | null;
-        requester: string;
+        requester: any;
         employeeId: string;
-        approvedBy: string;
+        approvedBy: any;
         approvalDate: Date | null;
     })[]>;
     exportReimbursementReport(user: User, filters: any, format?: 'csv' | 'excel'): Promise<{

@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { and, eq, inArray } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { db } from 'src/drizzle/types/drizzle';
-import { User } from 'src/common/types/user.type';
+import type { db } from 'src/drizzle/types/drizzle';
+import type { User } from 'src/common/types/user.type';
 import { appraisals } from './schema/performance-appraisals.schema';
 import {
   competencyLevels,
@@ -172,7 +172,7 @@ export class AppraisalEntriesService {
       .values({
         appraisalId,
         competencyId: dto.competencyId,
-        expectedLevelId: dto.expectedLevelId ?? null,
+        expectedLevelId: dto.expectedLevelId,
         employeeLevelId: dto.employeeLevelId ?? null,
         managerLevelId: dto.managerLevelId ?? null,
         notes: dto.notes ?? null,
@@ -237,10 +237,10 @@ export class AppraisalEntriesService {
           await trx.insert(appraisalEntries).values({
             appraisalId,
             competencyId: dto.competencyId,
-            expectedLevelId: dto.expectedLevelId ?? null,
-            employeeLevelId: dto.employeeLevelId ?? null,
-            managerLevelId: dto.managerLevelId ?? null,
-            notes: dto.notes ?? null,
+            expectedLevelId: dto.expectedLevelId,
+            employeeLevelId: dto.employeeLevelId ?? undefined,
+            managerLevelId: dto.managerLevelId ?? undefined,
+            notes: dto.notes ?? undefined,
           });
         }
       }

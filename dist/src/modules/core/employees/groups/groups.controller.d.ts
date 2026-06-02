@@ -1,7 +1,7 @@
 import { GroupsService } from './groups.service';
 import { AddGroupMembersDto, CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { User } from 'src/common/types/user.type';
+import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 export declare class GroupsController extends BaseController {
     private readonly groupsService;
@@ -17,36 +17,36 @@ export declare class GroupsController extends BaseController {
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     } | {
         id: any;
         name: any;
         type: any;
         parentGroupId: any;
         createdAt: any;
-        members: number;
-        leadEmployeeId: string | null;
-        leadEmployeeName: string | null;
+        members: any;
+        leadEmployeeId: any;
+        leadEmployeeName: any;
     })[]>;
     findOne(id: string): Promise<{
         members: ({

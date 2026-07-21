@@ -1,85 +1,160 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CentaHR — Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The server-side engine for CentaHR, a multi-tenant HR management platform built for African businesses. Handles payroll processing, tax compliance, workforce management, recruitment, performance appraisals, and real-time employee engagement — all through a single REST API.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Layer | Technology |
+|---|---|
+| Framework | NestJS (Fastify adapter) |
+| Language | TypeScript |
+| Database | PostgreSQL via Drizzle ORM |
+| Cache | Redis (Keyv) |
+| Queue | BullMQ + RabbitMQ |
+| Auth | JWT + Passport (local, Google OAuth, 2FA) |
+| Storage | AWS S3 |
+| Email | SendGrid + Handlebars templates |
+| Push Notifications | Expo SDK + Pusher |
+| PDF Generation | Puppeteer + PDFKit |
+| Logging | Pino + Logtail (Better Stack) |
+| Deployment | Railway |
 
-## Project setup
+---
+
+## Modules
+
+### Core HR
+- **Employees** — full employee lifecycle, role management, bulk import, org chart
+- **Departments** — department hierarchy, manager assignment
+- **Announcements** — company-wide announcements with email delivery
+- **Audit** — immutable audit log for all sensitive operations
+- **Assets** — company asset tracking and assignment
+
+### Payroll & Finance
+- **Payroll** — multi-run payroll engine with off-cycle support, pay groups, pay adjustments, payslip generation, payment status tracking
+- **Tax** — Nigerian tax compliance (PAYE, pension, NHF), configurable tax bands, tax filing
+- **Benefits** — employee benefit plans linked to pay groups
+- **Expenses** — expense submission and approval workflow
+
+### Time & Attendance
+- **Clock In/Out** — GPS-aware clock-in/out with timezone handling
+- **Shifts** — shift scheduling and assignment
+- **Reports** — daily, weekly, and monthly attendance reports with CSV export
+
+### Leave Management
+- **Leave Requests** — multi-type leave requests with approval flow
+- **Holidays** — company and public holiday calendar
+
+### Recruitment
+- **Recruitment** — job postings, applicant pipeline, offer letter generation with PDF, offer status tracking
+
+### Performance
+- **Appraisals** — self-appraisal, manager review, scoring engine, review cycles
+- **Goals** — goal creation, assignment, approval logic, cycle cron jobs
+- **Assessments** — 360-degree feedback and peer review
+
+### Employee Self-Service (ESS)
+- **ESS Home** — personalised employee dashboard (V2)
+- **Onboarding / Offboarding** — checklist-driven lifecycle flows
+
+### Integrations
+- **Google Calendar / Meet** — meeting scheduling
+- **Google OAuth** — SSO login
+- **OpenAI** — AI assistant integration
+- **Expo** — mobile push notifications
+
+### Infrastructure
+- **Auth** — JWT refresh rotation, 2FA (72h sessions), role-based guards, permission scoping
+- **Cache** — Redis-backed multi-layer caching with PgBouncer-compatible Drizzle config
+- **Notifications** — email, in-app, and mobile push notification service
+- **Billing** — subscription and trial period management
+- **Checklist** — configurable onboarding checklist engine
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL
+- Redis
+- AWS S3 bucket
+- SendGrid API key
+
+### Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+### Environment Variables
+
+Create a `.env` file at the root. Key variables:
+
+```env
+DATABASE_URL=
+REDIS_URL=
+JWT_SECRET=
+JWT_REFRESH_SECRET=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET=
+SENDGRID_API_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+
+### Running the Server
 
 ```bash
 # development
-$ npm run start
+npm run start:dev
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# production
+npm run start:prod
 ```
 
-## Run tests
+### Database
 
 ```bash
-# unit tests
-$ npm run test
+# generate migrations
+npm run db:generate
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# run migrations
+npm run db:migrate
 ```
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## Architecture
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+src/
+├── modules/
+│   ├── auth/           # JWT, OAuth, 2FA, guards
+│   ├── core/           # employees, departments, company settings
+│   ├── payroll/        # payroll engine, tax, benefits
+│   ├── time/           # attendance, shifts, reports
+│   ├── leave/          # leave requests, holidays
+│   ├── recruitment/    # jobs, applicants, offers
+│   ├── performance/    # appraisals, goals, assessments
+│   ├── lifecycle/      # onboarding, offboarding
+│   ├── notification/   # email, push, in-app
+│   ├── integrations/   # Google, OpenAI, Expo
+│   ├── assets/         # asset management
+│   ├── expenses/       # expense management
+│   ├── audit/          # audit logging
+│   └── announcement/   # company announcements
+└── common/             # guards, decorators, interceptors, pipes
+```
 
-## Support
+Multi-tenancy is enforced at the database level — every table is scoped by `company_id`. Role-based access control is implemented via a metadata-driven `PermissionsGuard` that gates routes by plan tier and user role.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Private — All rights reserved. CentaHR © 2024.

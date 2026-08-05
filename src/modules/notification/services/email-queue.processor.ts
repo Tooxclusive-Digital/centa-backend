@@ -9,7 +9,10 @@ import { NotificationDeliveryService } from '../notification-delivery.service';
 @Processor('emailQueue', {
   concurrency: 5,
   limiter: {
-    max: 30,
+    // Resend allows 10 requests/second. Stay just under it: the previous
+    // value of 30/s was 3x over the ceiling and produced 429s on any
+    // company-wide fan-out.
+    max: 8,
     duration: 1000,
   },
 } as WorkerOptions)

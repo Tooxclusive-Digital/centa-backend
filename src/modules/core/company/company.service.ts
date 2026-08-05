@@ -10,7 +10,7 @@ import {
   employees,
   jobRoles,
 } from '../schema';
-import { eq, and, gte, lte, sql, desc } from 'drizzle-orm';
+import { eq, and, or, gte, lte, sql, desc, isNull } from 'drizzle-orm';
 import { CacheService } from 'src/common/cache/cache.service';
 import { holidays } from 'src/modules/leave/schema/holidays.schema';
 import { DepartmentService } from '../department/department.service';
@@ -272,6 +272,11 @@ export class CompanyService {
             .from(holidays)
             .where(
               and(
+                // company-specific holidays plus global public ones
+                or(
+                  eq(holidays.companyId, companyId),
+                  isNull(holidays.companyId),
+                ),
                 gte(holidays.date, startDate.toISOString()),
                 lte(holidays.date, endDate.toISOString()),
               ),
@@ -421,6 +426,11 @@ export class CompanyService {
             .from(holidays)
             .where(
               and(
+                // company-specific holidays plus global public ones
+                or(
+                  eq(holidays.companyId, companyId),
+                  isNull(holidays.companyId),
+                ),
                 gte(holidays.date, startDate.toISOString()),
                 lte(holidays.date, endDate.toISOString()),
               ),

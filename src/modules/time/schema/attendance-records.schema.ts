@@ -40,5 +40,8 @@ export const attendanceRecords = pgTable(
     index('attendance_records_clock_in_idx').on(t.clockIn),
     index('attendance_records_clock_out_idx').on(t.clockOut),
     index('attendance_records_created_at_idx').on(t.createdAt),
+    // Reporting queries filter by company over a clock-in date range; the
+    // single-column indexes above force a filter step after the index scan.
+    index('attendance_records_company_clock_in_idx').on(t.companyId, t.clockIn),
   ],
 );

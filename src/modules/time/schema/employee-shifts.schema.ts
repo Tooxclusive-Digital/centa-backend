@@ -39,5 +39,10 @@ export const employeeShifts = pgTable(
     index('employee_shifts_shift_date_idx').on(t.shiftDate),
     index('employee_shifts_is_deleted_idx').on(t.isDeleted),
     index('employee_shifts_created_at_idx').on(t.createdAt),
+    // Range-loading a company's assignments for reporting.
+    index('employee_shifts_company_shift_date_idx').on(
+      t.companyId,
+      t.shiftDate,
+    ),
   ],
 );

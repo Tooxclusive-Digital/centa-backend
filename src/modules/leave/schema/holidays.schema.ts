@@ -39,5 +39,7 @@ export const holidays = pgTable(
     index('holidays_type_idx').on(t.type),
     index('holidays_country_idx').on(t.country),
     index('holidays_source_idx').on(t.source),
+    // Lookups scope by company (or global) across a date range.
+    index('holidays_company_date_idx').on(t.companyId, t.date),
   ],
 );

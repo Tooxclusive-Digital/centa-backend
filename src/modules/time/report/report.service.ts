@@ -9,7 +9,7 @@ import {
   startOfMonth,
   endOfMonth,
 } from 'date-fns';
-import { eq, gte, lte, and, sql } from 'drizzle-orm';
+import { eq, gte, lte, and, or, sql, isNull } from 'drizzle-orm';
 import { EmployeeShiftsService } from '../employee-shifts/employee-shifts.service';
 import { AttendanceSettingsService } from '../settings/attendance-settings.service';
 import { holidays } from 'src/modules/leave/schema/holidays.schema';
@@ -663,16 +663,22 @@ export class ReportService {
     return results;
   }
 
+  /**
+   * Attendance totals for the last 6 months.
+   *
+   * Present/late are counted by Postgres in a single grouped query; absences
+   * are derived from expected working days rather than walking every
+   * employee/day pair in JS. The previous implementation looped
+   * employees x days x months and issued queries inside those loops, which
+   * meant tens of thousands of round trips per dashboard load.
+   */
   async getLast6MonthsAttendanceSummary(companyId: string) {
     const now = new Date();
-    const summaries: {
-      month: string;
-      present: number;
-      absent: number;
-      late: number;
-    }[] = [];
+    const rangeStart = startOfMonth(
+      new Date(now.getFullYear(), now.getMonth() - 5, 1),
+    );
+    const rangeEnd = endOfMonth(now);
 
-    // Global settings, holidays, employees, shifts
     const s =
       await this.attendanceSettingsService.getAllAttendanceSettings(companyId);
     const useShifts = s['use_shifts'] ?? false;
@@ -680,124 +686,181 @@ export class ReportService {
     const defaultWorkingDays = Number(s['default_working_days'] ?? 5);
     const lateToleranceMins = Number(s['late_tolerance_minutes'] ?? 10);
 
-    const allEmployees =
-      await this.employeesService.findAllEmployees(companyId);
-    const leaves = await this.leaveRequestService.findAll(companyId);
+    const [allEmployees, leaves, holidayRows, attendanceRows, shiftRows] =
+      await Promise.all([
+        this.employeesService.findAllEmployees(companyId),
+        this.leaveRequestService.findAll(companyId),
 
+        // Company holidays plus global public holidays, for the whole range.
+        this.db
+          .select({ date: holidays.date })
+          .from(holidays)
+          .where(
+            and(
+              or(eq(holidays.companyId, companyId), isNull(holidays.companyId)),
+              gte(holidays.date, format(rangeStart, 'yyyy-MM-dd')),
+              lte(holidays.date, format(rangeEnd, 'yyyy-MM-dd')),
+            ),
+          )
+          .execute(),
+
+        // One grouped pass: per employee/day, the earliest clock-in.
+        this.db
+          .select({
+            employeeId: attendanceRecords.employeeId,
+            day: sql<string>`TO_CHAR(${attendanceRecords.clockIn}, 'YYYY-MM-DD')`.as(
+              'day',
+            ),
+            firstClockIn: sql<string>`MIN(${attendanceRecords.clockIn})`.as(
+              'first_clock_in',
+            ),
+          })
+          .from(attendanceRecords)
+          .where(
+            and(
+              eq(attendanceRecords.companyId, companyId),
+              gte(attendanceRecords.clockIn, rangeStart),
+              lte(attendanceRecords.clockIn, rangeEnd),
+            ),
+          )
+          .groupBy(
+            attendanceRecords.employeeId,
+            sql`TO_CHAR(${attendanceRecords.clockIn}, 'YYYY-MM-DD')`,
+          )
+          .execute(),
+
+        // Shift assignments for the range, loaded once instead of per day.
+        useShifts
+          ? this.db
+              .select({
+                employeeId: employeeShifts.employeeId,
+                shiftDate: employeeShifts.shiftDate,
+                startTime: shifts.startTime,
+                lateToleranceMinutes: shifts.lateToleranceMinutes,
+              })
+              .from(employeeShifts)
+              .innerJoin(shifts, eq(shifts.id, employeeShifts.shiftId))
+              .where(
+                and(
+                  eq(employeeShifts.companyId, companyId),
+                  eq(employeeShifts.isDeleted, false),
+                  gte(employeeShifts.shiftDate, format(rangeStart, 'yyyy-MM-dd')),
+                  lte(employeeShifts.shiftDate, format(rangeEnd, 'yyyy-MM-dd')),
+                ),
+              )
+              .execute()
+          : Promise.resolve(
+              [] as {
+                employeeId: string;
+                shiftDate: string;
+                startTime: string;
+                lateToleranceMinutes: number | null;
+              }[],
+            ),
+      ]);
+
+    const holidaySet = new Set(holidayRows.map((h) => h.date));
+
+    // employeeId -> set of days on approved leave
     const leaveMap = new Map<string, Set<string>>();
     for (const lr of leaves) {
       const from = new Date(lr.startDate);
       const to = new Date(lr.endDate);
       for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
         const key = format(d, 'yyyy-MM-dd');
-        if (!leaveMap.has(lr.employeeId))
-          leaveMap.set(lr.employeeId, new Set());
+        if (!leaveMap.has(lr.employeeId)) leaveMap.set(lr.employeeId, new Set());
         leaveMap.get(lr.employeeId)!.add(key);
       }
     }
 
-    // Iterate over last 6 months
+    // `${employeeId}|${day}` -> shift override
+    const shiftMap = new Map<
+      string,
+      { startTime: string; lateToleranceMinutes: number | null }
+    >();
+    for (const row of shiftRows) {
+      shiftMap.set(`${row.employeeId}|${row.shiftDate}`, {
+        startTime: row.startTime,
+        lateToleranceMinutes: row.lateToleranceMinutes,
+      });
+    }
+
+    const isWorkingDay = (dayKey: string) => {
+      if (holidaySet.has(dayKey)) return false;
+      if (defaultWorkingDays < 7) {
+        const dayName = format(parseISO(dayKey), 'EEE');
+        if (dayName === 'Sat' || dayName === 'Sun') return false;
+      }
+      return true;
+    };
+
+    // month key -> tallies
+    const byMonth = new Map<string, { present: number; late: number }>();
+    // month key -> days actually attended, to subtract from expected
+    const attendedByMonth = new Map<string, number>();
+
+    for (const row of attendanceRows) {
+      const dayKey = row.day;
+      if (!isWorkingDay(dayKey)) continue;
+      if (leaveMap.get(row.employeeId)?.has(dayKey)) continue;
+
+      const monthKey = dayKey.slice(0, 7); // YYYY-MM
+      const bucket = byMonth.get(monthKey) ?? { present: 0, late: 0 };
+
+      const override = useShifts
+        ? shiftMap.get(`${row.employeeId}|${dayKey}`)
+        : undefined;
+      const startTime = override?.startTime ?? defaultStartTimeStr;
+      const tolerance = override?.lateToleranceMinutes ?? lateToleranceMins;
+
+      const shiftStart = parseISO(`${dayKey}T${startTime}:00`);
+      const diffMins =
+        (new Date(row.firstClockIn).getTime() - shiftStart.getTime()) / 60000;
+
+      if (diffMins <= tolerance) bucket.present++;
+      else bucket.late++;
+
+      byMonth.set(monthKey, bucket);
+      attendedByMonth.set(monthKey, (attendedByMonth.get(monthKey) ?? 0) + 1);
+    }
+
+    // Absences = expected employee-days (working days, minus per-employee
+    // leave) - days actually attended.
+    const summaries: {
+      month: string;
+      present: number;
+      absent: number;
+      late: number;
+    }[] = [];
+
     for (let i = 5; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const start = startOfMonth(date);
       const end = endOfMonth(date);
-      const year = start.getFullYear();
-      const month = format(start, 'MMMM');
+      const monthKey = format(start, 'yyyy-MM');
 
-      // Holidays for that year
-      const holidaysForYear = await this.db
-        .select()
-        .from(holidays)
-        .where(eq(holidays.year, String(year)))
-        .execute();
-      const holidaySet = new Set(holidaysForYear.map((h) => h.date));
+      const workingDays = eachDayOfInterval({ start, end })
+        .map((d) => format(d, 'yyyy-MM-dd'))
+        .filter(isWorkingDay);
 
-      // Attendance records for the month
-      const recs = await this.db
-        .select()
-        .from(attendanceRecords)
-        .where(
-          and(
-            eq(attendanceRecords.companyId, companyId),
-            gte(attendanceRecords.clockIn, start),
-            lte(attendanceRecords.clockIn, end),
-          ),
-        )
-        .execute();
-
-      const attendanceMap = new Map<
-        string,
-        Map<string, typeof attendanceRecords.$inferSelect>
-      >();
-
-      for (const rec of recs) {
-        const dayKey = format(rec.clockIn, 'yyyy-MM-dd');
-        if (!attendanceMap.has(rec.employeeId)) {
-          attendanceMap.set(rec.employeeId, new Map());
-        }
-        attendanceMap.get(rec.employeeId)!.set(dayKey, rec);
-      }
-
-      const allDates = eachDayOfInterval({ start, end }).map((d) =>
-        format(d, 'yyyy-MM-dd'),
-      );
-
-      let present = 0;
-      let late = 0;
-      let absent = 0;
-
+      let expected = 0;
       for (const emp of allEmployees) {
-        for (const dateKey of allDates) {
-          // Skip weekends
-          if (defaultWorkingDays < 7) {
-            const dayName = format(parseISO(dateKey), 'EEE');
-            if (['Sat', 'Sun'].includes(dayName)) continue;
-          }
-
-          // Holiday?
-          if (holidaySet.has(dateKey)) continue;
-
-          // Leave?
-          if (leaveMap.get(emp.id)?.has(dateKey)) continue;
-
-          // Attendance?
-          const empMap = attendanceMap.get(emp.id) ?? new Map();
-          const rec = empMap.get(dateKey);
-          if (!rec || !rec.clockIn) {
-            absent++;
-            continue;
-          }
-
-          // Determine expected start time
-          let startTime = defaultStartTimeStr;
-          let tolerance = lateToleranceMins;
-
-          if (useShifts) {
-            const shift =
-              await this.employeeShiftsService.getActiveShiftForEmployee(
-                emp.id,
-                companyId,
-                dateKey,
-              );
-            if (shift) {
-              startTime = shift.startTime;
-              tolerance = shift.lateToleranceMinutes ?? lateToleranceMins;
-            }
-          }
-
-          const shiftStart = parseISO(`${dateKey}T${startTime}:00`);
-          const checkIn = new Date(rec.clockIn);
-          const diffMins = (checkIn.getTime() - shiftStart.getTime()) / 60000;
-
-          if (diffMins <= tolerance) {
-            present++;
-          } else {
-            late++;
-          }
+        const empLeave = leaveMap.get(emp.id);
+        for (const dayKey of workingDays) {
+          if (empLeave?.has(dayKey)) continue;
+          expected++;
         }
       }
 
-      summaries.push({ month, present, absent, late });
+      const tallies = byMonth.get(monthKey) ?? { present: 0, late: 0 };
+      const attended = attendedByMonth.get(monthKey) ?? 0;
+
+      summaries.push({
+        month: format(start, 'MMMM'),
+        present: tallies.present,
+        late: tallies.late,
+        absent: Math.max(0, expected - attended),
+      });
     }
 
     return summaries;

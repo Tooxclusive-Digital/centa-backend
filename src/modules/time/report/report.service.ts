@@ -1191,6 +1191,109 @@ export class ReportService {
     };
   }
 
+  async getShiftDetailedDailyReport(
+    companyId: string,
+    yearMonth: string,
+    filters?: { locationId?: string; departmentId?: string },
+  ) {
+    const tz = 'Africa/Lagos';
+    const from = `${yearMonth}-01`;
+    const to = new Date(
+      new Date(from).getFullYear(),
+      new Date(from).getMonth() + 1,
+      0,
+    )
+      .toISOString()
+      .split('T')[0];
+
+    const conditions = [
+      eq(employeeShifts.companyId, companyId),
+      eq(employeeShifts.isDeleted, false),
+      gte(employeeShifts.shiftDate, from),
+      lte(employeeShifts.shiftDate, to),
+    ];
+
+    if (filters?.locationId) {
+      conditions.push(eq(shifts.locationId, filters.locationId));
+    }
+    if (filters?.departmentId) {
+      conditions.push(eq(employees.departmentId, filters.departmentId));
+    }
+
+    const rows = await this.db
+      .select({
+        employeeNumber: employees.employeeNumber,
+        employeeName: sql<string>`CONCAT(${employees.firstName}, ' ', ${employees.lastName})`,
+        date: employeeShifts.shiftDate,
+        shiftName: shifts.name,
+        locationName: companyLocations.name,
+        expectedStart: shifts.startTime,
+        expectedEnd: shifts.endTime,
+        clockIn: attendanceRecords.clockIn,
+        clockOut: attendanceRecords.clockOut,
+        isLateArrival: attendanceRecords.isLateArrival,
+        workDurationMinutes: attendanceRecords.workDurationMinutes,
+        latenessMinutes: sql<number>`
+          CASE
+            WHEN ${attendanceRecords.clockIn} IS NOT NULL
+             AND COALESCE(${attendanceRecords.isLateArrival}, false) = true
+            THEN GREATEST(0, ROUND(
+              EXTRACT(EPOCH FROM (
+                ${attendanceRecords.clockIn}
+                - (${employeeShifts.shiftDate}::date + ${shifts.startTime}::time)
+              )) / 60
+            ))
+            ELSE 0
+          END
+        `.as('latenessMinutes'),
+      })
+      .from(employeeShifts)
+      .leftJoin(employees, eq(employees.id, employeeShifts.employeeId))
+      .leftJoin(shifts, eq(shifts.id, employeeShifts.shiftId))
+      .leftJoin(
+        attendanceRecords,
+        and(
+          eq(attendanceRecords.employeeId, employeeShifts.employeeId),
+          eq(attendanceRecords.companyId, companyId),
+          eq(
+            sql`${attendanceRecords.clockIn}::date`,
+            employeeShifts.shiftDate,
+          ),
+        ),
+      )
+      .leftJoin(companyLocations, eq(companyLocations.id, shifts.locationId))
+      .where(and(...conditions))
+      .orderBy(employees.lastName, employees.firstName, employeeShifts.shiftDate)
+      .execute();
+
+    return rows.map((row) => ({
+      employeeNumber: row.employeeNumber,
+      employeeName: row.employeeName,
+      date: row.date,
+      shiftName: row.shiftName ?? '',
+      locationName: row.locationName ?? '',
+      expectedStart: row.expectedStart ?? '',
+      expectedEnd: row.expectedEnd ?? '',
+      clockIn: row.clockIn
+        ? formatInTimeZone(new Date(row.clockIn), tz, 'HH:mm:ss')
+        : null,
+      clockOut: row.clockOut
+        ? formatInTimeZone(new Date(row.clockOut), tz, 'HH:mm:ss')
+        : null,
+      status:
+        row.clockIn == null
+          ? 'Absent'
+          : row.isLateArrival
+            ? 'Late'
+            : 'Present',
+      latenessMinutes: Number(row.latenessMinutes ?? 0),
+      hoursWorked:
+        row.workDurationMinutes != null
+          ? `${Math.floor(row.workDurationMinutes / 60)}h ${row.workDurationMinutes % 60}m`
+          : null,
+    }));
+  }
+
   async getShiftDashboardSummaryByMonthForDL(
     companyId: string,
     yearMonth: string,

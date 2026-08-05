@@ -1,10 +1,8 @@
-import { OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-export declare class EmailVerificationService implements OnModuleInit {
-    private config;
+import { ResendProvider } from '../resend.provider';
+export declare class EmailVerificationService {
+    private readonly resend;
     private readonly logger;
-    constructor(config: ConfigService);
-    onModuleInit(): void;
+    constructor(resend: ResendProvider);
     private sendWithRetry;
     sendVerifyEmail(email: string, token: string, companyName?: string): Promise<void>;
     sendVerifyLogin(email: string, token: string): Promise<void>;

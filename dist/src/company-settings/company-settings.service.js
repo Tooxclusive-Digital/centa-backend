@@ -23,6 +23,7 @@ const payroll_1 = require("./settings/payroll");
 const expense_1 = require("./settings/expense");
 const performance_1 = require("./settings/performance");
 const onboarding_1 = require("./settings/onboarding");
+const announcements_1 = require("./settings/announcements");
 const constants_1 = require("./constants/constants");
 const schema_1 = require("../drizzle/schema");
 let CompanySettingsService = class CompanySettingsService {
@@ -35,6 +36,7 @@ let CompanySettingsService = class CompanySettingsService {
             ...expense_1.expenses,
             ...performance_1.performance,
             ...onboarding_1.onboarding,
+            ...announcements_1.announcements,
             { key: 'default_currency', value: 'USD' },
             { key: 'default_timezone', value: 'UTC' },
             { key: 'default_language', value: 'en' },

@@ -39,6 +39,14 @@ let CompanySettingsController = class CompanySettingsController extends base_con
     async updateTwoFactorAuthSetting(user, body) {
         return this.companySettingsService.setSetting(user.companyId, body.key, body.value);
     }
+    async getBirthdayAnnouncements(user) {
+        const value = await this.companySettingsService.getSettingsOrDefaults(user.companyId, 'announcements.birthday_enabled', false);
+        return { enabled: value === true || value === 'true' };
+    }
+    async updateBirthdayAnnouncements(user, body) {
+        await this.companySettingsService.setSetting(user.companyId, 'announcements.birthday_enabled', !!body.enabled);
+        return { enabled: !!body.enabled };
+    }
     async getOnboardingStep(user) {
         return this.companySettingsService.getOnboardingVisibility(user.companyId);
     }
@@ -94,6 +102,25 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], CompanySettingsController.prototype, "updateTwoFactorAuthSetting", null);
+__decorate([
+    (0, common_2.Get)('birthday-announcements'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.SetMetadata)('roles', ['super_admin', 'admin', 'hr_manager']),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], CompanySettingsController.prototype, "getBirthdayAnnouncements", null);
+__decorate([
+    (0, common_1.Patch)('birthday-announcements'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.SetMetadata)('roles', ['super_admin', 'admin', 'hr_manager']),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], CompanySettingsController.prototype, "updateBirthdayAnnouncements", null);
 __decorate([
     (0, common_2.Get)('onboarding'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

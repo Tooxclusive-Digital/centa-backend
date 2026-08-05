@@ -7,13 +7,20 @@ export declare class AssetsController extends BaseController {
     private readonly assetsService;
     constructor(assetsService: AssetsService);
     create(createAssetDto: CreateAssetDto, user: User): Promise<{
+        status: string;
         id: string;
         name: string;
+        createdAt: string | null;
+        updatedAt: string | null;
+        companyId: string;
+        category: string;
+        locationId: string;
+        isDeleted: boolean | null;
+        employeeId: string | null;
         internalId: string;
         modelName: string | null;
         color: string | null;
         specs: string | null;
-        category: string;
         manufacturer: string | null;
         serialNumber: string;
         purchasePrice: string;
@@ -23,24 +30,24 @@ export declare class AssetsController extends BaseController {
         lendDate: string | null;
         returnDate: string | null;
         usefulLifeYears: number;
-        createdAt: string | null;
-        updatedAt: string | null;
-        companyId: string;
-        locationId: string;
-        isDeleted: boolean | null;
-        employeeId: string | null;
-        status: string;
     }>;
     bulkCreate(rows: any[], user: User): Promise<{
         insertedCount: number;
         inserted: {
+            status: string;
             id: string;
             name: string;
+            createdAt: string | null;
+            updatedAt: string | null;
+            companyId: string;
+            category: string;
+            locationId: string;
+            isDeleted: boolean | null;
+            employeeId: string | null;
             internalId: string;
             modelName: string | null;
             color: string | null;
             specs: string | null;
-            category: string;
             manufacturer: string | null;
             serialNumber: string;
             purchasePrice: string;
@@ -50,13 +57,6 @@ export declare class AssetsController extends BaseController {
             lendDate: string | null;
             returnDate: string | null;
             usefulLifeYears: number;
-            createdAt: string | null;
-            updatedAt: string | null;
-            companyId: string;
-            locationId: string;
-            isDeleted: boolean | null;
-            employeeId: string | null;
-            status: string;
         }[];
         errors: {
             index: number;

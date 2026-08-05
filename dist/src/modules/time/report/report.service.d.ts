@@ -226,6 +226,23 @@ export declare class ReportService {
             daysPresent: any;
         })[];
     }>;
+    getShiftDetailedDailyReport(companyId: string, yearMonth: string, filters?: {
+        locationId?: string;
+        departmentId?: string;
+    }): Promise<{
+        employeeNumber: any;
+        employeeName: any;
+        date: string;
+        shiftName: string;
+        locationName: string;
+        expectedStart: string;
+        expectedEnd: string;
+        clockIn: string | null;
+        clockOut: string | null;
+        status: string;
+        latenessMinutes: number;
+        hoursWorked: string | null;
+    }[]>;
     getShiftDashboardSummaryByMonthForDL(companyId: string, yearMonth: string, filters?: {
         locationId?: string;
         departmentId?: string;

@@ -8,18 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var LeaveNotificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LeaveNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
-let LeaveNotificationService = class LeaveNotificationService {
-    constructor(config) {
+const resend_provider_1 = require("../resend.provider");
+const leave_request_html_1 = require("../templates/leave-request.html");
+let LeaveNotificationService = LeaveNotificationService_1 = class LeaveNotificationService {
+    constructor(config, resend) {
         this.config = config;
+        this.resend = resend;
+        this.logger = new common_1.Logger(LeaveNotificationService_1.name);
         this.logoUrl = 'https://centa-hr.s3.eu-west-3.amazonaws.com/company-files/7beedcd5-66c3-4351-8955-ddcab3528652/5cf61059-52be-4c46-9d4e-9817f2b9257b/1769600186954-1768990436384-logo-CqG_6WrI.png';
-    }
-    ensureSendGrid() {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
     }
     buildSubject(status) {
         if (status === 'pending')
@@ -49,57 +50,37 @@ let LeaveNotificationService = class LeaveNotificationService {
         if (!base)
             return undefined;
         if (payload.status === 'pending') {
-            return `${base}/dashboard/leave}`;
+            return `${base}/dashboard/leave`;
         }
-        return `${base}/ess/leave}`;
-    }
-    pickTemplateId(status) {
-        if (status === 'pending') {
-            return this.config.get('LEAVE_REQUEST_TEMPLATE_ID') || '';
-        }
-        return this.config.get('LEAVE_STATUS_TEMPLATE_ID') || '';
+        return `${base}/ess/leave`;
     }
     async sendLeaveEmail(payload) {
-        this.ensureSendGrid();
-        const templateId = this.pickTemplateId(payload.status);
         const actionUrl = this.buildActionUrl(payload);
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'CentaHR',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: this.buildSubject(payload.status),
-                logoUrl: this.logoUrl,
-                companyName: payload.companyName,
-                status: payload.status,
-                statusTitle: this.buildStatusTitle(payload.status),
-                statusMessage: this.buildStatusMessage(payload.status),
-                managerName: payload.managerName,
-                employeeName: payload.employeeName,
-                leaveType: payload.leaveType,
-                startDate: payload.startDate,
-                endDate: payload.endDate,
-                totalDays: payload.totalDays,
-                reason: payload.reason,
-                rejectionReason: payload.rejectionReason,
-                actionUrl,
-                actionText: 'View Request',
-                leaveRequestId: payload.leaveRequestId,
-                employeeId: payload.employeeId,
-                approverId: payload.approverId,
-                meta: payload.meta,
-            },
-        };
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: 'CentaHR <noreply@centahr.com>',
+                subject: this.buildSubject(payload.status),
+                html: (0, leave_request_html_1.leaveRequestHtml)({
+                    employeeName: payload.employeeName,
+                    companyName: payload.companyName,
+                    statusTitle: this.buildStatusTitle(payload.status),
+                    statusMessage: this.buildStatusMessage(payload.status),
+                    leaveType: payload.leaveType,
+                    startDate: payload.startDate,
+                    endDate: payload.endDate,
+                    totalDays: payload.totalDays,
+                    rejectionReason: payload.rejectionReason,
+                    actionUrl,
+                    actionText: 'View Request',
+                    logoUrl: this.logoUrl,
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[LeaveNotificationService] sendLeaveEmail failed', error);
-            if (error?.response)
-                console.error(error.response.body);
+            this.logger.error('sendLeaveEmail failed', error);
         }
     }
     async sendLeaveApprovalRequestEmail(payload) {
@@ -110,8 +91,9 @@ let LeaveNotificationService = class LeaveNotificationService {
     }
 };
 exports.LeaveNotificationService = LeaveNotificationService;
-exports.LeaveNotificationService = LeaveNotificationService = __decorate([
+exports.LeaveNotificationService = LeaveNotificationService = LeaveNotificationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        resend_provider_1.ResendProvider])
 ], LeaveNotificationService);
 //# sourceMappingURL=leave-notification.service.js.map

@@ -46,6 +46,129 @@ let AnnouncementService = class AnnouncementService {
             `company:${companyId}:announcements:meta`,
         ];
     }
+    async findOrCreateCategory(companyId, name) {
+        const [existing] = await this.db
+            .select({ id: announcements_schema_1.announcementCategories.id })
+            .from(announcements_schema_1.announcementCategories)
+            .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(announcements_schema_1.announcementCategories.companyId, companyId), (0, drizzle_orm_1.eq)(announcements_schema_1.announcementCategories.name, name)))
+            .limit(1)
+            .execute();
+        if (existing)
+            return existing.id;
+        const [created] = await this.db
+            .insert(announcements_schema_1.announcementCategories)
+            .values({ companyId, name })
+            .returning({ id: announcements_schema_1.announcementCategories.id })
+            .execute();
+        return created.id;
+    }
+    async queueAnnouncementEmails(input) {
+        const recipients = await this.db
+            .select({
+            id: schema_1.employees.id,
+            email: schema_1.employees.email,
+            firstName: schema_1.employees.firstName,
+        })
+            .from(schema_1.employees)
+            .where(input.departmentId
+            ? (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employees.companyId, input.companyId), (0, drizzle_orm_1.eq)(schema_1.employees.departmentId, input.departmentId), (0, drizzle_orm_1.eq)(schema_1.employees.employmentStatus, 'active'), (0, drizzle_orm_1.isNotNull)(schema_1.employees.email))
+            : (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employees.companyId, input.companyId), (0, drizzle_orm_1.eq)(schema_1.employees.employmentStatus, 'active'), (0, drizzle_orm_1.isNotNull)(schema_1.employees.email)))
+            .execute();
+        if (!recipients.length)
+            return 0;
+        const [company] = await this.db
+            .select({ name: schema_1.companies.name })
+            .from(schema_1.companies)
+            .where((0, drizzle_orm_1.eq)(schema_1.companies.id, input.companyId))
+            .execute();
+        const companyName = company?.name || 'Your Company';
+        const publishedAtFormatted = input.publishedAt
+            ? (0, date_fns_1.format)(input.publishedAt, 'PPP')
+            : undefined;
+        const plainBody = (0, string_strip_html_1.stripHtml)(input.body).result;
+        const preview = plainBody.length > 200 ? plainBody.slice(0, 200) + '…' : plainBody;
+        const chunkSize = 500;
+        for (let i = 0; i < recipients.length; i += chunkSize) {
+            const chunk = recipients.slice(i, i + chunkSize);
+            await this.emailQueue.addBulk(chunk.map((r) => ({
+                name: 'sendAnnouncement',
+                data: {
+                    toEmail: r.email,
+                    subject: `New company announcement: ${input.title}`,
+                    firstName: r.firstName || 'there',
+                    title: input.title,
+                    body: preview,
+                    publishedAt: publishedAtFormatted,
+                    companyName,
+                    meta: { announcementId: input.announcementId },
+                },
+                opts: {
+                    attempts: 3,
+                    backoff: { type: 'exponential', delay: 2000 },
+                    removeOnComplete: true,
+                    removeOnFail: false,
+                },
+            })));
+        }
+        return recipients.length;
+    }
+    async createSystemAnnouncement(input) {
+        if (input.dedupeByTitle !== false) {
+            const [existing] = await this.db
+                .select({ id: announcements_schema_1.announcements.id })
+                .from(announcements_schema_1.announcements)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(announcements_schema_1.announcements.companyId, input.companyId), (0, drizzle_orm_1.eq)(announcements_schema_1.announcements.title, input.title)))
+                .limit(1)
+                .execute();
+            if (existing)
+                return null;
+        }
+        const categoryId = await this.findOrCreateCategory(input.companyId, input.categoryName);
+        const [created] = await this.db
+            .insert(announcements_schema_1.announcements)
+            .values({
+            title: input.title,
+            body: input.body,
+            createdBy: input.createdBy,
+            companyId: input.companyId,
+            categoryId,
+            isPublished: true,
+            publishedAt: new Date(),
+            expiresAt: input.expiresAt ?? null,
+            link: '',
+            image: '',
+        })
+            .returning()
+            .execute();
+        if (!input.skipPush) {
+            try {
+                await this.push.createAndSendToCompany(input.companyId, {
+                    title: input.pushTitle ?? 'New Announcement',
+                    body: input.pushBody ?? created.title,
+                    type: 'message',
+                    data: { id: created.id },
+                    route: `/screens/dashboard/announcements/announcement-detail`,
+                }, input.pushEmployeeIds?.length
+                    ? { employeeIds: input.pushEmployeeIds }
+                    : undefined);
+            }
+            catch {
+            }
+        }
+        try {
+            await this.queueAnnouncementEmails({
+                companyId: input.companyId,
+                announcementId: created.id,
+                title: created.title,
+                body: created.body,
+                publishedAt: created.publishedAt,
+            });
+        }
+        catch {
+        }
+        await this.cache.bumpCompanyVersion(input.companyId);
+        return created;
+    }
     async create(dto, user) {
         return this.db.transaction(async (tx) => {
             const [existingAnnouncement] = await tx
@@ -101,50 +224,14 @@ let AnnouncementService = class AnnouncementService {
             });
             await this.cache.bumpCompanyVersion(user.companyId);
             if (newAnnouncement) {
-                const recipientQuery = tx
-                    .select({
-                    id: schema_1.employees.id,
-                    email: schema_1.employees.email,
-                    firstName: schema_1.employees.firstName,
-                })
-                    .from(schema_1.employees)
-                    .where(dto.departmentId
-                    ? (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employees.companyId, user.companyId), (0, drizzle_orm_1.eq)(schema_1.employees.departmentId, dto.departmentId), (0, drizzle_orm_1.isNotNull)(schema_1.employees.email))
-                    : (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employees.companyId, user.companyId), (0, drizzle_orm_1.isNotNull)(schema_1.employees.email)));
-                const recipients = await recipientQuery.execute();
-                const [company] = await tx
-                    .select({ name: schema_1.companies.name })
-                    .from(schema_1.companies)
-                    .where((0, drizzle_orm_1.eq)(schema_1.companies.id, user.companyId))
-                    .execute();
-                const companyName = company?.name || 'Your Company';
-                const publishedAtFormatted = newAnnouncement.publishedAt
-                    ? (0, date_fns_1.format)(newAnnouncement.publishedAt, 'PPP')
-                    : undefined;
-                const plainBody = (0, string_strip_html_1.stripHtml)(newAnnouncement.body).result;
-                const preview = plainBody.length > 200 ? plainBody.slice(0, 200) + '…' : plainBody;
-                const chunkSize = 500;
-                for (let i = 0; i < recipients.length; i += chunkSize) {
-                    const chunk = recipients.slice(i, i + chunkSize);
-                    await this.emailQueue.addBulk(chunk.map((r) => ({
-                        name: 'sendAnnouncement',
-                        data: {
-                            toEmail: r.email,
-                            subject: `New company announcement: ${newAnnouncement.title}`,
-                            firstName: r.firstName || 'there',
-                            title: newAnnouncement.title,
-                            body: preview,
-                            publishedAt: publishedAtFormatted,
-                            companyName,
-                            meta: { announcementId: newAnnouncement.id },
-                        },
-                        opts: {
-                            attempts: 3,
-                            removeOnComplete: true,
-                            removeOnFail: false,
-                        },
-                    })));
-                }
+                await this.queueAnnouncementEmails({
+                    companyId: user.companyId,
+                    announcementId: newAnnouncement.id,
+                    title: newAnnouncement.title,
+                    body: newAnnouncement.body,
+                    publishedAt: newAnnouncement.publishedAt,
+                    departmentId: dto.departmentId || null,
+                });
             }
             return newAnnouncement;
         });

@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { ResendProvider } from '../resend.provider';
 export interface AnnouncementPayload {
     toEmail: string;
     subject: string;
@@ -23,7 +24,9 @@ export interface AssessmentReminderPayload {
 }
 export declare class AnnouncementNotificationService {
     private readonly config;
-    constructor(config: ConfigService);
+    private readonly resend;
+    private readonly logger;
+    constructor(config: ConfigService, resend: ResendProvider);
     sendNewAnnouncement(payload: AnnouncementPayload): Promise<void>;
     sendAssessmentReminder(payload: AssessmentReminderPayload): Promise<void>;
 }

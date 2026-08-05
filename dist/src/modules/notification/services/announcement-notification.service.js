@@ -8,87 +8,78 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var AnnouncementNotificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AnnouncementNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
-let AnnouncementNotificationService = class AnnouncementNotificationService {
-    constructor(config) {
+const resend_provider_1 = require("../resend.provider");
+const announcement_html_1 = require("../templates/announcement.html");
+const assessment_reminder_html_1 = require("../templates/assessment-reminder.html");
+const _layout_1 = require("../templates/_layout");
+let AnnouncementNotificationService = AnnouncementNotificationService_1 = class AnnouncementNotificationService {
+    constructor(config, resend) {
         this.config = config;
+        this.resend = resend;
+        this.logger = new common_1.Logger(AnnouncementNotificationService_1.name);
     }
     async sendNewAnnouncement(payload) {
-        const apiKey = this.config.get('SEND_GRID_KEY') || '';
-        sgMail.setApiKey(apiKey);
-        const templateId = this.config.get('ANNOUNCEMENT_TEMPLATE_ID') || '';
-        const url = `${this.config.get('EMPLOYEE_PORTAL_URL')}/ess/announcement/${payload.meta?.announcementId || ''}`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: payload.companyName || 'Announcements',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            subject: payload.subject,
-            dynamicTemplateData: {
-                firstName: payload.firstName,
-                title: payload.title,
-                url,
-                body: payload.body,
-                publishedAt: payload.publishedAt,
-                expiresAt: payload.expiresAt,
-                companyName: payload.companyName,
-                subject: payload.subject,
-                ...payload.meta,
-            },
-        };
+        const base = this.config.get('EMPLOYEE_PORTAL_URL') || '';
+        const url = `${base}/ess/announcement/${payload.meta?.announcementId || ''}`;
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)(payload.companyName || 'Announcements', 'noreply@centahr.com'),
+                subject: payload.subject,
+                html: (0, announcement_html_1.announcementHtml)({
+                    firstName: payload.firstName,
+                    title: payload.title,
+                    body: payload.body,
+                    publishedAt: payload.publishedAt,
+                    expiresAt: payload.expiresAt,
+                    companyName: payload.companyName,
+                    url,
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[AnnouncementNotificationService] sendNewAnnouncement failed', error);
-            if (error?.response?.body)
-                console.error(error.response.body);
+            this.logger.error('sendNewAnnouncement failed', error);
+            throw error;
         }
     }
     async sendAssessmentReminder(payload) {
-        const apiKey = this.config.get('SEND_GRID_KEY') || '';
-        sgMail.setApiKey(apiKey);
-        const templateId = this.config.get('ASSESSMENT_REMINDER_TEMPLATE_ID') || '';
-        const url = `${this.config.get('EMPLOYEE_PORTAL_URL')}/ess/performance/reviews/${payload.meta?.assessmentId || ''}`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: payload.companyName || 'Performance Team',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            subject: payload.subject,
-            dynamicTemplateData: {
-                firstName: payload.firstName,
-                employeeName: payload.employeeName,
-                reviewerName: payload.reviewerName,
-                cycleName: payload.cycleName,
-                dueDate: payload.dueDate,
-                companyName: payload.companyName,
-                url,
-                subject: payload.subject,
-                ...payload.meta,
-            },
-        };
+        const base = this.config.get('EMPLOYEE_PORTAL_URL') || '';
+        const url = `${base}/ess/performance/reviews/${payload.meta?.assessmentId || ''}`;
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)(payload.companyName || 'Performance Team', 'noreply@centahr.com'),
+                subject: payload.subject || `Reminder: ${payload.cycleName} review`,
+                html: (0, assessment_reminder_html_1.assessmentReminderHtml)({
+                    firstName: payload.firstName,
+                    employeeName: payload.employeeName,
+                    reviewerName: payload.reviewerName,
+                    cycleName: payload.cycleName,
+                    dueDate: payload.dueDate,
+                    companyName: payload.companyName,
+                    url,
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[AnnouncementNotificationService] sendAssessmentReminder failed', error);
-            if (error?.response?.body)
-                console.error(error.response.body);
+            this.logger.error('sendAssessmentReminder failed', error);
+            throw error;
         }
     }
 };
 exports.AnnouncementNotificationService = AnnouncementNotificationService;
-exports.AnnouncementNotificationService = AnnouncementNotificationService = __decorate([
+exports.AnnouncementNotificationService = AnnouncementNotificationService = AnnouncementNotificationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        resend_provider_1.ResendProvider])
 ], AnnouncementNotificationService);
 //# sourceMappingURL=announcement-notification.service.js.map

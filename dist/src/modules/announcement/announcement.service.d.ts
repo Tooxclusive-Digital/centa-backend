@@ -20,6 +20,44 @@ export declare class AnnouncementService {
     private readonly emailQueue;
     constructor(db: db, auditService: AuditService, commentService: CommentService, reactionService: ReactionService, awsService: AwsService, cache: CacheService, push: PushNotificationService, emailQueue: Queue);
     private tags;
+    findOrCreateCategory(companyId: string, name: string): Promise<string>;
+    queueAnnouncementEmails(input: {
+        companyId: string;
+        announcementId: string;
+        title: string;
+        body: string;
+        publishedAt?: Date | null;
+        departmentId?: string | null;
+    }): Promise<number>;
+    createSystemAnnouncement(input: {
+        companyId: string;
+        createdBy: string;
+        title: string;
+        body: string;
+        categoryName: string;
+        dedupeByTitle?: boolean;
+        expiresAt?: Date | null;
+        pushTitle?: string;
+        pushBody?: string;
+        pushEmployeeIds?: string[];
+        skipPush?: boolean;
+    }): Promise<{
+        id: string;
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        link: string | null;
+        companyId: string;
+        createdBy: string;
+        departmentId: string | null;
+        title: string;
+        locationId: string | null;
+        body: string;
+        image: string | null;
+        publishedAt: Date | null;
+        expiresAt: Date | null;
+        isPublished: boolean | null;
+        categoryId: string;
+    } | null>;
     create(dto: CreateAnnouncementDto, user: User): Promise<{
         id: string;
         createdAt: Date | null;

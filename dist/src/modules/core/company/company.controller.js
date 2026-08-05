@@ -21,10 +21,12 @@ const current_user_decorator_1 = require("../../auth/decorator/current-user.deco
 const jwt_auth_guard_1 = require("../../auth/guards/jwt-auth.guard");
 const base_controller_1 = require("../../../common/interceptor/base.controller");
 const update_company_dto_1 = require("./dto/update-company.dto");
+const birthdays_service_1 = require("../employees/birthdays/birthdays.service");
 let CompanyController = class CompanyController extends base_controller_1.BaseController {
-    constructor(companyService) {
+    constructor(companyService, birthdaysService) {
         super();
         this.companyService = companyService;
+        this.birthdaysService = birthdaysService;
     }
     update(dto, user, ip) {
         return this.companyService.update(user.companyId, dto, user.id, ip);
@@ -37,6 +39,11 @@ let CompanyController = class CompanyController extends base_controller_1.BaseCo
     }
     getCompanySummary(user) {
         return this.companyService.getCompanySummary(user.companyId);
+    }
+    getUpcomingBirthdays(user, windowDays) {
+        const parsed = Number(windowDays);
+        const days = Number.isFinite(parsed) ? Math.min(Math.max(parsed, 0), 365) : 30;
+        return this.birthdaysService.getUpcomingBirthdays(user.companyId, days);
     }
     getEmployeeSummary(employeeId) {
         return this.companyService.getEmployeeSummary(employeeId);
@@ -90,6 +97,15 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CompanyController.prototype, "getCompanySummary", null);
 __decorate([
+    (0, common_1.Get)('birthdays'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)('windowDays')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], CompanyController.prototype, "getUpcomingBirthdays", null);
+__decorate([
     (0, common_1.Get)('employee-summary/:employeeId'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('employeeId')),
@@ -109,6 +125,7 @@ __decorate([
 exports.CompanyController = CompanyController = __decorate([
     (0, common_1.UseInterceptors)(audit_interceptor_1.AuditInterceptor),
     (0, common_1.Controller)('company'),
-    __metadata("design:paramtypes", [company_service_1.CompanyService])
+    __metadata("design:paramtypes", [company_service_1.CompanyService,
+        birthdays_service_1.BirthdaysService])
 ], CompanyController);
 //# sourceMappingURL=company.controller.js.map

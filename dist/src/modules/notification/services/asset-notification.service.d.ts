@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { ResendProvider } from '../resend.provider';
 type AssetStatus = 'requested' | 'approved' | 'rejected';
 export interface AssetStatusEmailPayload {
     toEmail: string;
@@ -20,14 +21,14 @@ export interface AssetStatusEmailPayload {
 }
 export declare class AssetNotificationService {
     private readonly config;
-    constructor(config: ConfigService);
+    private readonly resend;
+    private readonly logger;
+    constructor(config: ConfigService, resend: ResendProvider);
     private readonly logoUrl;
-    private ensureSendGrid;
     private buildSubject;
     private buildStatusTitle;
     private buildStatusMessage;
     private buildActionUrl;
-    private pickTemplateId;
     sendAssetEmail(payload: AssetStatusEmailPayload): Promise<void>;
     sendAssetApprovalRequestEmail(payload: Omit<AssetStatusEmailPayload, 'status'>): Promise<void>;
     sendAssetDecisionEmail(payload: Omit<AssetStatusEmailPayload, 'status'> & {

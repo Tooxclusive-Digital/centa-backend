@@ -2,6 +2,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AuditService } from 'src/modules/audit/audit.service';
 import type { db } from 'src/drizzle/types/drizzle';
 import { CacheService } from 'src/common/cache/cache.service';
+import { BirthdaysService } from 'src/modules/core/employees/birthdays/birthdays.service';
 import { DepartmentService } from '../department/department.service';
 import { PayGroupsService } from 'src/modules/payroll/pay-groups/pay-groups.service';
 import { LocationsService } from './locations/locations.service';
@@ -30,6 +31,7 @@ export declare class CompanyService {
     private readonly onboardingSeederService;
     private readonly leaveBalanceService;
     private readonly companySettingsService;
+    private readonly birthdaysService;
     protected table: import("drizzle-orm/pg-core").PgTableWithColumns<{
         name: "companies";
         schema: undefined;
@@ -308,7 +310,7 @@ export declare class CompanyService {
         };
         dialect: "pg";
     }>;
-    constructor(db: db, cache: CacheService, audit: AuditService, departmentService: DepartmentService, payGroupService: PayGroupsService, locationService: LocationsService, jobRoleService: JobRolesService, costCenterService: CostCentersService, payrollReport: ReportService, attendanceReport: AttendanceReportService, awsService: AwsService, permissionsService: PermissionsService, onboardingSeederService: OnboardingSeederService, leaveBalanceService: LeaveBalanceService, companySettingsService: CompanySettingsService);
+    constructor(db: db, cache: CacheService, audit: AuditService, departmentService: DepartmentService, payGroupService: PayGroupsService, locationService: LocationsService, jobRoleService: JobRolesService, costCenterService: CostCentersService, payrollReport: ReportService, attendanceReport: AttendanceReportService, awsService: AwsService, permissionsService: PermissionsService, onboardingSeederService: OnboardingSeederService, leaveBalanceService: LeaveBalanceService, companySettingsService: CompanySettingsService, birthdaysService: BirthdaysService);
     private ttlCompany;
     private ttlSummary;
     private ttlElements;
@@ -464,6 +466,7 @@ export declare class CompanyService {
             id: string;
             title: string;
         }[];
+        upcomingBirthdays: import("src/modules/core/employees/birthdays/birthdays.service").BirthdayEntry[];
         onboardingTaskCompleted: boolean;
     }>;
     getEmployeeSummary(employeeId: string): Promise<{
@@ -500,6 +503,7 @@ export declare class CompanyService {
             dueDaysAfterStart: number | null;
             startDate: Date | null;
         }[];
+        upcomingBirthdays: import("src/modules/core/employees/birthdays/birthdays.service").BirthdayEntry[];
     }>;
     getCompanyElements(companyId: string): Promise<{
         departments: ({

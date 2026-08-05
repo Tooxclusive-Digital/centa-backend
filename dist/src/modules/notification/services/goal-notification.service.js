@@ -8,144 +8,120 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var GoalNotificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoalNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
-let GoalNotificationService = class GoalNotificationService {
-    constructor(config) {
+const resend_provider_1 = require("../resend.provider");
+const goal_html_1 = require("../templates/goal.html");
+const _layout_1 = require("../templates/_layout");
+let GoalNotificationService = GoalNotificationService_1 = class GoalNotificationService {
+    constructor(config, resend) {
         this.config = config;
+        this.resend = resend;
+        this.logger = new common_1.Logger(GoalNotificationService_1.name);
+    }
+    goalPage(goalId) {
+        const base = this.config.get('EMPLOYEE_PORTAL_URL') || '';
+        return `${base}/ess/performance/goals/${goalId || ''}`;
     }
     async sendGoalCheckin(payload) {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const templateId = this.config.get('GOAL_CHECKIN_TEMPLATE_ID') || '';
-        const goalPage = `${this.config.get('EMPLOYEE_PORTAL_URL')}/ess/performance/goals/${payload.meta?.goalId || ''}`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'Goal Check-in',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: payload.subject,
-                firstName: payload.firstName,
-                employeeName: payload.employeeName,
-                title: payload.title,
-                dueDate: payload.dueDate,
-                companyName: payload.companyName,
-                goalId: payload.meta?.goalId,
-                url: goalPage,
-                bucket: payload.meta?.bucket,
-            },
-        };
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)('Goal Check-in', 'noreply@centahr.com'),
+                subject: payload.subject,
+                html: (0, goal_html_1.goalCheckinHtml)({
+                    firstName: payload.firstName,
+                    title: payload.title,
+                    dueDate: payload.dueDate,
+                    companyName: payload.companyName,
+                    url: this.goalPage(payload.meta?.goalId),
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[NotificationService] sendGoalCheckin failed', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
+            this.logger.error('sendGoalCheckin failed', error);
+            throw error;
         }
     }
     async sendGoalAssignment(payload) {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const templateId = this.config.get('GOAL_ASSIGNMENT_TEMPLATE_ID');
-        const goalPage = `${this.config.get('EMPLOYEE_PORTAL_URL')}/ess/performance/goals/${payload.meta?.goalId || ''}`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'Goal Assignment',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: payload.subject,
-                assignedBy: payload.assignedBy,
-                assignedTo: payload.assignedTo,
-                title: payload.title,
-                dueDate: payload.dueDate,
-                description: payload.description,
-                progress: payload.progress,
-                url: goalPage,
-            },
-        };
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)('Goal Assignment', 'noreply@centahr.com'),
+                subject: payload.subject,
+                html: (0, goal_html_1.goalAssignmentHtml)({
+                    assignedBy: payload.assignedBy,
+                    assignedTo: payload.assignedTo,
+                    title: payload.title,
+                    dueDate: payload.dueDate,
+                    description: payload.description,
+                    progress: payload.progress,
+                    url: this.goalPage(payload.meta?.goalId),
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[NotificationService] sendGoalAssignment failed', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
+            this.logger.error('sendGoalAssignment failed', error);
+            throw error;
         }
     }
     async sendGoalUpdates(payload) {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const templateId = this.config.get('GOAL_UPDATE_TEMPLATE_ID');
-        const goalPage = `${this.config.get('EMPLOYEE_PORTAL_URL')}/ess/performance/goals/${payload.meta?.goalId || ''}`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'Goal Updates',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: payload.subject,
-                firstName: payload.firstName,
-                addedBy: payload.addedBy,
-                title: payload.title,
-                url: goalPage,
-            },
-        };
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)('Goal Updates', 'noreply@centahr.com'),
+                subject: payload.subject,
+                html: (0, goal_html_1.goalUpdateHtml)({
+                    firstName: payload.firstName,
+                    addedBy: payload.addedBy,
+                    title: payload.title,
+                    url: this.goalPage(payload.meta?.goalId),
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[NotificationService] sendGoalAssignment failed', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
+            this.logger.error('sendGoalUpdates failed', error);
+            throw error;
         }
     }
     async sendGoalApprovalRequest(payload) {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const templateId = this.config.get('GOAL_APPROVAL_REQUEST_TEMPLATE_ID') || '';
-        const approvalPage = `${this.config.get('EMPLOYEE_PORTAL_URL')}/dashboard/performance/goals`;
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'Goal Approval Required',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: payload.subject,
-                managerName: payload.managerName,
-                employeeName: payload.employeeName,
-                title: payload.title,
-                dueDate: payload.dueDate,
-                description: payload.description,
-                url: approvalPage,
-            },
-        };
+        const base = this.config.get('EMPLOYEE_PORTAL_URL') || '';
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: (0, _layout_1.fromHeader)('Goal Approval Required', 'noreply@centahr.com'),
+                subject: payload.subject,
+                html: (0, goal_html_1.goalApprovalRequestHtml)({
+                    managerName: payload.managerName,
+                    employeeName: payload.employeeName,
+                    title: payload.title,
+                    dueDate: payload.dueDate,
+                    description: payload.description,
+                    url: `${base}/dashboard/performance/goals`,
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[NotificationService] sendGoalApprovalRequest failed', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
+            this.logger.error('sendGoalApprovalRequest failed', error);
+            throw error;
         }
     }
 };
 exports.GoalNotificationService = GoalNotificationService;
-exports.GoalNotificationService = GoalNotificationService = __decorate([
+exports.GoalNotificationService = GoalNotificationService = GoalNotificationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        resend_provider_1.ResendProvider])
 ], GoalNotificationService);
 //# sourceMappingURL=goal-notification.service.js.map

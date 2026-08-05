@@ -26,5 +26,6 @@ exports.employeeShifts = (0, pg_core_1.pgTable)('employee_shifts', {
     (0, pg_core_1.index)('employee_shifts_shift_date_idx').on(t.shiftDate),
     (0, pg_core_1.index)('employee_shifts_is_deleted_idx').on(t.isDeleted),
     (0, pg_core_1.index)('employee_shifts_created_at_idx').on(t.createdAt),
+    (0, pg_core_1.index)('employee_shifts_company_shift_date_idx').on(t.companyId, t.shiftDate),
 ]);
 //# sourceMappingURL=employee-shifts.schema.js.map

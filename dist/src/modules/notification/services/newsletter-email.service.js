@@ -13,57 +13,74 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewsletterEmailService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
+const resend_provider_1 = require("../resend.provider");
+const newsletter_html_1 = require("../templates/newsletter.html");
+const BATCH_LIMIT = 100;
+const SUBJECT = 'Cut HR admin by 40% with AI-driven efficiency';
 let NewsletterEmailService = NewsletterEmailService_1 = class NewsletterEmailService {
-    constructor(config) {
+    constructor(config, resend) {
         this.config = config;
+        this.resend = resend;
         this.logger = new common_1.Logger(NewsletterEmailService_1.name);
     }
     async sendNewsletter(recipients, opts) {
         if (!recipients?.length)
             return;
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const templateId = this.config.get('NEWSLETTER_TEMPLATE_ID');
-        const fromEmail = 'marketing@centahr.com';
-        const fromName = 'CentaHR';
-        if (!templateId) {
-            throw new Error('NEWSLETTER_TEMPLATE_ID missing in config');
+        const ctaUrl = this.config.get('CLIENT_URL') || 'https://centahr.com';
+        const unsubscribeBase = this.config.get('NEWSLETTER_UNSUBSCRIBE_URL');
+        const messages = recipients.map((r) => {
+            const unsubscribeUrl = unsubscribeBase
+                ? `${unsubscribeBase}?email=${encodeURIComponent(r.email)}`
+                : undefined;
+            return {
+                to: r.email,
+                from: 'CentaHR <marketing@centahr.com>',
+                subject: SUBJECT,
+                html: (0, newsletter_html_1.newsletterHtml)({
+                    firstName: r.name || 'there',
+                    companyName: r.companyName,
+                    ctaUrl,
+                    unsubscribeUrl,
+                }),
+                tags: [
+                    { name: 'type', value: 'newsletter' },
+                    ...(opts?.campaignName
+                        ? [{ name: 'campaign', value: this.tagValue(opts.campaignName) }]
+                        : []),
+                    ...(opts?.categories || []).map((c) => ({
+                        name: 'category',
+                        value: this.tagValue(c),
+                    })),
+                ],
+                ...(unsubscribeUrl
+                    ? { headers: { 'List-Unsubscribe': `<${unsubscribeUrl}>` } }
+                    : {}),
+            };
+        });
+        let sent = 0;
+        for (let i = 0; i < messages.length; i += BATCH_LIMIT) {
+            const chunk = messages.slice(i, i + BATCH_LIMIT);
+            try {
+                const { error } = await this.resend.client.batch.send(chunk);
+                if (error)
+                    throw error;
+                sent += chunk.length;
+            }
+            catch (error) {
+                this.logger.error(`Newsletter batch failed (recipients ${i + 1}-${i + chunk.length})`, error);
+                throw error;
+            }
         }
-        const personalizations = recipients.map((r) => ({
-            to: [{ email: r.email, name: r.name }],
-            dynamicTemplateData: {
-                subject: 'Cut HR admin by 40% with AI-driven efficiency',
-                first_name: r.name || 'there',
-                companyName: r.companyName || '',
-            },
-        }));
-        const msg = {
-            from: { email: fromEmail, name: fromName },
-            templateId,
-            subject: 'Cut HR admin by 40% with AI-driven efficiency',
-            personalizations,
-            categories: ['newsletter', ...(opts?.categories || [])],
-            customArgs: opts?.campaignName
-                ? { campaign: opts.campaignName }
-                : undefined,
-            trackingSettings: {
-                clickTracking: { enable: true, enableText: true },
-                openTracking: { enable: true },
-            },
-        };
-        try {
-            await sgMail.send(msg);
-            this.logger.log(`Newsletter sent: ${recipients.length} recipients.`);
-        }
-        catch (error) {
-            this.logger.error('Newsletter send failed', error?.response?.body || error);
-            throw error;
-        }
+        this.logger.log(`Newsletter sent: ${sent} recipients.`);
+    }
+    tagValue(raw) {
+        return raw.replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 256);
     }
 };
 exports.NewsletterEmailService = NewsletterEmailService;
 exports.NewsletterEmailService = NewsletterEmailService = NewsletterEmailService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        resend_provider_1.ResendProvider])
 ], NewsletterEmailService);
 //# sourceMappingURL=newsletter-email.service.js.map

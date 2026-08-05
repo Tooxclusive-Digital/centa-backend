@@ -8,48 +8,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var InvitationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InvitationService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
-let InvitationService = class InvitationService {
-    constructor(config) {
-        this.config = config;
+const resend_provider_1 = require("../resend.provider");
+const invitation_html_1 = require("../templates/invitation.html");
+const _layout_1 = require("../templates/_layout");
+let InvitationService = InvitationService_1 = class InvitationService {
+    constructor(resend) {
+        this.resend = resend;
+        this.logger = new common_1.Logger(InvitationService_1.name);
     }
     async sendInvitationEmail(email, name, companyName, role, url) {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
-        const msg = {
-            to: email,
-            from: {
-                name: `Invitation to Join as ${role}`,
-                email: 'noreply@centa.africa',
-            },
-            templateId: this.config.get('INVITE_TEMPLATE_ID'),
-            dynamicTemplateData: {
-                name: name,
-                verifyLink: url,
-                companyName: companyName,
-                role: role,
+        try {
+            const { error } = await this.resend.client.emails.send({
+                to: email,
+                from: (0, _layout_1.fromHeader)(`Invitation to Join as ${role}`, 'noreply@centahr.com'),
                 subject: `Invitation to Join ${companyName} as ${role}`,
-            },
-        };
-        (async () => {
-            try {
-                await sgMail.send(msg);
-            }
-            catch (error) {
-                console.error(error);
-                if (error.response) {
-                    console.error(error.response.body);
-                }
-            }
-        })();
+                html: (0, invitation_html_1.invitationHtml)({ name, companyName, role, verifyLink: url }),
+            });
+            if (error)
+                throw error;
+        }
+        catch (error) {
+            this.logger.error('sendInvitationEmail failed', error);
+            throw error;
+        }
     }
 };
 exports.InvitationService = InvitationService;
-exports.InvitationService = InvitationService = __decorate([
+exports.InvitationService = InvitationService = InvitationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [resend_provider_1.ResendProvider])
 ], InvitationService);
 //# sourceMappingURL=invitation.service.js.map

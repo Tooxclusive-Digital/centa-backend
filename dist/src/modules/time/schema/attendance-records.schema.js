@@ -26,5 +26,6 @@ exports.attendanceRecords = (0, pg_core_1.pgTable)('attendance_records', {
     (0, pg_core_1.index)('attendance_records_clock_in_idx').on(t.clockIn),
     (0, pg_core_1.index)('attendance_records_clock_out_idx').on(t.clockOut),
     (0, pg_core_1.index)('attendance_records_created_at_idx').on(t.createdAt),
+    (0, pg_core_1.index)('attendance_records_company_clock_in_idx').on(t.companyId, t.clockIn),
 ]);
 //# sourceMappingURL=attendance-records.schema.js.map

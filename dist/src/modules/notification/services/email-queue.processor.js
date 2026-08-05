@@ -149,7 +149,7 @@ exports.EmailQueueProcessor = EmailQueueProcessor = EmailQueueProcessor_1 = __de
     (0, bullmq_1.Processor)('emailQueue', {
         concurrency: 5,
         limiter: {
-            max: 30,
+            max: 8,
             duration: 1000,
         },
     }),

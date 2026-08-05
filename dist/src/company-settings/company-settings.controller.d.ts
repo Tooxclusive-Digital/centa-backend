@@ -20,6 +20,14 @@ export declare class CompanySettingsController extends BaseController {
         value: boolean;
         key: string;
     }): Promise<void>;
+    getBirthdayAnnouncements(user: User): Promise<{
+        enabled: boolean;
+    }>;
+    updateBirthdayAnnouncements(user: User, body: {
+        enabled: boolean;
+    }): Promise<{
+        enabled: boolean;
+    }>;
     getOnboardingStep(user: User): Promise<{
         staff: boolean;
         payroll: boolean;

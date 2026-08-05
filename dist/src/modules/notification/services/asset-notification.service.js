@@ -8,18 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var AssetNotificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssetNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
-let AssetNotificationService = class AssetNotificationService {
-    constructor(config) {
+const resend_provider_1 = require("../resend.provider");
+const asset_request_html_1 = require("../templates/asset-request.html");
+let AssetNotificationService = AssetNotificationService_1 = class AssetNotificationService {
+    constructor(config, resend) {
         this.config = config;
+        this.resend = resend;
+        this.logger = new common_1.Logger(AssetNotificationService_1.name);
         this.logoUrl = 'https://centa-hr.s3.eu-west-3.amazonaws.com/company-files/7beedcd5-66c3-4351-8955-ddcab3528652/5cf61059-52be-4c46-9d4e-9817f2b9257b/1769600186954-1768990436384-logo-CqG_6WrI.png';
-    }
-    ensureSendGrid() {
-        sgMail.setApiKey(this.config.get('SEND_GRID_KEY') || '');
     }
     buildSubject(status, assetType) {
         const type = assetType ? ` – ${assetType}` : '';
@@ -54,53 +55,34 @@ let AssetNotificationService = class AssetNotificationService {
         }
         return `${base}/ess/assets`;
     }
-    pickTemplateId(status) {
-        if (status === 'requested') {
-            return this.config.get('ASSET_REQUEST_TEMPLATE_ID') || '';
-        }
-        return this.config.get('ASSET_STATUS_TEMPLATE_ID') || '';
-    }
     async sendAssetEmail(payload) {
-        this.ensureSendGrid();
-        const templateId = this.pickTemplateId(payload.status);
         const actionUrl = this.buildActionUrl(payload);
-        const msg = {
-            to: payload.toEmail,
-            from: {
-                name: 'CentaHR',
-                email: 'noreply@centahr.com',
-            },
-            templateId,
-            dynamicTemplateData: {
-                subject: this.buildSubject(payload.status, payload.assetType),
-                logoUrl: this.logoUrl,
-                companyName: payload.companyName,
-                status: payload.status,
-                statusTitle: this.buildStatusTitle(payload.status),
-                statusMessage: this.buildStatusMessage(payload.status),
-                managerName: payload.managerName,
-                employeeName: payload.employeeName,
-                assetType: payload.assetType,
-                purpose: payload.purpose,
-                urgency: payload.urgency,
-                notes: payload.notes,
-                rejectionReason: payload.rejectionReason,
-                remarks: payload.remarks,
-                actionUrl,
-                actionText: payload.status === 'requested' ? 'Review Request' : 'View Request',
-                assetRequestId: payload.assetRequestId,
-                employeeId: payload.employeeId,
-                approverId: payload.approverId,
-                meta: payload.meta,
-            },
-        };
         try {
-            await sgMail.send(msg);
+            const { error } = await this.resend.client.emails.send({
+                to: payload.toEmail,
+                from: 'CentaHR <noreply@centahr.com>',
+                subject: this.buildSubject(payload.status, payload.assetType),
+                html: (0, asset_request_html_1.assetRequestHtml)({
+                    employeeName: payload.employeeName,
+                    companyName: payload.companyName,
+                    statusTitle: this.buildStatusTitle(payload.status),
+                    statusMessage: this.buildStatusMessage(payload.status),
+                    assetType: payload.assetType,
+                    purpose: payload.purpose,
+                    urgency: payload.urgency,
+                    notes: payload.notes,
+                    rejectionReason: payload.rejectionReason,
+                    remarks: payload.remarks,
+                    actionUrl,
+                    actionText: payload.status === 'requested' ? 'Review Request' : 'View Request',
+                    logoUrl: this.logoUrl,
+                }),
+            });
+            if (error)
+                throw error;
         }
         catch (error) {
-            console.error('[AssetNotificationService] sendAssetEmail failed', error);
-            if (error?.response)
-                console.error(error.response.body);
+            this.logger.error('sendAssetEmail failed', error);
         }
     }
     async sendAssetApprovalRequestEmail(payload) {
@@ -111,8 +93,9 @@ let AssetNotificationService = class AssetNotificationService {
     }
 };
 exports.AssetNotificationService = AssetNotificationService;
-exports.AssetNotificationService = AssetNotificationService = __decorate([
+exports.AssetNotificationService = AssetNotificationService = AssetNotificationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        resend_provider_1.ResendProvider])
 ], AssetNotificationService);
 //# sourceMappingURL=asset-notification.service.js.map

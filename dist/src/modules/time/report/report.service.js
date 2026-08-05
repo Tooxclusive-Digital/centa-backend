@@ -399,14 +399,46 @@ let ReportService = class ReportService {
     }
     async getLast6MonthsAttendanceSummary(companyId) {
         const now = new Date();
-        const summaries = [];
+        const rangeStart = (0, date_fns_1.startOfMonth)(new Date(now.getFullYear(), now.getMonth() - 5, 1));
+        const rangeEnd = (0, date_fns_1.endOfMonth)(now);
         const s = await this.attendanceSettingsService.getAllAttendanceSettings(companyId);
         const useShifts = s['use_shifts'] ?? false;
         const defaultStartTimeStr = s['default_start_time'] ?? '09:00';
         const defaultWorkingDays = Number(s['default_working_days'] ?? 5);
         const lateToleranceMins = Number(s['late_tolerance_minutes'] ?? 10);
-        const allEmployees = await this.employeesService.findAllEmployees(companyId);
-        const leaves = await this.leaveRequestService.findAll(companyId);
+        const [allEmployees, leaves, holidayRows, attendanceRows, shiftRows] = await Promise.all([
+            this.employeesService.findAllEmployees(companyId),
+            this.leaveRequestService.findAll(companyId),
+            this.db
+                .select({ date: holidays_schema_1.holidays.date })
+                .from(holidays_schema_1.holidays)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.or)((0, drizzle_orm_1.eq)(holidays_schema_1.holidays.companyId, companyId), (0, drizzle_orm_1.isNull)(holidays_schema_1.holidays.companyId)), (0, drizzle_orm_1.gte)(holidays_schema_1.holidays.date, (0, date_fns_1.format)(rangeStart, 'yyyy-MM-dd')), (0, drizzle_orm_1.lte)(holidays_schema_1.holidays.date, (0, date_fns_1.format)(rangeEnd, 'yyyy-MM-dd'))))
+                .execute(),
+            this.db
+                .select({
+                employeeId: schema_1.attendanceRecords.employeeId,
+                day: (0, drizzle_orm_1.sql) `TO_CHAR(${schema_1.attendanceRecords.clockIn}, 'YYYY-MM-DD')`.as('day'),
+                firstClockIn: (0, drizzle_orm_1.sql) `MIN(${schema_1.attendanceRecords.clockIn})`.as('first_clock_in'),
+            })
+                .from(schema_1.attendanceRecords)
+                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.attendanceRecords.companyId, companyId), (0, drizzle_orm_1.gte)(schema_1.attendanceRecords.clockIn, rangeStart), (0, drizzle_orm_1.lte)(schema_1.attendanceRecords.clockIn, rangeEnd)))
+                .groupBy(schema_1.attendanceRecords.employeeId, (0, drizzle_orm_1.sql) `TO_CHAR(${schema_1.attendanceRecords.clockIn}, 'YYYY-MM-DD')`)
+                .execute(),
+            useShifts
+                ? this.db
+                    .select({
+                    employeeId: schema_1.employeeShifts.employeeId,
+                    shiftDate: schema_1.employeeShifts.shiftDate,
+                    startTime: schema_1.shifts.startTime,
+                    lateToleranceMinutes: schema_1.shifts.lateToleranceMinutes,
+                })
+                    .from(schema_1.employeeShifts)
+                    .innerJoin(schema_1.shifts, (0, drizzle_orm_1.eq)(schema_1.shifts.id, schema_1.employeeShifts.shiftId))
+                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.employeeShifts.companyId, companyId), (0, drizzle_orm_1.eq)(schema_1.employeeShifts.isDeleted, false), (0, drizzle_orm_1.gte)(schema_1.employeeShifts.shiftDate, (0, date_fns_1.format)(rangeStart, 'yyyy-MM-dd')), (0, drizzle_orm_1.lte)(schema_1.employeeShifts.shiftDate, (0, date_fns_1.format)(rangeEnd, 'yyyy-MM-dd'))))
+                    .execute()
+                : Promise.resolve([]),
+        ]);
+        const holidaySet = new Set(holidayRows.map((h) => h.date));
         const leaveMap = new Map();
         for (const lr of leaves) {
             const from = new Date(lr.startDate);
@@ -418,73 +450,73 @@ let ReportService = class ReportService {
                 leaveMap.get(lr.employeeId).add(key);
             }
         }
+        const shiftMap = new Map();
+        for (const row of shiftRows) {
+            shiftMap.set(`${row.employeeId}|${row.shiftDate}`, {
+                startTime: row.startTime,
+                lateToleranceMinutes: row.lateToleranceMinutes,
+            });
+        }
+        const isWorkingDay = (dayKey) => {
+            if (holidaySet.has(dayKey))
+                return false;
+            if (defaultWorkingDays < 7) {
+                const dayName = (0, date_fns_1.format)((0, date_fns_1.parseISO)(dayKey), 'EEE');
+                if (dayName === 'Sat' || dayName === 'Sun')
+                    return false;
+            }
+            return true;
+        };
+        const byMonth = new Map();
+        const attendedByMonth = new Map();
+        for (const row of attendanceRows) {
+            const dayKey = row.day;
+            if (!isWorkingDay(dayKey))
+                continue;
+            if (leaveMap.get(row.employeeId)?.has(dayKey))
+                continue;
+            const monthKey = dayKey.slice(0, 7);
+            const bucket = byMonth.get(monthKey) ?? { present: 0, late: 0 };
+            const override = useShifts
+                ? shiftMap.get(`${row.employeeId}|${dayKey}`)
+                : undefined;
+            const startTime = override?.startTime ?? defaultStartTimeStr;
+            const tolerance = override?.lateToleranceMinutes ?? lateToleranceMins;
+            const shiftStart = (0, date_fns_1.parseISO)(`${dayKey}T${startTime}:00`);
+            const diffMins = (new Date(row.firstClockIn).getTime() - shiftStart.getTime()) / 60000;
+            if (diffMins <= tolerance)
+                bucket.present++;
+            else
+                bucket.late++;
+            byMonth.set(monthKey, bucket);
+            attendedByMonth.set(monthKey, (attendedByMonth.get(monthKey) ?? 0) + 1);
+        }
+        const summaries = [];
         for (let i = 5; i >= 0; i--) {
             const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
             const start = (0, date_fns_1.startOfMonth)(date);
             const end = (0, date_fns_1.endOfMonth)(date);
-            const year = start.getFullYear();
-            const month = (0, date_fns_1.format)(start, 'MMMM');
-            const holidaysForYear = await this.db
-                .select()
-                .from(holidays_schema_1.holidays)
-                .where((0, drizzle_orm_1.eq)(holidays_schema_1.holidays.year, String(year)))
-                .execute();
-            const holidaySet = new Set(holidaysForYear.map((h) => h.date));
-            const recs = await this.db
-                .select()
-                .from(schema_1.attendanceRecords)
-                .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.attendanceRecords.companyId, companyId), (0, drizzle_orm_1.gte)(schema_1.attendanceRecords.clockIn, start), (0, drizzle_orm_1.lte)(schema_1.attendanceRecords.clockIn, end)))
-                .execute();
-            const attendanceMap = new Map();
-            for (const rec of recs) {
-                const dayKey = (0, date_fns_1.format)(rec.clockIn, 'yyyy-MM-dd');
-                if (!attendanceMap.has(rec.employeeId)) {
-                    attendanceMap.set(rec.employeeId, new Map());
-                }
-                attendanceMap.get(rec.employeeId).set(dayKey, rec);
-            }
-            const allDates = (0, date_fns_1.eachDayOfInterval)({ start, end }).map((d) => (0, date_fns_1.format)(d, 'yyyy-MM-dd'));
-            let present = 0;
-            let late = 0;
-            let absent = 0;
+            const monthKey = (0, date_fns_1.format)(start, 'yyyy-MM');
+            const workingDays = (0, date_fns_1.eachDayOfInterval)({ start, end })
+                .map((d) => (0, date_fns_1.format)(d, 'yyyy-MM-dd'))
+                .filter(isWorkingDay);
+            let expected = 0;
             for (const emp of allEmployees) {
-                for (const dateKey of allDates) {
-                    if (defaultWorkingDays < 7) {
-                        const dayName = (0, date_fns_1.format)((0, date_fns_1.parseISO)(dateKey), 'EEE');
-                        if (['Sat', 'Sun'].includes(dayName))
-                            continue;
-                    }
-                    if (holidaySet.has(dateKey))
+                const empLeave = leaveMap.get(emp.id);
+                for (const dayKey of workingDays) {
+                    if (empLeave?.has(dayKey))
                         continue;
-                    if (leaveMap.get(emp.id)?.has(dateKey))
-                        continue;
-                    const empMap = attendanceMap.get(emp.id) ?? new Map();
-                    const rec = empMap.get(dateKey);
-                    if (!rec || !rec.clockIn) {
-                        absent++;
-                        continue;
-                    }
-                    let startTime = defaultStartTimeStr;
-                    let tolerance = lateToleranceMins;
-                    if (useShifts) {
-                        const shift = await this.employeeShiftsService.getActiveShiftForEmployee(emp.id, companyId, dateKey);
-                        if (shift) {
-                            startTime = shift.startTime;
-                            tolerance = shift.lateToleranceMinutes ?? lateToleranceMins;
-                        }
-                    }
-                    const shiftStart = (0, date_fns_1.parseISO)(`${dateKey}T${startTime}:00`);
-                    const checkIn = new Date(rec.clockIn);
-                    const diffMins = (checkIn.getTime() - shiftStart.getTime()) / 60000;
-                    if (diffMins <= tolerance) {
-                        present++;
-                    }
-                    else {
-                        late++;
-                    }
+                    expected++;
                 }
             }
-            summaries.push({ month, present, absent, late });
+            const tallies = byMonth.get(monthKey) ?? { present: 0, late: 0 };
+            const attended = attendedByMonth.get(monthKey) ?? 0;
+            summaries.push({
+                month: (0, date_fns_1.format)(start, 'MMMM'),
+                present: tallies.present,
+                late: tallies.late,
+                absent: Math.max(0, expected - attended),
+            });
         }
         return summaries;
     }
@@ -678,6 +710,84 @@ let ReportService = class ReportService {
             },
             detailedBreakdown,
         };
+    }
+    async getShiftDetailedDailyReport(companyId, yearMonth, filters) {
+        const tz = 'Africa/Lagos';
+        const from = `${yearMonth}-01`;
+        const to = new Date(new Date(from).getFullYear(), new Date(from).getMonth() + 1, 0)
+            .toISOString()
+            .split('T')[0];
+        const conditions = [
+            (0, drizzle_orm_1.eq)(schema_1.employeeShifts.companyId, companyId),
+            (0, drizzle_orm_1.eq)(schema_1.employeeShifts.isDeleted, false),
+            (0, drizzle_orm_1.gte)(schema_1.employeeShifts.shiftDate, from),
+            (0, drizzle_orm_1.lte)(schema_1.employeeShifts.shiftDate, to),
+        ];
+        if (filters?.locationId) {
+            conditions.push((0, drizzle_orm_1.eq)(schema_1.shifts.locationId, filters.locationId));
+        }
+        if (filters?.departmentId) {
+            conditions.push((0, drizzle_orm_1.eq)(schema_2.employees.departmentId, filters.departmentId));
+        }
+        const rows = await this.db
+            .select({
+            employeeNumber: schema_2.employees.employeeNumber,
+            employeeName: (0, drizzle_orm_1.sql) `CONCAT(${schema_2.employees.firstName}, ' ', ${schema_2.employees.lastName})`,
+            date: schema_1.employeeShifts.shiftDate,
+            shiftName: schema_1.shifts.name,
+            locationName: schema_2.companyLocations.name,
+            expectedStart: schema_1.shifts.startTime,
+            expectedEnd: schema_1.shifts.endTime,
+            clockIn: schema_1.attendanceRecords.clockIn,
+            clockOut: schema_1.attendanceRecords.clockOut,
+            isLateArrival: schema_1.attendanceRecords.isLateArrival,
+            workDurationMinutes: schema_1.attendanceRecords.workDurationMinutes,
+            latenessMinutes: (0, drizzle_orm_1.sql) `
+          CASE
+            WHEN ${schema_1.attendanceRecords.clockIn} IS NOT NULL
+             AND COALESCE(${schema_1.attendanceRecords.isLateArrival}, false) = true
+            THEN GREATEST(0, ROUND(
+              EXTRACT(EPOCH FROM (
+                ${schema_1.attendanceRecords.clockIn}
+                - (${schema_1.employeeShifts.shiftDate}::date + ${schema_1.shifts.startTime}::time)
+              )) / 60
+            ))
+            ELSE 0
+          END
+        `.as('latenessMinutes'),
+        })
+            .from(schema_1.employeeShifts)
+            .leftJoin(schema_2.employees, (0, drizzle_orm_1.eq)(schema_2.employees.id, schema_1.employeeShifts.employeeId))
+            .leftJoin(schema_1.shifts, (0, drizzle_orm_1.eq)(schema_1.shifts.id, schema_1.employeeShifts.shiftId))
+            .leftJoin(schema_1.attendanceRecords, (0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_1.attendanceRecords.employeeId, schema_1.employeeShifts.employeeId), (0, drizzle_orm_1.eq)(schema_1.attendanceRecords.companyId, companyId), (0, drizzle_orm_1.eq)((0, drizzle_orm_1.sql) `${schema_1.attendanceRecords.clockIn}::date`, schema_1.employeeShifts.shiftDate)))
+            .leftJoin(schema_2.companyLocations, (0, drizzle_orm_1.eq)(schema_2.companyLocations.id, schema_1.shifts.locationId))
+            .where((0, drizzle_orm_1.and)(...conditions))
+            .orderBy(schema_2.employees.lastName, schema_2.employees.firstName, schema_1.employeeShifts.shiftDate)
+            .execute();
+        return rows.map((row) => ({
+            employeeNumber: row.employeeNumber,
+            employeeName: row.employeeName,
+            date: row.date,
+            shiftName: row.shiftName ?? '',
+            locationName: row.locationName ?? '',
+            expectedStart: row.expectedStart ?? '',
+            expectedEnd: row.expectedEnd ?? '',
+            clockIn: row.clockIn
+                ? (0, date_fns_tz_1.formatInTimeZone)(new Date(row.clockIn), tz, 'HH:mm:ss')
+                : null,
+            clockOut: row.clockOut
+                ? (0, date_fns_tz_1.formatInTimeZone)(new Date(row.clockOut), tz, 'HH:mm:ss')
+                : null,
+            status: row.clockIn == null
+                ? 'Absent'
+                : row.isLateArrival
+                    ? 'Late'
+                    : 'Present',
+            latenessMinutes: Number(row.latenessMinutes ?? 0),
+            hoursWorked: row.workDurationMinutes != null
+                ? `${Math.floor(row.workDurationMinutes / 60)}h ${row.workDurationMinutes % 60}m`
+                : null,
+        }));
     }
     async getShiftDashboardSummaryByMonthForDL(companyId, yearMonth, filters) {
         const from = `${yearMonth}-01`;

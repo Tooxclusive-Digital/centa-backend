@@ -2,9 +2,11 @@ import { CompanyService } from './company.service';
 import type { User } from 'src/common/types/user.type';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { BirthdaysService } from 'src/modules/core/employees/birthdays/birthdays.service';
 export declare class CompanyController extends BaseController {
     private readonly companyService;
-    constructor(companyService: CompanyService);
+    private readonly birthdaysService;
+    constructor(companyService: CompanyService, birthdaysService: BirthdaysService);
     update(dto: UpdateCompanyDto, user: User, ip: string): Promise<string>;
     get(user: User): Promise<{
         id: string;
@@ -146,8 +148,10 @@ export declare class CompanyController extends BaseController {
             id: string;
             title: string;
         }[];
+        upcomingBirthdays: import("src/modules/core/employees/birthdays/birthdays.service").BirthdayEntry[];
         onboardingTaskCompleted: boolean;
     }>;
+    getUpcomingBirthdays(user: User, windowDays?: string): Promise<import("src/modules/core/employees/birthdays/birthdays.service").BirthdayEntry[]>;
     getEmployeeSummary(employeeId: string): Promise<{
         allHolidays: {
             id: string;
@@ -182,6 +186,7 @@ export declare class CompanyController extends BaseController {
             dueDaysAfterStart: number | null;
             startDate: Date | null;
         }[];
+        upcomingBirthdays: import("src/modules/core/employees/birthdays/birthdays.service").BirthdayEntry[];
     }>;
     getCompanyElements(user: User): Promise<{
         departments: ({

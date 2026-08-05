@@ -27,6 +27,10 @@ const asset_notification_service_1 = require("./services/asset-notification.serv
 const notification_delivery_service_1 = require("./notification-delivery.service");
 const notification_engine_service_1 = require("./notification-engine.service");
 const notification_planner_cron_1 = require("./cron/notification-planner.cron");
+const resend_provider_1 = require("./resend.provider");
+const offer_email_service_1 = require("./services/offer-email.service");
+const birthday_cron_1 = require("./cron/birthday.cron");
+const birthdays_service_1 = require("../core/employees/birthdays/birthdays.service");
 let NotificationModule = class NotificationModule {
 };
 exports.NotificationModule = NotificationModule;
@@ -39,6 +43,7 @@ exports.NotificationModule = NotificationModule = __decorate([
         ],
         controllers: [notifications_controller_1.NotificationController],
         providers: [
+            resend_provider_1.ResendProvider,
             email_queue_processor_1.EmailQueueProcessor,
             notification_planner_cron_1.NotificationPlannerCron,
             password_reset_service_1.PasswordResetEmailService,
@@ -54,6 +59,9 @@ exports.NotificationModule = NotificationModule = __decorate([
             announcement_notification_service_1.AnnouncementNotificationService,
             leave_notification_service_1.LeaveNotificationService,
             asset_notification_service_1.AssetNotificationService,
+            offer_email_service_1.OfferEmailService,
+            birthdays_service_1.BirthdaysService,
+            birthday_cron_1.BirthdayCron,
             notification_delivery_service_1.NotificationDeliveryService,
             notification_engine_service_1.NotificationEngineService,
         ],
@@ -68,6 +76,8 @@ exports.NotificationModule = NotificationModule = __decorate([
             push_notification_service_1.PushNotificationService,
             leave_notification_service_1.LeaveNotificationService,
             asset_notification_service_1.AssetNotificationService,
+            offer_email_service_1.OfferEmailService,
+            birthdays_service_1.BirthdaysService,
         ],
     })
 ], NotificationModule);

@@ -19,6 +19,7 @@ const drizzle_module_1 = require("../../../drizzle/drizzle.module");
 const schema_1 = require("../schema");
 const drizzle_orm_1 = require("drizzle-orm");
 const cache_service_1 = require("../../../common/cache/cache.service");
+const birthdays_service_1 = require("../employees/birthdays/birthdays.service");
 const holidays_schema_1 = require("../../leave/schema/holidays.schema");
 const department_service_1 = require("../department/department.service");
 const pay_groups_service_1 = require("../../payroll/pay-groups/pay-groups.service");
@@ -38,7 +39,7 @@ const leave_balance_service_1 = require("../../leave/balance/leave-balance.servi
 const schema_3 = require("../../../drizzle/schema");
 const company_settings_service_1 = require("../../../company-settings/company-settings.service");
 let CompanyService = class CompanyService {
-    constructor(db, cache, audit, departmentService, payGroupService, locationService, jobRoleService, costCenterService, payrollReport, attendanceReport, awsService, permissionsService, onboardingSeederService, leaveBalanceService, companySettingsService) {
+    constructor(db, cache, audit, departmentService, payGroupService, locationService, jobRoleService, costCenterService, payrollReport, attendanceReport, awsService, permissionsService, onboardingSeederService, leaveBalanceService, companySettingsService, birthdaysService) {
         this.db = db;
         this.cache = cache;
         this.audit = audit;
@@ -54,6 +55,7 @@ let CompanyService = class CompanyService {
         this.onboardingSeederService = onboardingSeederService;
         this.leaveBalanceService = leaveBalanceService;
         this.companySettingsService = companySettingsService;
+        this.birthdaysService = birthdaysService;
         this.table = schema_1.companies;
         this.ttlCompany = 120 * 60;
         this.ttlSummary = 60 * 60;
@@ -169,7 +171,7 @@ let CompanyService = class CompanyService {
             const prevEndDate = new Date(now.getFullYear(), now.getMonth(), 0);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const [allEmployees, company, allHolidays, allDepartments, payrollSummary, recentLeaves, attendanceSummary, allAnnouncements,] = await Promise.all([
+            const [allEmployees, company, allHolidays, allDepartments, payrollSummary, recentLeaves, attendanceSummary, allAnnouncements, upcomingBirthdays,] = await Promise.all([
                 this.db
                     .select({
                     id: schema_1.employees.id,
@@ -197,7 +199,7 @@ let CompanyService = class CompanyService {
                 this.db
                     .select({ date: holidays_schema_1.holidays.date, name: holidays_schema_1.holidays.name })
                     .from(holidays_schema_1.holidays)
-                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.gte)(holidays_schema_1.holidays.date, startDate.toISOString()), (0, drizzle_orm_1.lte)(holidays_schema_1.holidays.date, endDate.toISOString())))
+                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.or)((0, drizzle_orm_1.eq)(holidays_schema_1.holidays.companyId, companyId), (0, drizzle_orm_1.isNull)(holidays_schema_1.holidays.companyId)), (0, drizzle_orm_1.gte)(holidays_schema_1.holidays.date, startDate.toISOString()), (0, drizzle_orm_1.lte)(holidays_schema_1.holidays.date, endDate.toISOString())))
                     .execute(),
                 this.db
                     .select({
@@ -229,6 +231,7 @@ let CompanyService = class CompanyService {
                     .from(schema_2.announcements)
                     .where((0, drizzle_orm_1.eq)(schema_2.announcements.companyId, companyId))
                     .execute(),
+                this.birthdaysService.getUpcomingBirthdays(companyId, 30),
             ]);
             const totalEmployees = allEmployees.filter((e) => !e.employmentEndDate || new Date(e.employmentEndDate) > endDate).length;
             const newStarters = allEmployees.filter((e) => {
@@ -274,6 +277,7 @@ let CompanyService = class CompanyService {
                 recentLeaves,
                 attendanceSummary,
                 announcements: allAnnouncements,
+                upcomingBirthdays,
                 onboardingTaskCompleted: allTasksCompleted,
             };
         }, { ttlSeconds: this.ttlSummary, tags: this.tags(companyId) });
@@ -291,7 +295,7 @@ let CompanyService = class CompanyService {
             const endDate = new Date(now.getFullYear(), now.getMonth() + 6, 0);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const [allHolidays, recentLeaves, allAnnouncements, leaveBalance, pendingChecklists,] = await Promise.all([
+            const [allHolidays, recentLeaves, allAnnouncements, leaveBalance, pendingChecklists, upcomingBirthdays,] = await Promise.all([
                 this.db
                     .select({
                     id: holidays_schema_1.holidays.id,
@@ -300,7 +304,7 @@ let CompanyService = class CompanyService {
                     type: holidays_schema_1.holidays.type,
                 })
                     .from(holidays_schema_1.holidays)
-                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.gte)(holidays_schema_1.holidays.date, startDate.toISOString()), (0, drizzle_orm_1.lte)(holidays_schema_1.holidays.date, endDate.toISOString())))
+                    .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.or)((0, drizzle_orm_1.eq)(holidays_schema_1.holidays.companyId, companyId), (0, drizzle_orm_1.isNull)(holidays_schema_1.holidays.companyId)), (0, drizzle_orm_1.gte)(holidays_schema_1.holidays.date, startDate.toISOString()), (0, drizzle_orm_1.lte)(holidays_schema_1.holidays.date, endDate.toISOString())))
                     .execute(),
                 this.db
                     .select({
@@ -339,6 +343,7 @@ let CompanyService = class CompanyService {
                     .from(schema_3.employeeChecklistStatus)
                     .innerJoin(schema_3.onboardingTemplateChecklists, (0, drizzle_orm_1.eq)(schema_3.onboardingTemplateChecklists.id, schema_3.employeeChecklistStatus.checklistId))
                     .where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(schema_3.employeeChecklistStatus.employeeId, employeeId), (0, drizzle_orm_1.eq)(schema_3.employeeChecklistStatus.status, 'pending'))),
+                this.birthdaysService.getUpcomingBirthdays(companyId, 30),
             ]);
             const breakdown = leaveBalance.map((b) => ({
                 type: b.leaveTypeName,
@@ -351,6 +356,7 @@ let CompanyService = class CompanyService {
                 announcements: allAnnouncements,
                 leaveBalance: { total, breakdown },
                 pendingChecklists,
+                upcomingBirthdays,
             };
         }, { ttlSeconds: this.ttlSummary, tags: this.tags(companyId) });
     }
@@ -395,6 +401,7 @@ exports.CompanyService = CompanyService = __decorate([
         permissions_service_1.PermissionsService,
         seeder_service_1.OnboardingSeederService,
         leave_balance_service_1.LeaveBalanceService,
-        company_settings_service_1.CompanySettingsService])
+        company_settings_service_1.CompanySettingsService,
+        birthdays_service_1.BirthdaysService])
 ], CompanyService);
 //# sourceMappingURL=company.service.js.map

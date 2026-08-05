@@ -130,7 +130,7 @@ let GenerateReportsService = class GenerateReportsService {
             attendanceRate: ((stats.present / stats.total) * 100).toFixed(2) + '%',
         }));
         const filename = `department_attendance_${companyId}_${yearMonth}`;
-        const filePath = export_util_1.ExportUtil.exportToCSV(exportData, [
+        const filePath = await export_util_1.ExportUtil.exportToCSV(exportData, [
             { field: 'department', title: 'Department' },
             { field: 'present', title: 'Present' },
             { field: 'absent', title: 'Absent' },
@@ -141,34 +141,60 @@ let GenerateReportsService = class GenerateReportsService {
         return url;
     }
     async generateShiftSummaryReportToS3(companyId, yearMonth, filters) {
-        const report = await this.reportService.getShiftDashboardSummaryByMonthForDL(companyId, yearMonth, filters);
-        if (!report.detailedBreakdown.length) {
-            throw new Error('No shift summary data available for this month.');
+        const rows = await this.reportService.getShiftDetailedDailyReport(companyId, yearMonth, filters);
+        if (!rows.length) {
+            throw new Error('No shift data available for this month.');
         }
-        const exportData = report.detailedBreakdown.map((row) => ({
-            employeeId: row.employeeNumber,
-            employeeName: row.employeeName,
-            shiftName: row.shiftName,
-            locationName: row.locationName ?? '',
-            startTime: row.startTime,
-            endTime: row.endTime,
-            expectedWorkDays: row.expectedWorkDays,
-            presentDays: row.presentDays,
-            lateDays: row.lateDays,
-            absentDays: row.absentDays,
-        }));
-        const filename = `shift_summary_${companyId}_${yearMonth.replace('-', '')}`;
+        const blankRow = {
+            employeeId: '',
+            employeeName: '',
+            date: '',
+            shiftName: '',
+            location: '',
+            expectedStart: '',
+            expectedEnd: '',
+            clockIn: '',
+            clockOut: '',
+            status: '',
+            latenessMinutes: '',
+            hoursWorked: '',
+        };
+        const exportData = [];
+        let lastEmployeeId = null;
+        for (const row of rows) {
+            if (lastEmployeeId !== null && row.employeeNumber !== lastEmployeeId) {
+                exportData.push(blankRow);
+            }
+            exportData.push({
+                employeeId: row.employeeNumber,
+                employeeName: row.employeeName,
+                date: row.date,
+                shiftName: row.shiftName,
+                location: row.locationName,
+                expectedStart: row.expectedStart,
+                expectedEnd: row.expectedEnd,
+                clockIn: row.clockIn ?? 'N/A',
+                clockOut: row.clockOut ?? 'N/A',
+                status: row.status,
+                latenessMinutes: row.latenessMinutes > 0 ? String(row.latenessMinutes) : '-',
+                hoursWorked: row.hoursWorked ?? 'N/A',
+            });
+            lastEmployeeId = row.employeeNumber;
+        }
+        const filename = `shift_detailed_report_${companyId}_${yearMonth.replace('-', '')}`;
         const filePath = await export_util_1.ExportUtil.exportToCSV(exportData, [
             { field: 'employeeId', title: 'Employee ID' },
             { field: 'employeeName', title: 'Employee Name' },
-            { field: 'shiftName', title: 'Shift Name' },
-            { field: 'locationName', title: 'Location' },
-            { field: 'startTime', title: 'Start Time' },
-            { field: 'endTime', title: 'End Time' },
-            { field: 'expectedWorkDays', title: 'Expected Work Days' },
-            { field: 'presentDays', title: 'Present Days' },
-            { field: 'lateDays', title: 'Late Days' },
-            { field: 'absentDays', title: 'Absent Days' },
+            { field: 'date', title: 'Date' },
+            { field: 'shiftName', title: 'Shift' },
+            { field: 'location', title: 'Location' },
+            { field: 'expectedStart', title: 'Expected Start' },
+            { field: 'expectedEnd', title: 'Expected End' },
+            { field: 'clockIn', title: 'Clock In' },
+            { field: 'clockOut', title: 'Clock Out' },
+            { field: 'status', title: 'Status' },
+            { field: 'latenessMinutes', title: 'Lateness (mins)' },
+            { field: 'hoursWorked', title: 'Hours Worked' },
         ], filename);
         const url = await this.awsService.uploadFilePath(filePath, companyId, 'report', 'shift-summary');
         return url;

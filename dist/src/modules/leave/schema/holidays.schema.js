@@ -26,5 +26,6 @@ exports.holidays = (0, pg_core_1.pgTable)('holidays', {
     (0, pg_core_1.index)('holidays_type_idx').on(t.type),
     (0, pg_core_1.index)('holidays_country_idx').on(t.country),
     (0, pg_core_1.index)('holidays_source_idx').on(t.source),
+    (0, pg_core_1.index)('holidays_company_date_idx').on(t.companyId, t.date),
 ]);
 //# sourceMappingURL=holidays.schema.js.map

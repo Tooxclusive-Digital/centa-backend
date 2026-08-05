@@ -12,15 +12,23 @@ var EmailVerificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailVerificationService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
-const sgMail = require("@sendgrid/mail");
+const resend_provider_1 = require("../resend.provider");
+const email_verification_html_1 = require("../templates/email-verification.html");
+const verify_login_html_1 = require("../templates/verify-login.html");
 function sleep(ms) {
     return new Promise((r) => setTimeout(r, ms));
 }
 function getStatusCode(err) {
-    return err?.code ?? err?.response?.statusCode;
+    return err?.statusCode ?? err?.code ?? err?.response?.statusCode;
 }
 function isRetryable(err) {
+    const name = err?.name;
+    if (name === 'rate_limit_exceeded' || name === 'application_error') {
+        return true;
+    }
+    if (name && name !== 'internal_server_error') {
+        return false;
+    }
     const status = getStatusCode(err);
     if (!status) {
         return true;
@@ -33,38 +41,30 @@ function backoffMs(attempt, base = 250, cap = 5000) {
     return exp + jitter;
 }
 let EmailVerificationService = EmailVerificationService_1 = class EmailVerificationService {
-    constructor(config) {
-        this.config = config;
+    constructor(resend) {
+        this.resend = resend;
         this.logger = new common_1.Logger(EmailVerificationService_1.name);
-    }
-    onModuleInit() {
-        const key = this.config.get('SEND_GRID_KEY');
-        if (!key) {
-            this.logger.error('SEND_GRID_KEY is missing');
-            return;
-        }
-        sgMail.setApiKey(key);
     }
     async sendWithRetry(msg, maxAttempts = 4) {
         let lastErr;
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                await Promise.race([
-                    sgMail.send(msg),
+                const { error } = await Promise.race([
+                    this.resend.client.emails.send(msg),
                     (async () => {
                         await sleep(10_000);
-                        throw new Error('SendGrid send timeout after 10s');
+                        throw new Error('Resend send timeout after 10s');
                     })(),
                 ]);
+                if (error)
+                    throw error;
                 return;
             }
             catch (err) {
                 lastErr = err;
                 const status = getStatusCode(err);
-                const body = err?.response?.body;
-                this.logger.warn(`SendGrid send failed (attempt ${attempt}/${maxAttempts}) status=${status ?? 'n/a'}`);
-                if (body)
-                    this.logger.debug(body);
+                this.logger.warn(`Resend send failed (attempt ${attempt}/${maxAttempts}) status=${status ?? 'n/a'} name=${err?.name ?? 'n/a'}`);
+                this.logger.debug(err);
                 if (!isRetryable(err) || attempt === maxAttempts)
                     break;
                 await sleep(backoffMs(attempt));
@@ -73,34 +73,28 @@ let EmailVerificationService = EmailVerificationService_1 = class EmailVerificat
         throw lastErr;
     }
     async sendVerifyEmail(email, token, companyName) {
-        const msg = {
+        await this.sendWithRetry({
             to: email,
-            from: { name: 'noreply@centahr.com', email: 'noreply@centahr.com' },
-            templateId: this.config.get('VERIFY_TEMPLATE_ID'),
-            dynamicTemplateData: {
+            from: 'CentaHR <noreply@centahr.com>',
+            subject: 'Verify your email address',
+            html: (0, email_verification_html_1.emailVerificationHtml)({
                 verificationCode: token,
-                email,
                 companyName,
-            },
-        };
-        await this.sendWithRetry(msg);
+            }),
+        });
     }
     async sendVerifyLogin(email, token) {
-        const msg = {
+        await this.sendWithRetry({
             to: email,
-            from: { name: 'noreply@centahr.com', email: 'noreply@centahr.com' },
-            templateId: this.config.get('VERIFY_LOGIN_TEMPLATE_ID'),
-            dynamicTemplateData: {
-                verificationCode: token,
-                email,
-            },
-        };
-        await this.sendWithRetry(msg);
+            from: 'CentaHR <noreply@centahr.com>',
+            subject: 'Confirm your sign-in',
+            html: (0, verify_login_html_1.verifyLoginHtml)({ verificationCode: token }),
+        });
     }
 };
 exports.EmailVerificationService = EmailVerificationService;
 exports.EmailVerificationService = EmailVerificationService = EmailVerificationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __metadata("design:paramtypes", [resend_provider_1.ResendProvider])
 ], EmailVerificationService);
 //# sourceMappingURL=email-verification.service.js.map

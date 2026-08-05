@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { ResendProvider } from '../resend.provider';
 export interface GoalCheckinPayload {
     toEmail: string;
     firstName: string;
@@ -46,7 +47,10 @@ interface GoalApprovalRequestPayload {
 }
 export declare class GoalNotificationService {
     private readonly config;
-    constructor(config: ConfigService);
+    private readonly resend;
+    private readonly logger;
+    constructor(config: ConfigService, resend: ResendProvider);
+    private goalPage;
     sendGoalCheckin(payload: GoalCheckinPayload): Promise<void>;
     sendGoalAssignment(payload: GoalAssignmentPayload): Promise<void>;
     sendGoalUpdates(payload: GoalUpdatePayload): Promise<void>;

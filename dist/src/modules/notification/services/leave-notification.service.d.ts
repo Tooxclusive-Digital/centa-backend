@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { ResendProvider } from '../resend.provider';
 type LeaveStatus = 'pending' | 'approved' | 'rejected';
 export interface LeaveStatusEmailPayload {
     toEmail: string;
@@ -20,14 +21,14 @@ export interface LeaveStatusEmailPayload {
 }
 export declare class LeaveNotificationService {
     private readonly config;
-    constructor(config: ConfigService);
+    private readonly resend;
+    private readonly logger;
+    constructor(config: ConfigService, resend: ResendProvider);
     private readonly logoUrl;
-    private ensureSendGrid;
     private buildSubject;
     private buildStatusTitle;
     private buildStatusMessage;
     private buildActionUrl;
-    private pickTemplateId;
     sendLeaveEmail(payload: LeaveStatusEmailPayload): Promise<void>;
     sendLeaveApprovalRequestEmail(payload: Omit<LeaveStatusEmailPayload, 'status'>): Promise<void>;
     sendLeaveDecisionEmail(payload: Omit<LeaveStatusEmailPayload, 'status'> & {

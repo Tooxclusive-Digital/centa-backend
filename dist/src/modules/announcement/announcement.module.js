@@ -31,6 +31,7 @@ exports.AnnouncementModule = AnnouncementModule = __decorate([
             reaction_service_1.ReactionService,
             category_service_1.CategoryService,
         ],
+        exports: [announcement_service_1.AnnouncementService],
     })
 ], AnnouncementModule);
 //# sourceMappingURL=announcement.module.js.map

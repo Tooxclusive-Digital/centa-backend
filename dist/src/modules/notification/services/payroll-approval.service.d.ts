@@ -1,6 +1,7 @@
-import { ConfigService } from '@nestjs/config';
+import { ResendProvider } from '../resend.provider';
 export declare class PayrollApprovalEmailService {
-    private config;
-    constructor(config: ConfigService);
+    private readonly resend;
+    private readonly logger;
+    constructor(resend: ResendProvider);
     sendApprovalEmail(email: string, name: string, url: string, month: string, companyName: string): Promise<void>;
 }

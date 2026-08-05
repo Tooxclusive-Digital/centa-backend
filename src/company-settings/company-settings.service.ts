@@ -10,6 +10,7 @@ import { payroll } from './settings/payroll';
 import { expenses } from './settings/expense';
 import { performance } from './settings/performance';
 import { onboarding } from './settings/onboarding';
+import { announcements } from './settings/announcements';
 import {
   ALLOWED_TASKS,
   MODULE_SETTING_KEY,
@@ -30,6 +31,7 @@ export class CompanySettingsService {
     ...expenses,
     ...performance,
     ...onboarding,
+    ...announcements,
     { key: 'default_currency', value: 'USD' },
     { key: 'default_timezone', value: 'UTC' },
     { key: 'default_language', value: 'en' },

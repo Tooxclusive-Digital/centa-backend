@@ -18,6 +18,10 @@ import { AssetNotificationService } from './services/asset-notification.service'
 import { NotificationDeliveryService } from './notification-delivery.service';
 import { NotificationEngineService } from './notification-engine.service';
 import { NotificationPlannerCron } from './cron/notification-planner.cron';
+import { ResendProvider } from './resend.provider';
+import { OfferEmailService } from './services/offer-email.service';
+import { BirthdayCron } from './cron/birthday.cron';
+import { BirthdaysService } from 'src/modules/core/employees/birthdays/birthdays.service';
 
 @Module({
   imports: [
@@ -27,6 +31,8 @@ import { NotificationPlannerCron } from './cron/notification-planner.cron';
   ],
   controllers: [NotificationController],
   providers: [
+    // Transport stays internal — consumers send through the named services.
+    ResendProvider,
     EmailQueueProcessor,
     NotificationPlannerCron,
     PasswordResetEmailService,
@@ -42,6 +48,9 @@ import { NotificationPlannerCron } from './cron/notification-planner.cron';
     AnnouncementNotificationService,
     LeaveNotificationService,
     AssetNotificationService,
+    OfferEmailService,
+    BirthdaysService,
+    BirthdayCron,
     NotificationDeliveryService,
     NotificationEngineService,
   ],
@@ -56,6 +65,8 @@ import { NotificationPlannerCron } from './cron/notification-planner.cron';
     PushNotificationService,
     LeaveNotificationService,
     AssetNotificationService,
+    OfferEmailService,
+    BirthdaysService,
   ],
 })
 export class NotificationModule {}

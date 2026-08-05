@@ -109,6 +109,9 @@ export class NotificationDeliveryService {
           await this.announcementNotification.sendNewAnnouncement(payload);
           break;
 
+        // Birthdays are posted as announcements (see BirthdayCron) so people
+        // can react and comment, rather than emailed.
+
         default:
           this.logger.warn({
             op: 'notif.delivery.unknown_eventType.skip',

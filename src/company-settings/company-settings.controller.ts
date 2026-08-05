@@ -68,6 +68,33 @@ export class CompanySettingsController extends BaseController {
     );
   }
 
+  @Get('birthday-announcements')
+  @UseGuards(JwtAuthGuard)
+  @SetMetadata('roles', ['super_admin', 'admin', 'hr_manager'])
+  async getBirthdayAnnouncements(@CurrentUser() user: User) {
+    const value = await this.companySettingsService.getSettingsOrDefaults(
+      user.companyId,
+      'announcements.birthday_enabled',
+      false,
+    );
+    return { enabled: value === true || value === 'true' };
+  }
+
+  @Patch('birthday-announcements')
+  @UseGuards(JwtAuthGuard)
+  @SetMetadata('roles', ['super_admin', 'admin', 'hr_manager'])
+  async updateBirthdayAnnouncements(
+    @CurrentUser() user: User,
+    @Body() body: { enabled: boolean },
+  ) {
+    await this.companySettingsService.setSetting(
+      user.companyId,
+      'announcements.birthday_enabled',
+      !!body.enabled,
+    );
+    return { enabled: !!body.enabled };
+  }
+
   @Get('onboarding')
   @UseGuards(JwtAuthGuard)
   @SetMetadata('roles', ['super_admin', 'admin', 'hr_manager'])

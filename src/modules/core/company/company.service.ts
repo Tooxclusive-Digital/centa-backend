@@ -12,6 +12,7 @@ import {
 } from '../schema';
 import { eq, and, or, gte, lte, sql, desc, isNull } from 'drizzle-orm';
 import { CacheService } from 'src/common/cache/cache.service';
+import { BirthdaysService } from 'src/modules/core/employees/birthdays/birthdays.service';
 import { holidays } from 'src/modules/leave/schema/holidays.schema';
 import { DepartmentService } from '../department/department.service';
 import { PayGroupsService } from 'src/modules/payroll/pay-groups/pay-groups.service';
@@ -54,6 +55,7 @@ export class CompanyService {
     private readonly onboardingSeederService: OnboardingSeederService,
     private readonly leaveBalanceService: LeaveBalanceService,
     private readonly companySettingsService: CompanySettingsService,
+    private readonly birthdaysService: BirthdaysService,
   ) {}
 
   // ---- TTLs -------------------------------------------------------------
@@ -232,6 +234,7 @@ export class CompanyService {
           recentLeaves,
           attendanceSummary,
           allAnnouncements,
+          upcomingBirthdays,
         ] = await Promise.all([
           this.db
             .select({
@@ -324,6 +327,8 @@ export class CompanyService {
             .from(announcements)
             .where(eq(announcements.companyId, companyId))
             .execute(),
+
+          this.birthdaysService.getUpcomingBirthdays(companyId, 30),
         ]);
 
         const totalEmployees = allEmployees.filter(
@@ -383,6 +388,7 @@ export class CompanyService {
           recentLeaves,
           attendanceSummary,
           announcements: allAnnouncements,
+          upcomingBirthdays,
           onboardingTaskCompleted: allTasksCompleted,
         };
       },
@@ -415,6 +421,7 @@ export class CompanyService {
           allAnnouncements,
           leaveBalance,
           pendingChecklists,
+          upcomingBirthdays,
         ] = await Promise.all([
           this.db
             .select({
@@ -498,6 +505,8 @@ export class CompanyService {
                 eq(employeeChecklistStatus.status, 'pending'),
               ),
             ),
+
+          this.birthdaysService.getUpcomingBirthdays(companyId, 30),
         ]);
 
         const breakdown = leaveBalance.map((b) => ({
@@ -512,6 +521,7 @@ export class CompanyService {
           announcements: allAnnouncements,
           leaveBalance: { total, breakdown },
           pendingChecklists,
+          upcomingBirthdays,
         };
       },
       { ttlSeconds: this.ttlSummary, tags: this.tags(companyId) },

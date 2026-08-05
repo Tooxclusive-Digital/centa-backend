@@ -9,6 +9,7 @@ import {
   SetMetadata,
   Ip,
   Param,
+  Query,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { Audit } from 'src/modules/audit/audit.decorator';
@@ -18,11 +19,15 @@ import { CurrentUser } from 'src/modules/auth/decorator/current-user.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { BaseController } from 'src/common/interceptor/base.controller';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { BirthdaysService } from 'src/modules/core/employees/birthdays/birthdays.service';
 
 @UseInterceptors(AuditInterceptor)
 @Controller('company')
 export class CompanyController extends BaseController {
-  constructor(private readonly companyService: CompanyService) {
+  constructor(
+    private readonly companyService: CompanyService,
+    private readonly birthdaysService: BirthdaysService,
+  ) {
     super();
   }
 
@@ -61,6 +66,17 @@ export class CompanyController extends BaseController {
   @SetMetadata('permissions', ['company.summary'])
   getCompanySummary(@CurrentUser() user: User) {
     return this.companyService.getCompanySummary(user.companyId);
+  }
+
+  @Get('birthdays')
+  @UseGuards(JwtAuthGuard)
+  getUpcomingBirthdays(
+    @CurrentUser() user: User,
+    @Query('windowDays') windowDays?: string,
+  ) {
+    const parsed = Number(windowDays);
+    const days = Number.isFinite(parsed) ? Math.min(Math.max(parsed, 0), 365) : 30;
+    return this.birthdaysService.getUpcomingBirthdays(user.companyId, days);
   }
 
   @Get('employee-summary/:employeeId')

@@ -23,11 +23,15 @@ import { CacheModule } from './common/cache/cache.module';
         JWT_EXPIRATION: Joi.string().required(),
         JWT_REFRESH_EXPIRATION: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
-        SEND_GRID_KEY: Joi.string().required(),
-        PASSWORD_RESET_TEMPLATE_ID: Joi.string().required(),
-        VERIFY_TEMPLATE_ID: Joi.string().required(),
-        FEEDBACK_TEMPLATE_ID: Joi.string().required(),
-        INVITE_TEMPLATE_ID: Joi.string().required(),
+        RESEND_API_KEY: Joi.string().required(),
+        // Email content now lives in src/modules/notification/templates,
+        // so the SendGrid key and *_TEMPLATE_ID vars are no longer read.
+        EMPLOYEE_PORTAL_URL: Joi.string().uri().required(),
+        NOTIFY_EMAIL_TO: Joi.string().email().optional(),
+        NEWSLETTER_UNSUBSCRIBE_URL: Joi.string().uri().optional(),
+        // When set, ALL outbound email is redirected here instead of real
+        // recipients. Leave unset in production.
+        EMAIL_TEST_REDIRECT: Joi.string().email().optional(),
         DATABASE_URL: Joi.string().required(),
         CLIENT_URL: Joi.string().required(),
         CLIENT_DASHBOARD_URL: Joi.string().required(),

@@ -19,5 +19,7 @@ import { BullModule } from '@nestjs/bullmq';
     ReactionService,
     CategoryService,
   ],
+  // BirthdayCron posts system announcements through this service.
+  exports: [AnnouncementService],
 })
 export class AnnouncementModule {}

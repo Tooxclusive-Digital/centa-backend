@@ -6,7 +6,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { SendOffersService } from './send-offer.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { OfferEmailService } from 'src/modules/notification/services/offer-email.service';
+import { NotificationModule } from 'src/modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -14,14 +14,11 @@ import { OfferEmailService } from 'src/modules/notification/services/offer-email
     BullModule.registerQueue({
       name: 'offerPdfQueue',
     }),
+    // OfferEmailService is declared and exported by NotificationModule so it
+    // can reach the ResendProvider that lives there.
+    NotificationModule,
   ],
   controllers: [OffersController],
-  providers: [
-    OffersService,
-    SendOffersService,
-    OfferEmailService,
-    JwtService,
-    ConfigService,
-  ],
+  providers: [OffersService, SendOffersService, JwtService, ConfigService],
 })
 export class OffersModule {}

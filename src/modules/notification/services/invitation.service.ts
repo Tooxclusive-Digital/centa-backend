@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { Injectable, Logger } from '@nestjs/common';
+import { ResendProvider } from '../resend.provider';
+import { invitationHtml } from '../templates/invitation.html';
+import { fromHeader } from '../templates/_layout';
 
 @Injectable()
 export class InvitationService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(InvitationService.name);
+
+  constructor(private readonly resend: ResendProvider) {}
+
   async sendInvitationEmail(
     email: string,
     name: string,
@@ -12,34 +16,19 @@ export class InvitationService {
     role: string,
     url: string,
   ) {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
-
-    const msg = {
-      to: email,
-      from: {
-        name: `Invitation to Join as ${role}`,
-        email: 'noreply@centa.africa',
-      },
-      templateId: this.config.get('INVITE_TEMPLATE_ID'),
-      dynamicTemplateData: {
-        name: name,
-        verifyLink: url,
-        companyName: companyName,
-        role: role,
+    try {
+      const { error } = await this.resend.client.emails.send({
+        to: email,
+        // was noreply@centa.africa — consolidated onto the verified domain
+        from: fromHeader(`Invitation to Join as ${role}`, 'noreply@centahr.com'),
         subject: `Invitation to Join ${companyName} as ${role}`,
-      },
-    };
+        html: invitationHtml({ name, companyName, role, verifyLink: url }),
+      });
 
-    (async () => {
-      try {
-        await sgMail.send(msg);
-      } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      }
-    })();
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendInvitationEmail failed', error);
+      throw error;
+    }
   }
 }

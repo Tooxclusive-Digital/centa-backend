@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { Injectable, Logger } from '@nestjs/common';
+import { ResendProvider } from '../resend.provider';
+import { employeeInvitationHtml } from '../templates/employee-invitation.html';
 
 @Injectable()
 export class EmployeeInvitationService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(EmployeeInvitationService.name);
+
+  constructor(private readonly resend: ResendProvider) {}
+
   async sendInvitationEmail(
     email: string,
     name: string,
@@ -12,34 +15,18 @@ export class EmployeeInvitationService {
     role: string,
     url: string,
   ) {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
-
-    const msg = {
-      to: email,
-      from: {
-        name: 'Employee Invitation',
-        email: 'noreply@centahr.com',
-      },
-      templateId: this.config.get('EMPLOYEE_INVITE_TEMPLATE_ID'),
-      dynamicTemplateData: {
-        name: name,
-        verifyLink: url,
-        companyName: companyName,
-        role: role,
+    try {
+      const { error } = await this.resend.client.emails.send({
+        to: email,
+        from: 'Employee Invitation <noreply@centahr.com>',
         subject: `Invitation to Join ${companyName} as ${role}`,
-      },
-    };
+        html: employeeInvitationHtml({ name, companyName, verifyLink: url }),
+      });
 
-    (async () => {
-      try {
-        await sgMail.send(msg);
-      } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      }
-    })();
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendInvitationEmail failed', error);
+      throw error;
+    }
   }
 }

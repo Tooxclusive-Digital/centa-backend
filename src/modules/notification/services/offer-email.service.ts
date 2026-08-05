@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { Injectable, Logger } from '@nestjs/common';
+import { ResendProvider } from '../resend.provider';
+import { offerHtml } from '../templates/offer.html';
+import { fromHeader } from '../templates/_layout';
 
 @Injectable()
 export class OfferEmailService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(OfferEmailService.name);
+
+  constructor(private readonly resend: ResendProvider) {}
+
   async sendOfferEmail(
     email: string,
     candidateName: string,
@@ -13,35 +17,24 @@ export class OfferEmailService {
     offerUrl: string,
     companyLogo?: string,
   ) {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
-
-    const msg = {
-      to: email,
-      from: {
-        name: `${companyName} HR`,
-        email: 'noreply@centahr.com',
-      },
-      templateId: this.config.get('OFFER_TEMPLATE_ID'),
-      dynamicTemplateData: {
-        name: candidateName,
-        jobTitle,
-        companyName,
-        offerLink: offerUrl,
+    try {
+      const { error } = await this.resend.client.emails.send({
+        to: email,
+        from: fromHeader(`${companyName} HR`, 'noreply@centahr.com'),
         subject: `Your Job Offer for ${jobTitle} at ${companyName}`,
-        companyLogo,
-      },
-    };
+        html: offerHtml({
+          name: candidateName,
+          jobTitle,
+          companyName,
+          offerLink: offerUrl,
+          companyLogo,
+        }),
+      });
 
-    (async () => {
-      try {
-        await sgMail.send(msg);
-      } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      }
-    })();
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendOfferEmail failed', error);
+      throw error;
+    }
   }
 }

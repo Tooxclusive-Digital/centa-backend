@@ -1,66 +1,95 @@
 // src/email/services/newsletter-email.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
-import { MailDataRequired } from '@sendgrid/mail';
+import { ResendProvider } from '../resend.provider';
+import { newsletterHtml } from '../templates/newsletter.html';
 import { NewsletterRecipientDto } from '../dto/newsletter-recipient.dto';
+
+/** Resend accepts at most 100 messages per batch call. */
+const BATCH_LIMIT = 100;
+
+const SUBJECT = 'Cut HR admin by 40% with AI-driven efficiency';
 
 @Injectable()
 export class NewsletterEmailService {
   private readonly logger = new Logger(NewsletterEmailService.name);
 
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly resend: ResendProvider,
+  ) {}
 
+  /**
+   * SendGrid rendered one message per `personalizations` entry server-side.
+   * Resend has no merge-field equivalent, so each recipient's HTML is rendered
+   * here and sent through the batch endpoint in chunks of 100.
+   */
   async sendNewsletter(
     recipients: NewsletterRecipientDto[],
     opts?: { campaignName?: string; categories?: string[] },
   ) {
     if (!recipients?.length) return;
 
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
+    const ctaUrl = this.config.get<string>('CLIENT_URL') || 'https://centahr.com';
+    const unsubscribeBase = this.config.get<string>('NEWSLETTER_UNSUBSCRIBE_URL');
 
-    const templateId = this.config.get<string>('NEWSLETTER_TEMPLATE_ID');
-    const fromEmail = 'marketing@centahr.com';
-    const fromName = 'CentaHR';
+    const messages = recipients.map((r) => {
+      const unsubscribeUrl = unsubscribeBase
+        ? `${unsubscribeBase}?email=${encodeURIComponent(r.email)}`
+        : undefined;
 
-    if (!templateId) {
-      throw new Error('NEWSLETTER_TEMPLATE_ID missing in config');
+      return {
+        to: r.email,
+        from: 'CentaHR <marketing@centahr.com>',
+        subject: SUBJECT,
+        html: newsletterHtml({
+          firstName: r.name || 'there',
+          companyName: r.companyName,
+          ctaUrl,
+          unsubscribeUrl,
+        }),
+        // SendGrid categories/customArgs -> Resend tags. Tag values must be
+        // ASCII alphanumeric, underscores or dashes.
+        tags: [
+          { name: 'type', value: 'newsletter' },
+          ...(opts?.campaignName
+            ? [{ name: 'campaign', value: this.tagValue(opts.campaignName) }]
+            : []),
+          ...(opts?.categories || []).map((c) => ({
+            name: 'category',
+            value: this.tagValue(c),
+          })),
+        ],
+        ...(unsubscribeUrl
+          ? { headers: { 'List-Unsubscribe': `<${unsubscribeUrl}>` } }
+          : {}),
+      };
+    });
+
+    let sent = 0;
+
+    for (let i = 0; i < messages.length; i += BATCH_LIMIT) {
+      const chunk = messages.slice(i, i + BATCH_LIMIT);
+
+      try {
+        const { error } = await this.resend.client.batch.send(chunk);
+        if (error) throw error;
+
+        sent += chunk.length;
+      } catch (error) {
+        this.logger.error(
+          `Newsletter batch failed (recipients ${i + 1}-${i + chunk.length})`,
+          error,
+        );
+        throw error;
+      }
     }
 
-    const personalizations: MailDataRequired['personalizations'] =
-      recipients.map((r) => ({
-        to: [{ email: r.email, name: r.name }],
-        dynamicTemplateData: {
-          subject: 'Cut HR admin by 40% with AI-driven efficiency',
-          first_name: r.name || 'there',
-          companyName: r.companyName || '',
-        },
-      }));
+    this.logger.log(`Newsletter sent: ${sent} recipients.`);
+  }
 
-    const msg: MailDataRequired = {
-      from: { email: fromEmail, name: fromName },
-      templateId,
-      subject: 'Cut HR admin by 40% with AI-driven efficiency',
-      personalizations,
-      categories: ['newsletter', ...(opts?.categories || [])],
-      customArgs: opts?.campaignName
-        ? { campaign: opts.campaignName }
-        : undefined,
-      trackingSettings: {
-        clickTracking: { enable: true, enableText: true },
-        openTracking: { enable: true },
-      },
-    };
-
-    try {
-      await sgMail.send(msg);
-      this.logger.log(`Newsletter sent: ${recipients.length} recipients.`);
-    } catch (error: any) {
-      this.logger.error(
-        'Newsletter send failed',
-        error?.response?.body || error,
-      );
-      throw error;
-    }
+  /** Resend rejects tag values outside [A-Za-z0-9_-]. */
+  private tagValue(raw: string) {
+    return raw.replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 256);
   }
 }

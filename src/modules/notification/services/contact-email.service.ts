@@ -1,41 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { ResendProvider } from '../resend.provider';
+import { contactMessageHtml } from '../templates/contact-message.html';
 import { CreateMessageDto } from '../dto/create-message.dto';
 
 @Injectable()
 export class ContactEmailService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(ContactEmailService.name);
+
+  constructor(
+    private readonly config: ConfigService,
+    private readonly resend: ResendProvider,
+  ) {}
+
   async sendContactEmail(dto: CreateMessageDto) {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
     const { email, name, message, phone, website } = dto;
-    const msg = {
-      to: this.config.get<string>('NOTIFY_EMAIL_TO'),
-      from: {
-        name: 'noreply@centahr.com',
-        email: 'noreply@centahr.com',
-      },
-      templateId: this.config.get('CONTACT_TEMPLATE_ID'),
-      dynamicTemplateData: {
-        email,
-        name,
-        message,
-        phone: phone || 'N/A',
-        website: website || 'N/A',
+
+    const to = this.config.get<string>('NOTIFY_EMAIL_TO');
+    if (!to) {
+      this.logger.error('NOTIFY_EMAIL_TO is not configured; dropping message');
+      return;
+    }
+
+    try {
+      const { error } = await this.resend.client.emails.send({
+        to,
+        from: 'CentaHR <noreply@centahr.com>',
+        replyTo: email,
         subject: `New Contact Us Message from ${name}`,
-      },
-    };
+        html: contactMessageHtml({ name, email, message, phone, website }),
+      });
 
-    (async () => {
-      try {
-        await sgMail.send(msg);
-      } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      }
-    })();
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendContactEmail failed', error);
+      throw error;
+    }
   }
 }

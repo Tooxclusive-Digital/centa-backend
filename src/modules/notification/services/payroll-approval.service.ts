@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { Injectable, Logger } from '@nestjs/common';
+import { ResendProvider } from '../resend.provider';
+import { payrollApprovalHtml } from '../templates/payroll-approval.html';
 
 @Injectable()
 export class PayrollApprovalEmailService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(PayrollApprovalEmailService.name);
+
+  constructor(private readonly resend: ResendProvider) {}
+
   async sendApprovalEmail(
     email: string,
     name: string,
@@ -12,34 +15,18 @@ export class PayrollApprovalEmailService {
     month: string,
     companyName: string,
   ) {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
-    const msg = {
-      to: email,
-      from: {
-        name: 'noreply@centahr.com',
-        email: 'noreply@centahr.com',
-      },
-      templateId: this.config.get('PAYROLL_APPROVAL_TEMPLATE_ID'),
-      dynamicTemplateData: {
-        email,
-        month,
-        url,
-        name,
+    try {
+      const { error } = await this.resend.client.emails.send({
+        to: email,
+        from: 'CentaHR <noreply@centahr.com>',
         subject: `Action Required: Approve Payroll for ${month}`,
-        companyName,
-      },
-    };
+        html: payrollApprovalHtml({ name, month, companyName, url }),
+      });
 
-    (async () => {
-      try {
-        await sgMail.send(msg);
-      } catch (error) {
-        console.error(error);
-
-        if (error.response) {
-          console.error(error.response.body);
-        }
-      }
-    })();
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendApprovalEmail failed', error);
+      throw error;
+    }
   }
 }

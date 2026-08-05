@@ -1,7 +1,8 @@
 // src/modules/notification/asset-notification.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+import { ResendProvider } from '../resend.provider';
+import { assetRequestHtml } from '../templates/asset-request.html';
 
 type AssetStatus = 'requested' | 'approved' | 'rejected';
 
@@ -35,14 +36,15 @@ export interface AssetStatusEmailPayload {
 
 @Injectable()
 export class AssetNotificationService {
-  constructor(private readonly config: ConfigService) {}
+  private readonly logger = new Logger(AssetNotificationService.name);
+
+  constructor(
+    private readonly config: ConfigService,
+    private readonly resend: ResendProvider,
+  ) {}
 
   private readonly logoUrl =
     'https://centa-hr.s3.eu-west-3.amazonaws.com/company-files/7beedcd5-66c3-4351-8955-ddcab3528652/5cf61059-52be-4c46-9d4e-9817f2b9257b/1769600186954-1768990436384-logo-CqG_6WrI.png';
-
-  private ensureSendGrid() {
-    sgMail.setApiKey(this.config.get<string>('SEND_GRID_KEY') || '');
-  }
 
   private buildSubject(status: AssetStatus, assetType?: string) {
     const type = assetType ? ` – ${assetType}` : '';
@@ -85,76 +87,42 @@ export class AssetNotificationService {
     return `${base}/ess/assets`;
   }
 
-  private pickTemplateId(status: AssetStatus) {
-    // ✅ two templates:
-    // - requested => ASSET_REQUEST_TEMPLATE_ID
-    // - approved/rejected => ASSET_STATUS_TEMPLATE_ID
-    if (status === 'requested') {
-      return this.config.get<string>('ASSET_REQUEST_TEMPLATE_ID') || '';
-    }
-    return this.config.get<string>('ASSET_STATUS_TEMPLATE_ID') || '';
-  }
-
   /**
-   * Core sender: selects template by status:
-   * - requested => ASSET_REQUEST_TEMPLATE_ID (to manager/dashboard)
-   * - approved/rejected => ASSET_STATUS_TEMPLATE_ID (to employee/ess)
+   * Core sender. The request/status split that used two SendGrid templates is
+   * one function here — the wording already varies via statusTitle/statusMessage.
+   *
+   * Deliberately does not rethrow: callers are request paths (submitting or
+   * approving an asset request) that must not fail because mail delivery did.
    */
   async sendAssetEmail(payload: AssetStatusEmailPayload) {
-    this.ensureSendGrid();
-
-    const templateId = this.pickTemplateId(payload.status);
     const actionUrl = this.buildActionUrl(payload);
 
-    const msg = {
-      to: payload.toEmail,
-      from: {
-        name: 'CentaHR',
-        email: 'noreply@centahr.com',
-      },
-      templateId,
-      dynamicTemplateData: {
-        // common
-        subject: this.buildSubject(payload.status, payload.assetType),
-        logoUrl: this.logoUrl,
-        companyName: payload.companyName,
-
-        // status
-        status: payload.status,
-        statusTitle: this.buildStatusTitle(payload.status),
-        statusMessage: this.buildStatusMessage(payload.status),
-
-        // asset details
-        managerName: payload.managerName,
-        employeeName: payload.employeeName,
-        assetType: payload.assetType,
-        purpose: payload.purpose,
-        urgency: payload.urgency,
-        notes: payload.notes,
-
-        // reasons/remarks (optional)
-        rejectionReason: payload.rejectionReason,
-        remarks: payload.remarks,
-
-        // CTA
-        actionUrl,
-        actionText:
-          payload.status === 'requested' ? 'Review Request' : 'View Request',
-
-        // ids (optional)
-        assetRequestId: payload.assetRequestId,
-        employeeId: payload.employeeId,
-        approverId: payload.approverId,
-
-        meta: payload.meta,
-      },
-    };
-
     try {
-      await sgMail.send(msg as any);
-    } catch (error: any) {
-      console.error('[AssetNotificationService] sendAssetEmail failed', error);
-      if (error?.response) console.error(error.response.body);
+      const { error } = await this.resend.client.emails.send({
+        to: payload.toEmail,
+        from: 'CentaHR <noreply@centahr.com>',
+        subject: this.buildSubject(payload.status, payload.assetType),
+        html: assetRequestHtml({
+          employeeName: payload.employeeName,
+          companyName: payload.companyName,
+          statusTitle: this.buildStatusTitle(payload.status),
+          statusMessage: this.buildStatusMessage(payload.status),
+          assetType: payload.assetType,
+          purpose: payload.purpose,
+          urgency: payload.urgency,
+          notes: payload.notes,
+          rejectionReason: payload.rejectionReason,
+          remarks: payload.remarks,
+          actionUrl,
+          actionText:
+            payload.status === 'requested' ? 'Review Request' : 'View Request',
+          logoUrl: this.logoUrl,
+        }),
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      this.logger.error('sendAssetEmail failed', error);
     }
   }
 

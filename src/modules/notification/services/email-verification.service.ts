@@ -1,18 +1,31 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
-
-type SendGridError = any;
+import { Injectable, Logger } from '@nestjs/common';
+import type { CreateEmailOptions } from 'resend';
+import { ResendProvider } from '../resend.provider';
+import { emailVerificationHtml } from '../templates/email-verification.html';
+import { verifyLoginHtml } from '../templates/verify-login.html';
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-function getStatusCode(err: SendGridError): number | undefined {
-  return err?.code ?? err?.response?.statusCode;
+function getStatusCode(err: any): number | undefined {
+  return err?.statusCode ?? err?.code ?? err?.response?.statusCode;
 }
 
-function isRetryable(err: SendGridError): boolean {
+/**
+ * Resend surfaces failures as a typed `error` on the response rather than a
+ * thrown exception, so match on its `name` as well as the HTTP status.
+ */
+function isRetryable(err: any): boolean {
+  const name = err?.name;
+  if (name === 'rate_limit_exceeded' || name === 'application_error') {
+    return true;
+  }
+  if (name && name !== 'internal_server_error') {
+    // validation / auth / not-found style errors won't succeed on retry
+    return false;
+  }
+
   const status = getStatusCode(err);
   if (!status) {
     // likely network/timeout/etc.
@@ -29,45 +42,36 @@ function backoffMs(attempt: number, base = 250, cap = 5000) {
 }
 
 @Injectable()
-export class EmailVerificationService implements OnModuleInit {
+export class EmailVerificationService {
   private readonly logger = new Logger(EmailVerificationService.name);
 
-  constructor(private config: ConfigService) {}
+  constructor(private readonly resend: ResendProvider) {}
 
-  onModuleInit() {
-    const key = this.config.get<string>('SEND_GRID_KEY');
-    if (!key) {
-      this.logger.error('SEND_GRID_KEY is missing');
-      return;
-    }
-    sgMail.setApiKey(key);
-  }
-
-  private async sendWithRetry(msg: sgMail.MailDataRequired, maxAttempts = 4) {
+  private async sendWithRetry(msg: CreateEmailOptions, maxAttempts = 4) {
     let lastErr: any;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        // Optional: add a timeout around send
-        await Promise.race([
-          sgMail.send(msg),
+        const { error } = await Promise.race([
+          this.resend.client.emails.send(msg),
           (async () => {
             await sleep(10_000);
-            throw new Error('SendGrid send timeout after 10s');
+            throw new Error('Resend send timeout after 10s');
           })(),
         ]);
+
+        if (error) throw error;
         return; // success
       } catch (err) {
         lastErr = err;
 
         const status = getStatusCode(err);
-        const body = err?.response?.body;
 
         // log once per attempt
         this.logger.warn(
-          `SendGrid send failed (attempt ${attempt}/${maxAttempts}) status=${status ?? 'n/a'}`,
+          `Resend send failed (attempt ${attempt}/${maxAttempts}) status=${status ?? 'n/a'} name=${(err as any)?.name ?? 'n/a'}`,
         );
-        if (body) this.logger.debug(body);
+        this.logger.debug(err);
 
         if (!isRetryable(err) || attempt === maxAttempts) break;
 
@@ -79,31 +83,23 @@ export class EmailVerificationService implements OnModuleInit {
   }
 
   async sendVerifyEmail(email: string, token: string, companyName?: string) {
-    const msg: sgMail.MailDataRequired = {
+    await this.sendWithRetry({
       to: email,
-      from: { name: 'noreply@centahr.com', email: 'noreply@centahr.com' },
-      templateId: this.config.get<string>('VERIFY_TEMPLATE_ID')!,
-      dynamicTemplateData: {
+      from: 'CentaHR <noreply@centahr.com>',
+      subject: 'Verify your email address',
+      html: emailVerificationHtml({
         verificationCode: token,
-        email,
         companyName,
-      },
-    };
-
-    await this.sendWithRetry(msg);
+      }),
+    });
   }
 
   async sendVerifyLogin(email: string, token: string) {
-    const msg: sgMail.MailDataRequired = {
+    await this.sendWithRetry({
       to: email,
-      from: { name: 'noreply@centahr.com', email: 'noreply@centahr.com' },
-      templateId: this.config.get<string>('VERIFY_LOGIN_TEMPLATE_ID')!,
-      dynamicTemplateData: {
-        verificationCode: token,
-        email,
-      },
-    };
-
-    await this.sendWithRetry(msg);
+      from: 'CentaHR <noreply@centahr.com>',
+      subject: 'Confirm your sign-in',
+      html: verifyLoginHtml({ verificationCode: token }),
+    });
   }
 }

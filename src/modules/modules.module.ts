@@ -20,6 +20,7 @@ import { IntegrationsModule } from './integrations/integrations.module';
 import { SeederModule } from './seed/seeder.module';
 import { PerformanceModule } from './performance/performance.module';
 import { ChecklistModule } from './checklist/checklist.module';
+import { PlatformAdminModule } from './platform-admin/platform-admin.module';
 
 @Global()
 @Module({
@@ -45,6 +46,7 @@ import { ChecklistModule } from './checklist/checklist.module';
     SeederModule,
     PerformanceModule,
     ChecklistModule,
+    PlatformAdminModule,
   ],
   exports: [
     CoreModule,

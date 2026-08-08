@@ -23,4 +23,5 @@ __exportStar(require("../modules/announcement/schema/announcements.schema"), exp
 __exportStar(require("../modules/lifecycle/schema"), exports);
 __exportStar(require("../modules/recruitment/schema/index"), exports);
 __exportStar(require("../modules/performance/schema/index"), exports);
+__exportStar(require("../modules/platform-admin/schema"), exports);
 //# sourceMappingURL=schema.js.map

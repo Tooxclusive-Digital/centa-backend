@@ -29,6 +29,7 @@ const integrations_module_1 = require("./integrations/integrations.module");
 const seeder_module_1 = require("./seed/seeder.module");
 const performance_module_1 = require("./performance/performance.module");
 const checklist_module_1 = require("./checklist/checklist.module");
+const platform_admin_module_1 = require("./platform-admin/platform-admin.module");
 let ModulesModule = class ModulesModule {
 };
 exports.ModulesModule = ModulesModule;
@@ -57,6 +58,7 @@ exports.ModulesModule = ModulesModule = __decorate([
             seeder_module_1.SeederModule,
             performance_module_1.PerformanceModule,
             checklist_module_1.ChecklistModule,
+            platform_admin_module_1.PlatformAdminModule,
         ],
         exports: [
             core_module_1.CoreModule,

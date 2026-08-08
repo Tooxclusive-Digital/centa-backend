@@ -18,7 +18,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed:platform-admin": "ts-node -r tsconfig-paths/register src/modules/platform-admin/seed-platform-admin.ts",
+    "seed:demo-companies": "ts-node --transpile-only -r tsconfig-paths/register src/modules/platform-admin/seed-demo-companies.ts",
+    "teardown:demo-companies": "ts-node -r tsconfig-paths/register src/modules/platform-admin/teardown-demo-companies.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.744.0",

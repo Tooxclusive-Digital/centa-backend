@@ -95,6 +95,25 @@ export declare const platformAdmins: import("drizzle-orm/pg-core").PgTableWithCo
         }, {}, {
             length: 100;
         }>;
+        avatar: import("drizzle-orm/pg-core").PgColumn<{
+            name: "avatar";
+            tableName: "platform_admins";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {
+            length: 500;
+        }>;
         isActive: import("drizzle-orm/pg-core").PgColumn<{
             name: "is_active";
             tableName: "platform_admins";

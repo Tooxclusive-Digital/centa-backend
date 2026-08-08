@@ -66,6 +66,7 @@ export class PlatformAuthService {
         email: admin.email,
         firstName: admin.firstName,
         lastName: admin.lastName,
+        avatar: admin.avatar,
         lastLogin: admin.lastLogin,
       },
       accessToken: this.signToken(admin),
@@ -79,6 +80,7 @@ export class PlatformAuthService {
         email: platformAdmins.email,
         firstName: platformAdmins.firstName,
         lastName: platformAdmins.lastName,
+        avatar: platformAdmins.avatar,
         lastLogin: platformAdmins.lastLogin,
         isActive: platformAdmins.isActive,
       })

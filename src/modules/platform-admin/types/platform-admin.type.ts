@@ -3,6 +3,7 @@ export interface PlatformAdminUser {
   email: string;
   firstName: string | null;
   lastName: string | null;
+  avatar: string | null;
   lastLogin: Date | null;
 }
 

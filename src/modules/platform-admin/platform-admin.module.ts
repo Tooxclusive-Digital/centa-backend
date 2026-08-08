@@ -8,6 +8,9 @@ import { PlatformAuthService } from './services/platform-auth.service';
 import { PlatformMetricsService } from './services/platform-metrics.service';
 import { PlatformFilingService } from './services/platform-filing.service';
 import { PlatformNoteService } from './services/platform-note.service';
+import { PlatformProfileService } from './services/platform-profile.service';
+import { PlatformProfileController } from './platform-profile.controller';
+import { AwsService } from 'src/common/aws/aws.service';
 import { PlatformAuthGuard } from './guards/platform-auth.guard';
 
 @Module({
@@ -21,13 +24,18 @@ import { PlatformAuthGuard } from './guards/platform-auth.guard';
     PlatformAuthController,
     PlatformMetricsController,
     PlatformFilingController,
+    PlatformProfileController,
   ],
   providers: [
     PlatformAuthService,
     PlatformMetricsService,
     PlatformFilingService,
     PlatformNoteService,
+    PlatformProfileService,
     PlatformAuthGuard,
+    // Provided here rather than imported: AwsService is registered per-module
+    // across this codebase, not globally.
+    AwsService,
     ConfigService,
   ],
   exports: [
@@ -35,6 +43,7 @@ import { PlatformAuthGuard } from './guards/platform-auth.guard';
     PlatformMetricsService,
     PlatformFilingService,
     PlatformNoteService,
+    PlatformProfileService,
   ],
 })
 export class PlatformAdminModule {}

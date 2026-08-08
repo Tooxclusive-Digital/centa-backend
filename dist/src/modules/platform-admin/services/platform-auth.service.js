@@ -57,6 +57,7 @@ let PlatformAuthService = class PlatformAuthService {
                 email: admin.email,
                 firstName: admin.firstName,
                 lastName: admin.lastName,
+                avatar: admin.avatar,
                 lastLogin: admin.lastLogin,
             },
             accessToken: this.signToken(admin),
@@ -69,6 +70,7 @@ let PlatformAuthService = class PlatformAuthService {
             email: schema_1.platformAdmins.email,
             firstName: schema_1.platformAdmins.firstName,
             lastName: schema_1.platformAdmins.lastName,
+            avatar: schema_1.platformAdmins.avatar,
             lastLogin: schema_1.platformAdmins.lastLogin,
             isActive: schema_1.platformAdmins.isActive,
         })

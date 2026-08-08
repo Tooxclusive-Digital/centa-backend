@@ -1,0 +1,1 @@
+ALTER TABLE "platform_admins" ADD COLUMN "avatar" varchar(500);

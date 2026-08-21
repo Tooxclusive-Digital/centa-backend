@@ -629,7 +629,7 @@ export declare class EmployeesService {
         email: string;
     })[]>;
     resolveFallbackManager(companyId: string): Promise<string | null>;
-    search(dto: SearchEmployeesDto): Promise<({
+    search(dto: SearchEmployeesDto, companyId: string): Promise<({
         id: any;
         employeeNumber: any;
         firstName: any;

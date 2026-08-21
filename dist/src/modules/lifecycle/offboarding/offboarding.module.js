@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OffboardingModule = void 0;
 const common_1 = require("@nestjs/common");
 const offboarding_service_1 = require("./offboarding.service");
+const offboarding_export_service_1 = require("./offboarding-export.service");
 const offboarding_controller_1 = require("./offboarding.controller");
 const offboarding_config_controller_1 = require("./offboarding-config.controller");
 const offboarding_config_service_1 = require("./offboarding-config.service");
@@ -20,6 +21,7 @@ exports.OffboardingModule = OffboardingModule = __decorate([
     (0, common_1.Module)({
         controllers: [offboarding_controller_1.OffboardingController, offboarding_config_controller_1.OffboardingConfigController],
         providers: [
+            offboarding_export_service_1.OffboardingExportService,
             offboarding_service_1.OffboardingService,
             offboarding_config_service_1.OffboardingConfigService,
             offboarding_seeder_service_1.OffboardingSeederService,

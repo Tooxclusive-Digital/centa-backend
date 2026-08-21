@@ -60,8 +60,6 @@ const COMPANY_ROSTER = [
     ['Aliyu Security Services Ltd', 28, '2026-04', 20, 2, 0.06, 67_000, true],
     ['Pearl Gate Consulting Limited', 31, '2026-05', 8, 1, 0.02, 329_000, true],
     ['Bayelsa Marine Supplies Ltd', 28, '2026-05', 14, 1, 0.04, 132_000, true],
-    ['Kano Leather Works Limited', 26, '2026-06', 12, 1, 0.05, 105_000, true],
-    ['Enugu Print House Limited', 25, '2026-06', 10, 1, 0.04, 140_000, true],
     ['Folake Interiors Nigeria', 27, '2026-02', 0, 0, 0, 0, false],
     ['Uche Brothers Haulage Ltd', 28, '2026-03', 0, 0, 0, 0, false],
     ['Plateau Dairy Nigeria Limited', 26, '2026-04', 0, 0, 0, 0, false],
@@ -94,9 +92,11 @@ const COMPANIES = COMPANY_ROSTER.map(([name, payDay, joinMonth, headcount, hires
     const firstY = jm === 12 ? jy + 1 : jy;
     const firstM = jm === 12 ? 1 : jm + 1;
     const firstPayroll = `${firstY}-${String(firstM).padStart(2, '0')}`;
+    const appliesNhf = runsPayroll && i % 2 === 0;
     return {
         name,
         domain: slug,
+        appliesNhf,
         payDay,
         joined: `${joinMonth}-${String(joinDay).padStart(2, '0')}`,
         employeeStart: `${firstPayroll}-01`,
@@ -314,8 +314,9 @@ async function main() {
             await pool.query(`insert into users (id, email, password, first_name, last_name, company_id, company_role_id, is_verified, created_at, updated_at)
          values ($1,$2,$3,'Payroll','Admin',$4,$5,true,$6::timestamp,$6::timestamp)`, [adminUserId, `payroll@${spec.domain}.ng`, inertPassword, companyId, roleId, spec.joined]);
             for (const [key, value] of Object.entries(PAYROLL_SETTINGS)) {
+                const resolved = key === 'payroll.apply_nhf' ? spec.appliesNhf : value;
                 await pool.query(`insert into company_settings (id, company_id, key, value, created_at, updated_at)
-           values ($1,$2,$3,$4::jsonb,$5::timestamp,$5::timestamp)`, [(0, node_crypto_1.randomUUID)(), companyId, key, JSON.stringify(value), spec.joined]);
+           values ($1,$2,$3,$4::jsonb,$5::timestamp,$5::timestamp)`, [(0, node_crypto_1.randomUUID)(), companyId, key, JSON.stringify(resolved), spec.joined]);
             }
             const scheduleId = (0, node_crypto_1.randomUUID)();
             const payGroupId = (0, node_crypto_1.randomUUID)();
@@ -326,7 +327,7 @@ async function main() {
                 spec.joined,
             ]);
             await pool.query(`insert into pay_groups (id, name, apply_paye, apply_pension, apply_nhf, pay_schedule_id, company_id, created_at, updated_at)
-         values ($1,'monthly',true,true,false,$2,$3,$4::timestamp,$4::timestamp)`, [payGroupId, scheduleId, companyId, spec.joined]);
+         values ($1,'monthly',true,true,$5,$2,$3,$4::timestamp,$4::timestamp)`, [payGroupId, scheduleId, companyId, spec.joined, spec.appliesNhf]);
             if (!spec.runsPayroll) {
                 console.log('  signed up · no payroll run');
                 continue;
@@ -347,7 +348,10 @@ async function main() {
                     person.startDate,
                 ]);
                 await pool.query(`insert into employee_compensations (id, employee_id, gross_salary, effective_date, apply_nhf, created_at, updated_at)
-           values ($1,$2,$3,$4::text,false,$5::timestamp,$5::timestamp)`, [(0, node_crypto_1.randomUUID)(), person.id, person.gross * 12, person.startDate, person.startDate]);
+           values ($1,$2,$3,$4::text,$6,$5::timestamp,$5::timestamp)`, [
+                    (0, node_crypto_1.randomUUID)(), person.id, person.gross * 12, person.startDate,
+                    person.startDate, spec.appliesNhf,
+                ]);
             }
             const leavers = workforce.length - finalHeadcount;
             console.log(`  ${workforce.length} employees over the period · ` +

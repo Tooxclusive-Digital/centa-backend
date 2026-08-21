@@ -1041,7 +1041,7 @@ let EmployeesService = EmployeesService_1 = class EmployeesService {
             return superAdmin?.id ?? null;
         }, { tags: ['settings'] });
     }
-    async search(dto) {
+    async search(dto, companyId) {
         const { search, departmentId, jobRoleId, costCenterId, status, locationId, } = dto;
         const maybeClauses = [
             search &&
@@ -1053,6 +1053,7 @@ let EmployeesService = EmployeesService_1 = class EmployeesService {
             locationId && (0, drizzle_orm_1.eq)(schema_1.employees.locationId, locationId),
         ];
         const clauses = maybeClauses.filter((c) => Boolean(c));
+        const scoped = [(0, drizzle_orm_1.eq)(schema_1.employees.companyId, companyId), ...clauses];
         return this.db
             .select({
             id: schema_1.employees.id,
@@ -1071,7 +1072,7 @@ let EmployeesService = EmployeesService_1 = class EmployeesService {
             .leftJoin(schema_1.departments, (0, drizzle_orm_1.eq)(schema_1.employees.departmentId, schema_1.departments.id))
             .leftJoin(schema_1.jobRoles, (0, drizzle_orm_1.eq)(schema_1.employees.jobRoleId, schema_1.jobRoles.id))
             .leftJoin(schema_1.costCenters, (0, drizzle_orm_1.eq)(schema_1.employees.costCenterId, schema_1.costCenters.id))
-            .where(clauses.length ? (0, drizzle_orm_1.and)(...clauses.filter(Boolean)) : undefined)
+            .where((0, drizzle_orm_1.and)(...scoped))
             .execute();
     }
     async getEmployeeAttendanceByMonth(employeeId, companyId, yearMonth) {

@@ -54,6 +54,7 @@ export declare class OffboardingService {
     }>;
     findAll(companyId: string): Promise<{
         id: string;
+        employeeId: any;
         employeeName: string;
         jobRole: string | null;
         department: any;

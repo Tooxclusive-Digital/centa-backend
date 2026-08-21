@@ -224,6 +224,7 @@ let OffboardingService = class OffboardingService {
             const completed = checklist.filter((i) => i.completed).length;
             return {
                 id: session.id,
+                employeeId: session.employeeId,
                 employeeName: `${session.firstName} ${session.lastName}`,
                 jobRole: session.jobRole || null,
                 department: session.department || null,

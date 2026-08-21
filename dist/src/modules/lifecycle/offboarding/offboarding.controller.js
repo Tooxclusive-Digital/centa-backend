@@ -21,10 +21,27 @@ const jwt_auth_guard_1 = require("../../auth/guards/jwt-auth.guard");
 const current_user_decorator_1 = require("../../auth/decorator/current-user.decorator");
 const create_offboarding_dto_1 = require("./dto/create-offboarding.dto");
 const add_offboarding_details_dto_1 = require("./dto/add-offboarding-details.dto");
+const offboarding_export_service_1 = require("./offboarding-export.service");
 let OffboardingController = class OffboardingController extends base_controller_1.BaseController {
-    constructor(offboardingService) {
+    constructor(offboardingService, exportService) {
         super();
         this.offboardingService = offboardingService;
+        this.exportService = exportService;
+    }
+    async downloadRecord(employeeId, user, reply, sections) {
+        const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!UUID.test(employeeId)) {
+            throw new common_1.BadRequestException('A valid employee id is required');
+        }
+        const requested = (sections ?? '')
+            .split(',')
+            .map((s) => s.trim())
+            .filter((s) => offboarding_export_service_1.RECORD_SECTIONS.includes(s));
+        const { buffer, filename } = await this.exportService.generateWorkbook(employeeId, user.companyId, requested);
+        reply
+            .header('Content-Disposition', `attachment; filename="${filename}"`)
+            .header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        return reply.send(buffer);
     }
     begin(dto, user) {
         return this.offboardingService.begin(dto, user);
@@ -55,6 +72,16 @@ let OffboardingController = class OffboardingController extends base_controller_
     }
 };
 exports.OffboardingController = OffboardingController;
+__decorate([
+    (0, common_1.Get)('employee/:employeeId/record'),
+    __param(0, (0, common_1.Param)('employeeId')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
+    __param(3, (0, common_1.Query)('sections')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object, String]),
+    __metadata("design:returntype", Promise)
+], OffboardingController.prototype, "downloadRecord", null);
 __decorate([
     (0, common_1.Post)('begin'),
     __param(0, (0, common_1.Body)()),
@@ -132,6 +159,7 @@ exports.OffboardingController = OffboardingController = __decorate([
     (0, common_1.Controller)('offboarding'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.SetMetadata)('permission', ['employees.manage']),
-    __metadata("design:paramtypes", [offboarding_service_1.OffboardingService])
+    __metadata("design:paramtypes", [offboarding_service_1.OffboardingService,
+        offboarding_export_service_1.OffboardingExportService])
 ], OffboardingController);
 //# sourceMappingURL=offboarding.controller.js.map

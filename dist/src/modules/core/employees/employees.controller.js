@@ -99,8 +99,8 @@ let EmployeesController = class EmployeesController extends base_controller_1.Ba
     async getFallbackManagers(user) {
         return this.employeesService.findFallbackManagers(user.companyId);
     }
-    search(params) {
-        return this.employeesService.search(params);
+    search(params, user) {
+        return this.employeesService.search(params, user.companyId);
     }
     async getEmployeeCard(user, employeeId) {
         return this.employeesService.getEmployeeCard(employeeId, user.companyId);
@@ -320,10 +320,12 @@ __decorate([
 ], EmployeesController.prototype, "getFallbackManagers", null);
 __decorate([
     (0, common_1.Get)('search'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.SetMetadata)('permission', ['employees.search']),
     __param(0, (0, common_1.Query)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [search_employees_dto_1.SearchEmployeesDto]),
+    __metadata("design:paramtypes", [search_employees_dto_1.SearchEmployeesDto, Object]),
     __metadata("design:returntype", void 0)
 ], EmployeesController.prototype, "search", null);
 __decorate([

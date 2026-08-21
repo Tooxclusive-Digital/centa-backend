@@ -495,7 +495,7 @@ export declare class EmployeesController extends BaseController {
         role: string;
         email: string;
     })[]>;
-    search(params: SearchEmployeesDto): Promise<({
+    search(params: SearchEmployeesDto, user: User): Promise<({
         id: any;
         employeeNumber: any;
         firstName: any;

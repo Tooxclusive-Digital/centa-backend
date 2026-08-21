@@ -313,6 +313,9 @@ export class OffboardingService {
 
       return {
         id: session.id,
+        // The session id is not the employee id; anything fetching that
+        // person's records needs this rather than the session's own key.
+        employeeId: session.employeeId,
         employeeName: `${session.firstName} ${session.lastName}`,
         jobRole: session.jobRole || null,
         department: session.department || null,

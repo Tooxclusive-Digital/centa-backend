@@ -1486,7 +1486,11 @@ export class EmployeesService {
   }
 
   // Search is ad-hoc (many combinations). Prefer no cache or short TTL if needed.
-  async search(dto: SearchEmployeesDto) {
+  //
+  // companyId is a required argument rather than an optional filter: every
+  // other clause here is caller-supplied and optional, so a tenant scope that
+  // could be omitted would silently return the whole platform.
+  async search(dto: SearchEmployeesDto, companyId: string) {
     const {
       search,
       departmentId,
@@ -1511,6 +1515,10 @@ export class EmployeesService {
 
     const clauses = maybeClauses.filter((c): c is SQL => Boolean(c));
 
+    // Tenant scope is applied outside the optional list so it can never be
+    // filtered out by the Boolean() pass above.
+    const scoped = [eq(employees.companyId, companyId), ...clauses];
+
     return this.db
       .select({
         id: employees.id,
@@ -1529,7 +1537,7 @@ export class EmployeesService {
       .leftJoin(departments, eq(employees.departmentId, departments.id))
       .leftJoin(jobRoles, eq(employees.jobRoleId, jobRoles.id))
       .leftJoin(costCenters, eq(employees.costCenterId, costCenters.id))
-      .where(clauses.length ? and(...clauses.filter(Boolean)) : undefined)
+      .where(and(...scoped))
       .execute();
   }
 

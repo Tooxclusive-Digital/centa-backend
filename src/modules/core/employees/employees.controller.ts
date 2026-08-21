@@ -276,9 +276,10 @@ export class EmployeesController extends BaseController {
   }
 
   @Get('search')
+  @UseGuards(JwtAuthGuard)
   @SetMetadata('permission', ['employees.search'])
-  search(@Query() params: SearchEmployeesDto) {
-    return this.employeesService.search(params);
+  search(@Query() params: SearchEmployeesDto, @CurrentUser() user: User) {
+    return this.employeesService.search(params, user.companyId);
   }
 
   @Get('employee-card/:employeeId')

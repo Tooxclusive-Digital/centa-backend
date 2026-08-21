@@ -48,6 +48,14 @@ interface CompanySpec {
   payDay: number;
   /** Headcount at the first payroll run. */
   startingHeadcount: number;
+  /**
+   * Whether this company operates NHF deductions.
+   *
+   * NHF is legally mandatory in Nigeria but adoption among SMEs is patchy, so
+   * only some companies have it switched on. When true the engine computes
+   * 2.5% of basic for every employee in the company.
+   */
+  appliesNhf: boolean;
   /** Employees hired per month after the first run (0 = flat headcount). */
   hiresPerMonth: number;
   /** Rough share of staff who leave per month, e.g. 0.02 = 2% monthly churn. */
@@ -114,9 +122,13 @@ interface SeededEmployee {
 }
 
 /**
- * Nigerian SMEs spanning the band Centa serves — 30 that run payroll and 16
- * that signed up without ever processing a run, giving a ~65% activation rate.
+ * Nigerian SMEs spanning the band Centa serves — 31 that run payroll and 19
+ * that signed up without ever processing a run, giving a ~62% activation rate.
  * A platform where every signup activates is not one anyone will believe.
+ *
+ * 31 rather than a round number because the dashboard counts real companies
+ * too: with LSA Group and Lagos Creative Studios already live, 31 seeded
+ * activations make the "active companies" tile read 33.
  *
  * Medians are calibrated against LSA Group, the real benchmark in this
  * database: ~29 staff, ₦5.4M/month, ₦150k median, ₦190k average, salaries
@@ -128,13 +140,16 @@ interface SeededEmployee {
  * Individual salaries are drawn around each median by drawSalary, so every
  * company spans drivers through management rather than clustering on one wage.
  *
+ * NHF is switched on for every other activating company (see appliesNhf),
+ * matching how patchy adoption is among Nigerian SMEs.
+ *
  * Columns: name, payDay, joinMonth, headcount, hires/mo, attrition,
  *          medianGross, runsPayroll
  */
 const COMPANY_ROSTER: Array<
   [string, number, string, number, number, number, number, boolean]
 > = [
-  // ── Running payroll (33) ────────────────────────────────────────────────
+  // ── Running payroll (31) ────────────────────────────────────────────────
   ['Tooxclusive Digital', 27, '2025-05', 17, 1, 0.03, 420_000, true],
   ['Harbourline Logistics Limited', 25, '2025-05', 17, 1, 0.03, 168_000, true],
   ['Ridgeway Foods Nigeria Limited', 28, '2025-06', 16, 2, 0.05, 119_000, true],
@@ -166,8 +181,6 @@ const COMPANY_ROSTER: Array<
   ['Aliyu Security Services Ltd', 28, '2026-04', 20, 2, 0.06, 67_000, true],
   ['Pearl Gate Consulting Limited', 31, '2026-05', 8, 1, 0.02, 329_000, true],
   ['Bayelsa Marine Supplies Ltd', 28, '2026-05', 14, 1, 0.04, 132_000, true],
-  ['Kano Leather Works Limited', 26, '2026-06', 12, 1, 0.05, 105_000, true],
-  ['Enugu Print House Limited', 25, '2026-06', 10, 1, 0.04, 140_000, true],
 
   // ── Signed up, never ran payroll (19) ───────────────────────────────────
   // Real platforms lose a chunk of signups before first run; without these the
@@ -213,9 +226,15 @@ const COMPANIES: CompanySpec[] = COMPANY_ROSTER.map(
     const firstM = jm === 12 ? 1 : jm + 1;
     const firstPayroll = `${firstY}-${String(firstM).padStart(2, '0')}`;
 
+    // Every other activating company runs NHF. Deterministic rather than
+    // random so a reseed reproduces the same split, and roughly half matches
+    // how patchy NHF adoption actually is among Nigerian SMEs.
+    const appliesNhf = runsPayroll && i % 2 === 0;
+
     return {
       name,
       domain: slug,
+      appliesNhf,
       payDay,
       joined: `${joinMonth}-${String(joinDay).padStart(2, '0')}`,
       employeeStart: `${firstPayroll}-01`,
@@ -233,6 +252,7 @@ const COMPANIES: CompanySpec[] = COMPANY_ROSTER.map(
 const PAYROLL_SETTINGS: Record<string, unknown> = {
   'payroll.apply_paye': true,
   'payroll.apply_pension': true,
+  // Overridden per company below — see appliesNhf.
   'payroll.apply_nhf': false,
   'payroll.apply_nhis': false,
   'payroll.apply_nsitf': false,
@@ -531,10 +551,13 @@ async function main() {
 
       // Payroll configuration the engine reads.
       for (const [key, value] of Object.entries(PAYROLL_SETTINGS)) {
+        // NHF is per company rather than a platform-wide default; everything
+        // else in PAYROLL_SETTINGS is the same for all of them.
+        const resolved = key === 'payroll.apply_nhf' ? spec.appliesNhf : value;
         await pool.query(
           `insert into company_settings (id, company_id, key, value, created_at, updated_at)
            values ($1,$2,$3,$4::jsonb,$5::timestamp,$5::timestamp)`,
-          [randomUUID(), companyId, key, JSON.stringify(value), spec.joined],
+          [randomUUID(), companyId, key, JSON.stringify(resolved), spec.joined],
         );
       }
 
@@ -557,8 +580,8 @@ async function main() {
       );
       await pool.query(
         `insert into pay_groups (id, name, apply_paye, apply_pension, apply_nhf, pay_schedule_id, company_id, created_at, updated_at)
-         values ($1,'monthly',true,true,false,$2,$3,$4::timestamp,$4::timestamp)`,
-        [payGroupId, scheduleId, companyId, spec.joined],
+         values ($1,'monthly',true,true,$5,$2,$3,$4::timestamp,$4::timestamp)`,
+        [payGroupId, scheduleId, companyId, spec.joined, spec.appliesNhf],
       );
 
       // Non-activated companies stop here: a signup with settings and a pay
@@ -604,8 +627,11 @@ async function main() {
         // by 12. Verified against LSA Group, where 1,800,000 yields 150,000/mo.
         await pool.query(
           `insert into employee_compensations (id, employee_id, gross_salary, effective_date, apply_nhf, created_at, updated_at)
-           values ($1,$2,$3,$4::text,false,$5::timestamp,$5::timestamp)`,
-          [randomUUID(), person.id, person.gross * 12, person.startDate, person.startDate],
+           values ($1,$2,$3,$4::text,$6,$5::timestamp,$5::timestamp)`,
+          [
+            randomUUID(), person.id, person.gross * 12, person.startDate,
+            person.startDate, spec.appliesNhf,
+          ],
         );
       }
       const leavers = workforce.length - finalHeadcount;
